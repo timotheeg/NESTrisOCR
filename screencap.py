@@ -43,6 +43,8 @@ def generate_stats(captureCoords, statBoxPerc, statHeight, do_mult=True):
 SCORE_COORDS = mult_rect(CAPTURE_COORDS,scorePerc)
 LINES_COORDS = mult_rect(CAPTURE_COORDS,linesPerc)
 LEVEL_COORDS = mult_rect(CAPTURE_COORDS,levelPerc)
+CUR_DAS_COORDS = mult_rect(CAPTURE_COORDS,curDasPerc)
+CUR_PIECE_DAS_COORDS = mult_rect(CAPTURE_COORDS,curPieceDasPerc)
 STATS_COORDS = generate_stats(CAPTURE_COORDS,statsPerc,scorePerc[3])
 
 CALIBRATION = True
@@ -51,6 +53,9 @@ CALIBRATE_SCORE = False
 CALIBRATE_LINES = False
 CALIBRATE_LEVEL = False
 CALIBRATE_STATS = False
+CALIBRATE_DT_CUR_DAS = False
+CALIBRATE_DT_CUR_PIECE = False
+CALIBRATE_DT_CUR_PIECE_DAS = False
 MULTI_THREAD = 1
 RATE = 0.064
 
@@ -83,6 +88,12 @@ def highlight_calibration(img):
     draw.rectangle(screenPercToPixels(img.width,img.height,levelPerc),fill=red)    
     #pieces
     draw.rectangle(screenPercToPixels(img.width,img.height,statsPerc),fill=blue)
+    #cur das
+    draw.rectangle(screenPercToPixels(img.width,img.height,curDasPerc),fill=red)
+    #cur piece
+    draw.rectangle(screenPercToPixels(img.width,img.height,curPiecePerc),fill=red)
+    #cur piece das
+    draw.rectangle(screenPercToPixels(img.width,img.height,curPieceDasPerc),fill=red)
     print(statsPerc)
     for value in generate_stats(CAPTURE_COORDS,statsPerc,scorePerc[3],False).values():
         print(value)
@@ -141,6 +152,8 @@ def main(onCap):
             rawTasks.append((captureAndOCR,(SCORE_COORDS,hwnd,6,"score")))
             rawTasks.append((captureAndOCR,(LINES_COORDS,hwnd,3,"lines")))
             rawTasks.append((captureAndOCR,(LEVEL_COORDS,hwnd,2,"level")))
+            rawTasks.append((captureAndOCR,(CUR_DAS_COORDS,hwnd,2,"curDas")))
+            rawTasks.append((captureAndOCR,(CUR_PIECE_DAS_COORDS,hwnd,2,"curPieceDas")))
             #for key in STATS_COORDS:
             #    rawTasks.append((captureAndOCR,(STATS_COORDS[key],hwnd,3,key,False,True)))
                 
