@@ -13,7 +13,7 @@ else:
     from Win32WindowMgr import WindowMgr
 
 from PIL import Image, ImageDraw
-from fastocr import scoreImage
+from fastocr import scoreImage, scoreStage
 from multiprocessing import Pool
 from Networking import TCPClient
 import json
@@ -22,7 +22,7 @@ import time
 from calibration import * #bad!
 
 
-RATE = 0.006
+RATE = 0.016
 
 HIGHLIGHT_COLORS = {
     'red':     (255,   0,   0, 128),
@@ -30,27 +30,26 @@ HIGHLIGHT_COLORS = {
     'orange':  (255, 165,   0, 128),
 }
 
-HIGHLIGHT_COLORS['default'] = HIGHLIGHT_COLORS['red']
-
-CAPTURE_AREAS_ALLOW_LIST = set((
-    'score',
-    'level',
-    'lines',
-    'stage',
-    'next_piece',
-    'piece_stats',
+# define what can be captured and how many digits they have
+CAPTURE_AREAS_ALLOW_LIST = {
+    'score':       6,
+    'level':       2,
+    'lines':       3,
+    'stage':       None,
+    'next_piece':  None,
+    'piece_stats': 3,
 
     # das trainer specific stats
-    'das',
-    'cur_piece',
-    'cur_piece_das',
-    'das_stats'
-))
+    'das':           2,
+    'cur_piece':     None,
+    'cur_piece_das': 2,
+    'das_stats':     3
+}
 
 CAPTURE_PROFILES = {
     'original':        'score,level,lines,piece_stats',
     'original_all':    'score,level,lines,piece_stats,stage,next_piece',
-    'das_trainer':     'score,level,lines,stage,cur_piece_das,das_stats',
+    'das_trainer':     'score,level,lines,stage,cur_piece_das',
     'das_trainer_all': 'score,level,lines,das,cur_piece_das,das_stats,cur_piece,next_piece,stage',
 }
 
@@ -69,9 +68,6 @@ def mult_rect(rect, mult):
             math.ceil(rect[2] * mult[2]),
             math.ceil(rect[3] * mult[3]))
 
-    if len(mult) == 5:
-        multiplied = multiplied + (mult[4], )
-
     return multiplied
 
 def generate_piece_stats(captureCoords, statBoxPerc, statHeight, do_mult=True):    
@@ -89,12 +85,10 @@ def generate_piece_stats(captureCoords, statBoxPerc, statHeight, do_mult=True):
         else:
             result[piece] = box
 
-        result[piece] = result[piece] + ('orange', )
-
     return result
 
 def generate_das_stats(captureCoords, statBoxPerc, statHeight, do_mult=True):    
-    statGap = (statBoxPerc[3] - (4*statHeight))/3
+    statGap = (statBoxPerc[3] - (4 * statHeight)) / 3
     statGap = statGap + statHeight
     offsets = [i*(statGap) for i in range(7)]
     das_categories = ['great', 'ok', 'bad', 'terrible']
@@ -107,8 +101,6 @@ def generate_das_stats(captureCoords, statBoxPerc, statHeight, do_mult=True):
             result[category] = mult_rect(captureCoords, box)
         else:
             result[category] = box
-
-        result[category] = result[category] + ('orange', )
 
     return result
 
@@ -144,16 +136,14 @@ def highlight_calibration(img, areas):
     subareas = {}
 
     for area_id in areas:
+        fill = HIGHLIGHT_COLORS['red']
+
         if area_id in ('piece_stats', 'das_stats'):
+            fill = HIGHLIGHT_COLORS['blue']
             subareas = COORDINATES[area_id]
             area_id += '_whole'
 
         coordinates = COORDINATES[area_id]
-
-        if len(coordinates) == 5:
-            fill = HIGHLIGHT_COLORS[ coordinates[4] ]
-        else:
-            fill = HIGHLIGHT_COLORS['default']
 
         draw.rectangle(ltwhToLtrb(coordinates), fill=fill)
 
@@ -162,13 +152,6 @@ def highlight_calibration(img, areas):
 
     img.paste(poly, mask=poly)
     del draw
-
-    #pieces
-    #draw.rectangle(screenPercToPixels(img.width,img.height,statsPerc),fill=blue)
-    #print(statsPerc)
-    #for value in generate_piece_stats(WINDOW_CAPTURE_COORDS,statsPerc,scorePerc[3],False).values():
-    #    print(value)
-    #    draw.rectangle(screenPercToPixels(img.width,img.height,value),fill=orange)
     
 def calibrate(areas, only_highlight=True):
     hwnd = getWindow()
@@ -178,10 +161,12 @@ def calibrate(areas, only_highlight=True):
         return
 
     if only_highlight:
+        # show main wondow and hoghlight all required areas
         img = WindowCapture.ImageCapture(WINDOW_CAPTURE_COORDS, hwnd)
         highlight_calibration(img, areas)
         img.show()
     else:
+        # Extract all areas of interest and show them individually
         for area_id in areas:
             subareas = {}
 
@@ -189,16 +174,20 @@ def calibrate(areas, only_highlight=True):
                 subareas = COORDINATES[area_id]
                 area_id += '_whole'
 
-            img = WindowCapture.ImageCapture(COORDINATES[area_id][:4], hwnd)
+            img = WindowCapture.ImageCapture(COORDINATES[area_id], hwnd)
             img.show()
 
             for _, coordinates in subareas.items():
-                img = WindowCapture.ImageCapture(coordinates[:4], hwnd)
+                img = WindowCapture.ImageCapture(coordinates, hwnd)
                 img.show()
 
-def captureAndOCR(coords,hwnd,digits,taskName,draw=False,red=False):
-    img = WindowCapture.ImageCapture(coords,hwnd)
-    return taskName, scoreImage(img,digits,draw,red)
+def captureAndOCR(coords, hwnd, digits, taskName, draw=False, red=False):
+    img = WindowCapture.ImageCapture(coords, hwnd)
+    return taskName, scoreImage(img, digits, draw, red)
+
+def captureStage(coords, hwnd, taskName, draw=False, red=False):
+    img = WindowCapture.ImageCapture(coords, hwnd)
+    return taskName, scoreStage(img)
 
 def runFunc(func, args):
     return func(*args)
@@ -256,7 +245,7 @@ def getCLIArguments():
 
     area_ids = set(capture_areas.split(','))
 
-    if not area_ids.issubset(CAPTURE_AREAS_ALLOW_LIST):
+    if not area_ids.issubset(set([key for key in CAPTURE_AREAS_ALLOW_LIST])):
         eprint('Invalid capture area id', args.capture)
         sys.exit(3)
 
@@ -280,32 +269,50 @@ def main(onCap):
         p = None
     
     while True:
-        frame_end = time.time() + RATE
+        frame_start  = time.time()
+        frame_end = frame_start + RATE
         hwnd = getWindow()
         result = {}
-        if hwnd:       
+        if hwnd:
             rawTasks = []
-            rawTasks.append((captureAndOCR,(SCORE_COORDS,hwnd,6,"score")))
-            rawTasks.append((captureAndOCR,(LINES_COORDS,hwnd,3,"lines")))
-            rawTasks.append((captureAndOCR,(LEVEL_COORDS,hwnd,2,"level")))
-            #for key in STATS_COORDS:
-            #    rawTasks.append((captureAndOCR,(STATS_COORDS[key],hwnd,3,key,False,True)))
-                
+
+            for area_id in args.capture:
+                ocr_char_len = CAPTURE_AREAS_ALLOW_LIST[area_id]
+                coordinates = COORDINATES[area_id]
+
+                if area_id in ('piece_stats', 'das_stats'):
+                    for key, coordinates in COORDINATES[area_id].items():
+                        rawTasks.append((captureAndOCR, (coordinates, hwnd, ocr_char_len, area_id + '.' + key)))
+                elif area_id == 'stage':
+                    rawTasks.append((captureStage, (coordinates, hwnd, area_id)))
+                elif area_id == 'next_piece':
+                    pass
+                elif area_id == 'cur_piece':
+                    pass
+                else:
+                    rawTasks.append((captureAndOCR, (coordinates, hwnd, ocr_char_len, area_id)))
+
             result = {}
             if p: #multithread
                 tasks = []
+
                 for task in rawTasks:
-                    tasks.append(p.apply_async(task[0],task[1]))                
+                    tasks.append(p.apply_async(task[0], task[1]))
+
                 taskResults = [res.get(timeout=1) for res in tasks]
+
                 for key, number in taskResults:
                     result[key] = number
                 
             else: #single thread                   
                 for task in rawTasks:
-                    key, number = runFunc(task[0],task[1])
+                    key, number = runFunc(task[0], task[1])
                     result[key] = number
         
-            onCap(result)  
+            onCap(result)
+
+        print(time.time() - frame_start)
+
         while time.time() < frame_end:
             time.sleep(0.001)
         

@@ -10,6 +10,12 @@ IMAGE_SIZE = 7
 BLOCK_SIZE = IMAGE_SIZE+1
 IMAGE_MULT = 2
 
+STAGE_CHECK_5 = True
+STAGE_RED_THRESHOLD = 10
+STAGE_BLOCK_WIDTH = 10
+STAGE_BLOCK_HEIGHT = 20
+
+
 def setupColour(prefix, outputDict):
     #setup white digits
     for digit in digits:
@@ -69,7 +75,7 @@ def convertImg(img, count, show):
     return img    
 
 def scoreImage(img, count, show=False, red=False):
-    img = convertImg(img,count,show)
+    img = convertImg(img, count, show)
     label = ""
     for i in range(count):
         result = scoreDigit(img,i*(BLOCK_SIZE*IMAGE_MULT),0, red)
@@ -78,6 +84,52 @@ def scoreImage(img, count, show=False, red=False):
         else:
             label += result[1]
     return label
+
+def is_block_active(stage_img, x, y):
+    # fastest, but perhaps not so accurate?
+    active = stage_img[x, y][0] > STAGE_RED_THRESHOLD
+
+    # better check for piece
+    if STAGE_CHECK_5:
+        active = (active
+            or (stage_img[x-1, y-1][0] > STAGE_RED_THRESHOLD)
+            or (stage_img[x+1, y-1][0] > STAGE_RED_THRESHOLD)
+            or (stage_img[x-1, y+1][0] > STAGE_RED_THRESHOLD)
+            or (stage_img[x+1, y+1][0] > STAGE_RED_THRESHOLD)
+        )
+
+    return 1 if active else 0
+
+
+def scoreStage(stage_img):
+    block_size_w = 1.0 * stage_img.width / STAGE_BLOCK_WIDTH
+    block_size_h = 1.0 * stage_img.height / STAGE_BLOCK_HEIGHT
+
+    offset_x = block_size_w * 0.5
+    offset_y = block_size_h * 0.5
+
+    stage_data = [[] for j in range(STAGE_BLOCK_HEIGHT)]
+
+    j = 0
+    active_blocks = 0
+
+    loaded_stage = stage_img.load()
+
+    while j < STAGE_BLOCK_HEIGHT:
+        i = 0
+        while i < STAGE_BLOCK_WIDTH:
+            x = round(offset_x + block_size_w * i)
+            y = round(offset_y + block_size_h * j)
+
+            active = is_block_active(loaded_stage, x, y)
+            active_blocks += active
+            stage_data[j].append(active)
+
+            i += 1
+        j += 1
+
+    return active_blocks, stage_data
+
 
 setupData()
     
