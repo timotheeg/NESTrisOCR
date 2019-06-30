@@ -236,8 +236,8 @@ def getCLIArguments():
                        default='original',
                        help='Specify which list of capture area will be considered, Allowed values [original, das_trainer]. Note that if --capture is specified profile is ignored.')
 
-    parser.add_argument('--threads', action='store_const',
-                       const=int, default=1,
+    parser.add_argument('--threads', action='store', nargs='?',
+                       type=int, default=1,
                        help='sum the integers (default: find the max)')
 
     args = parser.parse_args()
