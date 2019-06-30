@@ -20,13 +20,30 @@ NEXT_PIECE_BLOCKS = {
     # Alignment 1
     'J': ((0.253, 0.125), (0.500, 0.125), (0.775, 0.125), (0.775, 0.875)),
     'L': ((0.253, 0.125), (0.500, 0.125), (0.775, 0.125), (0.253, 0.875)),
-    'S': ((0.500, 0.125), (0.775, 0.125), (0.500, 0.875), (0.253, 0.875)),
     'Z': ((0.253, 0.125), (0.500, 0.125), (0.500, 0.875), (0.775, 0.875)),
+    'S': ((0.500, 0.125), (0.775, 0.125), (0.500, 0.875), (0.253, 0.875)),
     'T': ((0.253, 0.125), (0.500, 0.125), (0.775, 0.125), (0.500, 0.875)),
 
     # Alignment 2
     'O': ((0.380, 0.125), (0.630, 0.125), (0.380, 0.875), (0.630, 0.875)),
     'I': ((0.110, 0.500), (0.380, 0.500), (0.630, 0.500), (0.890, 0.500)),
+}
+
+CURRENT_PIECE_BLOCKS = {
+    # Alignment 1
+    'Z': ((0.115, 0.192), (0.462, 0.192), (0.462, 0.923), (0.769, 0.923)),
+    'S': ((0.462, 0.192), (0.769, 0.192), (0.462, 0.923), (0.115, 0.923)),
+    'T': ((0.115, 0.192), (0.462, 0.192), (0.769, 0.192), (0.462, 0.923)),
+
+    # Alignment 2
+    'L': ((0.115, 0.115), (0.462, 0.115), (0.769, 0.115), (0.115, 0.808)),
+    'J': ((0.115, 0.115), (0.462, 0.115), (0.769, 0.115), (0.769, 0.808)),
+
+    # Alignment 3
+    'O': ((0.269, 0.231), (0.635, 0.231), (0.269, 0.846), (0.635, 0.846)),
+
+    # Alignment 4
+    'I': ((0.096, 0.538), (0.365, 0.538), (0.635, 0.538), (0.904, 0.538)),
 }
 
 def setupColour(prefix, outputDict):
@@ -115,8 +132,8 @@ def is_block_active(stage_img, x, y):
 
 
 def scoreStage(stage_img):
-    block_size_w = 1.0 * stage_img.width / STAGE_BLOCK_WIDTH
-    block_size_h = 1.0 * stage_img.height / STAGE_BLOCK_HEIGHT
+    block_size_w = stage_img.width / STAGE_BLOCK_WIDTH
+    block_size_h = stage_img.height / STAGE_BLOCK_HEIGHT
 
     offset_x = block_size_w * 0.5
     offset_y = block_size_h * 0.5
@@ -143,13 +160,11 @@ def scoreStage(stage_img):
 
     return active_blocks, stage_data
 
-def scoreCurrentPiece(img):
-    pass
 
-def scoreNextPiece(img):
+def scorePiece(img, block_map):
     loaded_img = img.load()
 
-    for name, blocks in NEXT_PIECE_BLOCKS.items():
+    for name, blocks in block_map.items():
         detected = True
 
         for block in blocks:
@@ -160,6 +175,12 @@ def scoreNextPiece(img):
         if detected:
             return name
 
+
+def scoreCurrentPiece(img):
+    return scorePiece(img, CURRENT_PIECE_BLOCKS)
+
+def scoreNextPiece(img):
+    return scorePiece(img, NEXT_PIECE_BLOCKS)
 
 setupData()
     
