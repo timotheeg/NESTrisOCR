@@ -334,11 +334,15 @@ def main(onCap):
                 for key, number in taskResults:
                     result[key] = number
                 
-            else: #single thread                   
+            else: #single thread
+                pitstop = time.time()
+                print('before capture', pitstop - frame_start)
                 for task in rawTasks:
                     key, number = runFunc(task[0], task[1])
                     result[key] = number
-        
+                    print(key, time.time() - pitstop)
+                    pitstop = time.time()
+
             onCap(result)
 
             print(time.time() - frame_start)
