@@ -73,26 +73,42 @@ def setupData():
     setupColour('samples/red',redData) #setup red
 
 def dist(col):
-    return col*col
+    return col * col
     
-def sub(col1,col2):
-    return col1-col2
+def sub(col1, col2):
+    return col1 - col2
 
 
-def scoreDigit(img, startX, startY, red):
-    scores = []
+def getDigit(img, startX, startY, red):
     template = redData if red else data
+
+    ITERATION_COUNT = IMAGE_SIZE * IMAGE_MULT
+
+    lowest_score = float("inf")
+    lowest_digit = None
+
     for digit in digits:
+        cur_template = template[digit]
         score = 0
-        for y in range(IMAGE_SIZE*IMAGE_MULT):
-            for x in range(IMAGE_SIZE*IMAGE_MULT):
-                a = template[digit][x,y]
-                b = img[startX+x,startY+y]
-                score += dist(sub(a,b))
+
+        y = 0
+        while y < ITERATION_COUNT:
+            x = 0
+            while x < ITERATION_COUNT:
+                a = cur_template[x, y]
+                b = img[startX + x, startY + y]
+
+                sub = a - b
+                score += sub * sub # adding distance
+
+                x += 1
+            y += 1
                 
-        scores.append((score, digit))
-    scores.sort(key=lambda tup:tup[0])
-    return scores[0]
+        if score < lowest_score:
+            lowest_score = score
+            lowest_digit = digit
+
+    return lowest_digit
 
 #convert to black/white, with custom threshold    
 def contrastImg(img):  
@@ -124,11 +140,14 @@ def scoreImage(img, count, show=False, red=False):
     label = ""
 
     for i in range(count):
-        result = scoreDigit(img,i*(BLOCK_SIZE*IMAGE_MULT),0, red)
-        if result[1] == 'null':
+        start = time.time()
+        digit = getDigit(img, i * BLOCK_SIZE * IMAGE_MULT, 0, red)
+        print('getDigit', time.time() - start)
+        if digit == 'null':
             return None
         else:
-            label += result[1]
+            label += digit
+
     return label
 
 def is_block_active(stage_img, x, y):
