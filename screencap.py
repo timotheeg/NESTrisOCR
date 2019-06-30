@@ -115,12 +115,19 @@ for area_id, coordinates in CAPTURE_AREAS.items():
         COORDINATES[area_id] = mult_rect(WINDOW_CAPTURE_COORDS, coordinates)
 
 
-def getWindow():
+def getWindow(hwnd=None):
     wm = WindowMgr()
+
+    if hwnd:
+        if platform.system() == 'Darwin':
+            return wm.getWindow(hwnd['ID'])
+
     windows = wm.getWindows()
+
     for window in windows:
         if window[1].startswith(WINDOW_NAME):
             return window[0]
+
     return None
 
 def ltwhToLtrb(rect_xywh):
@@ -279,9 +286,24 @@ def main(onCap):
     while True:
         frame_start  = time.time()
         frame_end = frame_start + RATE
+
         hwnd = getWindow()
-        result = {}
-        if hwnd:
+
+        if not hwnd:
+            while time.time() < frame_end:
+                time.sleep(0.001)
+
+            continue
+
+        while True:
+            frame_start  = time.time()
+            frame_end = frame_start + RATE
+            hwnd = getWindow(hwnd)
+
+            if not hwnd:
+                break
+
+            result = {}
             rawTasks = []
 
             for area_id in args.capture:
@@ -319,10 +341,10 @@ def main(onCap):
         
             onCap(result)
 
-        print(time.time() - frame_start)
+            print(time.time() - frame_start)
 
-        while time.time() < frame_end:
-            time.sleep(0.001)
+            while time.time() < frame_end:
+                time.sleep(0.001)
         
 class CachedSender(object):
     def __init__(self, client):
