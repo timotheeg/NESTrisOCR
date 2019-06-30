@@ -189,15 +189,21 @@ def calibrate(areas, only_highlight=True):
                 img.show()
 
 def captureAndOCR(coords, hwnd, digits, taskName, draw=False, red=False):
+    start = time.time()
     img = WindowCapture.ImageCapture(coords, hwnd)
+    print('capture', time.time() - start)
     return taskName, scoreImage(img, digits, draw, red)
 
 def captureStage(coords, hwnd, taskName, draw=False, red=False):
+    start = time.time()
     img = WindowCapture.ImageCapture(coords, hwnd)
+    print('capture', time.time() - start)
     return taskName, scoreStage(img)
 
 def captureCurrentPiece(coords, hwnd, taskName, draw=False, red=False):
+    start = time.time()
     img = WindowCapture.ImageCapture(coords, hwnd)
+    print('capture', time.time() - start)
     return taskName, scoreCurrentPiece(img)
 
 def captureNextPiece(coords, hwnd, taskName, draw=False, red=False):

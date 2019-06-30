@@ -1,4 +1,5 @@
 import PIL
+import time
 from PIL import Image, ImageEnhance
 
 data = {}
@@ -117,8 +118,11 @@ def convertImg(img, count, show):
     return img    
 
 def scoreImage(img, count, show=False, red=False):
+    start = time.time()
     img = convertImg(img, count, show)
+    print('convert', time.time() - start)
     label = ""
+
     for i in range(count):
         result = scoreDigit(img,i*(BLOCK_SIZE*IMAGE_MULT),0, red)
         if result[1] == 'null':
