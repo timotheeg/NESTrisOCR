@@ -53,7 +53,8 @@ CAPTURE_PROFILES = {
     'das_trainer_all': 'score,level,lines,stage,cur_piece,cur_piece_das,das,das_stats,next_piece',
 }
 
-COORDINATES = {}
+COORDINATES_XYWH = {}
+COORDINATES_LTRB = {}
 
 # error print
 def eprint(*args, **kwargs):
@@ -63,7 +64,7 @@ def lerp(start, end, perc):
     return perc * (end-start) + start
     
 def mult_rect(rect, mult):
-    multiplied =  (math.floor(rect[2] * mult[0] + rect[0]),
+    multiplied = (math.floor(rect[2] * mult[0] + rect[0]),
             math.floor(rect[3] * mult[1] + rect[1]),
             math.ceil(rect[2] * mult[2]),
             math.ceil(rect[3] * mult[3]))
@@ -104,15 +105,44 @@ def generate_das_stats(captureCoords, statBoxPerc, statHeight, do_mult=True):
 
     return result
 
+
+def ltwhToLtrb(rect_xywh, offset):
+    left = rect_xywh[0] - offset[0] # substract to be relative to window cut, rather than full window
+    top = rect_xywh[1] - offset[1] # substract to be relative to window cut, rather than full window
+    right = left + rect_xywh[2]
+    bottom = top + rect_xywh[3]
+    return (left, top, right, bottom)
+
+
+
+# we need to compute the minimum window area to extract in one call
+# and then compute the coordinates of each capture area in LTRB format for PIL
+MIN_WINDOW_COORDS = (
+    min( (math.floor(WINDOW_CAPTURE_COORDS[0] + v[0] * WINDOW_CAPTURE_COORDS[2]) for k, v in CAPTURE_AREAS.items())),
+    min( (math.floor(WINDOW_CAPTURE_COORDS[1] + v[1] * WINDOW_CAPTURE_COORDS[3]) for k, v in CAPTURE_AREAS.items())),
+    max( (math.ceil(WINDOW_CAPTURE_COORDS[0] + (v[0] + v[2]) * WINDOW_CAPTURE_COORDS[3]) for k, v in CAPTURE_AREAS.items())),
+    max( (math.ceil(WINDOW_CAPTURE_COORDS[1] + (v[1] + v[3]) * WINDOW_CAPTURE_COORDS[3]) for k, v in CAPTURE_AREAS.items())),
+)
+
 for area_id, coordinates in CAPTURE_AREAS.items():
     if area_id == 'piece_stats':
-        COORDINATES['piece_stats_whole'] = mult_rect(WINDOW_CAPTURE_COORDS, coordinates)
-        COORDINATES[area_id] = generate_piece_stats(WINDOW_CAPTURE_COORDS, coordinates, CAPTURE_AREAS["score"][3])
+        COORDINATES_XYWH['piece_stats_whole'] = mult_rect(WINDOW_CAPTURE_COORDS, coordinates)
+        COORDINATES_XYWH[area_id] = generate_piece_stats(WINDOW_CAPTURE_COORDS, coordinates, CAPTURE_AREAS["score"][3])
     elif area_id == 'das_stats':
-        COORDINATES['das_stats_whole'] = mult_rect(WINDOW_CAPTURE_COORDS, coordinates)
-        COORDINATES[area_id] = generate_das_stats(WINDOW_CAPTURE_COORDS, coordinates, CAPTURE_AREAS["score"][3])
+        COORDINATES_XYWH['das_stats_whole'] = mult_rect(WINDOW_CAPTURE_COORDS, coordinates)
+        COORDINATES_XYWH[area_id] = generate_das_stats(WINDOW_CAPTURE_COORDS, coordinates, CAPTURE_AREAS["score"][3])
     else:
-        COORDINATES[area_id] = mult_rect(WINDOW_CAPTURE_COORDS, coordinates)
+        COORDINATES_XYWH[area_id] = mult_rect(WINDOW_CAPTURE_COORDS, coordinates)
+
+
+for area_id, coordinates in COORDINATES_XYWH.items():
+    if type(coordinates) is dict:
+        COORDINATES_LTRB[area_id] = {}
+        for key, coordinates2 in coordinates.items():
+            COORDINATES_LTRB[area_id][key] = ltwhToLtrb(coordinates2, MIN_WINDOW_COORDS)
+    else:
+        COORDINATES_LTRB[area_id] = ltwhToLtrb(coordinates, MIN_WINDOW_COORDS)
+
 
 
 def getWindow(hwnd=None):
@@ -130,13 +160,6 @@ def getWindow(hwnd=None):
 
     return None
 
-def ltwhToLtrb(rect_xywh):
-    left = rect_xywh[0] - WINDOW_CAPTURE_COORDS[0] # substract to be relative to window cut, rather than full window
-    top = rect_xywh[1] - WINDOW_CAPTURE_COORDS[1] # substract to be relative to window cut, rather than full window
-    right = left + rect_xywh[2]
-    bottom = top + rect_xywh[3]
-    return (left, top, right, bottom)
-    
 def highlight_calibration(img, areas):
     poly = Image.new('RGBA', (img.width, img.height))
     draw = ImageDraw.Draw(poly)
@@ -147,15 +170,15 @@ def highlight_calibration(img, areas):
 
         if area_id in ('piece_stats', 'das_stats'):
             fill = HIGHLIGHT_COLORS['blue']
-            subareas = COORDINATES[area_id]
+            subareas = COORDINATES_XYWH[area_id]
             area_id += '_whole'
 
-        coordinates = COORDINATES[area_id]
+        coordinates = COORDINATES_XYWH[area_id]
 
-        draw.rectangle(ltwhToLtrb(coordinates), fill=fill)
+        draw.rectangle(ltwhToLtrb(coordinates, WINDOW_CAPTURE_COORDS), fill=fill)
 
         for _, coordinates in subareas.items():
-            draw.rectangle(ltwhToLtrb(coordinates), fill=HIGHLIGHT_COLORS['orange'])   
+            draw.rectangle(ltwhToLtrb(coordinates, WINDOW_CAPTURE_COORDS), fill=HIGHLIGHT_COLORS['orange'])   
 
     img.paste(poly, mask=poly)
     del draw
@@ -178,36 +201,38 @@ def calibrate(areas, only_highlight=True):
             subareas = {}
 
             if area_id in ('piece_stats', 'das_stats'):
-                subareas = COORDINATES[area_id]
+                subareas = COORDINATES_XYWH[area_id]
                 area_id += '_whole'
 
-            img = WindowCapture.ImageCapture(COORDINATES[area_id], hwnd)
+            img = WindowCapture.ImageCapture(COORDINATES_XYWH[area_id], hwnd)
             img.show()
 
             for _, coordinates in subareas.items():
                 img = WindowCapture.ImageCapture(coordinates, hwnd)
                 img.show()
 
-def captureAndOCR(coords, hwnd, digits, taskName, draw=False, red=False):
+def captureAndOCR(coords, window_img, digits, taskName, draw=False, red=False):
     start = time.time()
-    img = WindowCapture.ImageCapture(coords, hwnd)
-    print('capture', time.time() - start)
+    img = window_img.crop(coords)
+    print('captureAndOCR', time.time() - start)
     return taskName, scoreImage(img, digits, draw, red)
 
-def captureStage(coords, hwnd, taskName, draw=False, red=False):
+def captureStage(coords, window_img, taskName, draw=False, red=False):
     start = time.time()
-    img = WindowCapture.ImageCapture(coords, hwnd)
-    print('capture', time.time() - start)
+    img = window_img.crop(coords)
+    print('captureStage', time.time() - start)
     return taskName, scoreStage(img)
 
-def captureCurrentPiece(coords, hwnd, taskName, draw=False, red=False):
+def captureCurrentPiece(coords, window_img, taskName, draw=False, red=False):
     start = time.time()
-    img = WindowCapture.ImageCapture(coords, hwnd)
-    print('capture', time.time() - start)
+    img = window_img.crop(coords)
+    print('captureCurrentPiece', time.time() - start)
     return taskName, scoreCurrentPiece(img)
 
-def captureNextPiece(coords, hwnd, taskName, draw=False, red=False):
-    img = WindowCapture.ImageCapture(coords, hwnd)
+def captureNextPiece(coords, window_img, taskName, draw=False, red=False):
+    start = time.time()
+    img = window_img.crop(coords)
+    print('captureNextPiece', time.time() - start)
     return taskName, scoreNextPiece(img)
 
 def runFunc(func, args):
@@ -291,11 +316,11 @@ def main(onCap):
     
     while True:
         frame_start  = time.time()
-        frame_end = frame_start + RATE
-
         hwnd = getWindow()
+        print('getWindow()', time.time() - frame_start)
 
         if not hwnd:
+            frame_end = frame_start + RATE
             while time.time() < frame_end:
                 time.sleep(0.001)
 
@@ -303,30 +328,34 @@ def main(onCap):
 
         while True:
             frame_start  = time.time()
-            frame_end = frame_start + RATE
             hwnd = getWindow(hwnd)
+            print('getWindow(hwnd)', time.time() - frame_start)
 
             if not hwnd:
                 break
+
+            pitstop = time.time()
+            window_img = WindowCapture.ImageCapture(MIN_WINDOW_COORDS, hwnd)
+            print('window_capture', time.time() - pitstop)
 
             result = {}
             rawTasks = []
 
             for area_id in args.capture:
                 ocr_char_len = CAPTURE_AREAS_ALLOW_LIST[area_id]
-                coordinates = COORDINATES[area_id]
+                coordinates = COORDINATES_LTRB[area_id]
 
                 if area_id in ('piece_stats', 'das_stats'):
-                    for key, coordinates in COORDINATES[area_id].items():
-                        rawTasks.append((captureAndOCR, (coordinates, hwnd, ocr_char_len, area_id + '.' + key)))
+                    for key, coordinates in COORDINATES_LTRB[area_id].items():
+                        rawTasks.append((captureAndOCR, (coordinates, window_img, ocr_char_len, area_id + '.' + key)))
                 elif area_id == 'stage':
-                    rawTasks.append((captureStage, (coordinates, hwnd, area_id)))
+                    rawTasks.append((captureStage, (coordinates, window_img, area_id)))
                 elif area_id == 'next_piece':
-                    rawTasks.append((captureNextPiece, (coordinates, hwnd, area_id)))
+                    rawTasks.append((captureNextPiece, (coordinates, window_img, area_id)))
                 elif area_id == 'cur_piece':
-                    rawTasks.append((captureCurrentPiece, (coordinates, hwnd, area_id)))
+                    rawTasks.append((captureCurrentPiece, (coordinates, window_img, area_id)))
                 else:
-                    rawTasks.append((captureAndOCR, (coordinates, hwnd, ocr_char_len, area_id)))
+                    rawTasks.append((captureAndOCR, (coordinates, window_img, ocr_char_len, area_id)))
 
             result = {}
             if p: #multithread
@@ -351,8 +380,9 @@ def main(onCap):
 
             onCap(result)
 
-            print(time.time() - frame_start)
+            print('TOTAL PROCESSING', time.time() - frame_start)
 
+            frame_end = frame_start + RATE
             while time.time() < frame_end:
                 time.sleep(0.001)
         

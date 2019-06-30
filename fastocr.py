@@ -8,7 +8,7 @@ digits = ['0','1','2','3','4','5','6','7','8','9','null']
 
 MONO = True
 IMAGE_SIZE = 7
-BLOCK_SIZE = IMAGE_SIZE+1
+BLOCK_SIZE = IMAGE_SIZE + 1
 IMAGE_MULT = 2
 
 STAGE_CHECK_5 = False
@@ -130,9 +130,12 @@ def convertImg(img, count, show):
         ),
         PIL.Image.ANTIALIAS
     )
+
     if show:
         img.show()
-    img = img.load()        
+
+    img = img.load()
+
     return img    
 
 def scoreImage(img, count, show=False, red=False):

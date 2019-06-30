@@ -1,5 +1,7 @@
 WINDOW_NAME = "ezcap VideoGrabber"
 
+# All coordinates in x, y, width, height
+
 WINDOW_CAPTURE_COORDS = (28, 22, 585, 470)
 
 CAPTURE_AREAS = {
