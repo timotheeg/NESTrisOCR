@@ -49,8 +49,8 @@ CAPTURE_AREAS_ALLOW_LIST = {
 CAPTURE_PROFILES = {
     'original':        'score,level,lines,piece_stats',
     'original_all':    'score,level,lines,piece_stats,stage,next_piece',
-    'das_trainer':     'score,level,lines,stage,cur_piece_das',
-    'das_trainer_all': 'score,level,lines,das,cur_piece_das,das_stats,cur_piece,next_piece,stage',
+    'das_trainer':     'score,level,lines,stage,cur_piece,cur_piece_das',
+    'das_trainer_all': 'score,level,lines,stage,cur_piece,cur_piece_das,das,das_stats,next_piece',
 }
 
 COORDINATES = {}
