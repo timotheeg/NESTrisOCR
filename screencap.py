@@ -2,6 +2,7 @@ import sys
 import platform
 import argparse
 import re
+import math
 
 if platform.system() == 'Darwin':
     import QuartzCapture as WindowCapture
@@ -21,7 +22,7 @@ import time
 from calibration import * #bad!
 
 
-RATE = 0.064
+RATE = 0.006
 
 HIGHLIGHT_COLORS = {
     'red':     (255,   0,   0, 128),
@@ -49,8 +50,8 @@ CAPTURE_AREAS_ALLOW_LIST = set((
 CAPTURE_PROFILES = {
     'original':        'score,level,lines,piece_stats',
     'original_all':    'score,level,lines,piece_stats,stage,next_piece',
-    'das_trainer':     'score,level,lines,cur_piece,cur_piece_das',
-    'das_trainer_all': 'score,level,lines,cur_piece,cur_piece_das,stage,next_piece',
+    'das_trainer':     'score,level,lines,stage,cur_piece_das,das_stats',
+    'das_trainer_all': 'score,level,lines,das,cur_piece_das,das_stats,cur_piece,next_piece,stage',
 }
 
 COORDINATES = {}
@@ -63,17 +64,17 @@ def lerp(start, end, perc):
     return perc * (end-start) + start
     
 def mult_rect(rect, mult):
-    multiplied =  (round(rect[2] * mult[0] + rect[0]),
-            round(rect[3] * mult[1] + rect[1]),
-            round(rect[2] * mult[2]),
-            round(rect[3] * mult[3]))
+    multiplied =  (math.floor(rect[2] * mult[0] + rect[0]),
+            math.floor(rect[3] * mult[1] + rect[1]),
+            math.ceil(rect[2] * mult[2]),
+            math.ceil(rect[3] * mult[3]))
 
     if len(mult) == 5:
         multiplied = multiplied + (mult[4], )
 
     return multiplied
 
-def generate_line_stats(captureCoords, statBoxPerc, statHeight, do_mult=True):    
+def generate_piece_stats(captureCoords, statBoxPerc, statHeight, do_mult=True):    
     statGap = (statBoxPerc[3] - (7*statHeight))/6
     statGap = statGap + statHeight
     offsets = [i*(statGap) for i in range(7)]
@@ -84,7 +85,7 @@ def generate_line_stats(captureCoords, statBoxPerc, statHeight, do_mult=True):
         box = (statBoxPerc[0],statBoxPerc[1]+offset,statBoxPerc[2],statHeight)
 
         if do_mult:
-            result[piece] = mult_rect(captureCoords,box)
+            result[piece] = mult_rect(captureCoords, box)
         else:
             result[piece] = box
 
@@ -92,13 +93,32 @@ def generate_line_stats(captureCoords, statBoxPerc, statHeight, do_mult=True):
 
     return result
 
+def generate_das_stats(captureCoords, statBoxPerc, statHeight, do_mult=True):    
+    statGap = (statBoxPerc[3] - (4*statHeight))/3
+    statGap = statGap + statHeight
+    offsets = [i*(statGap) for i in range(7)]
+    das_categories = ['great', 'ok', 'bad', 'terrible']
+    result = {}
+    for i, category in enumerate(das_categories):
+        offset = offsets[i]
+        box = (statBoxPerc[0], statBoxPerc[1] + offset,statBoxPerc[2], statHeight)
+
+        if do_mult:
+            result[category] = mult_rect(captureCoords, box)
+        else:
+            result[category] = box
+
+        result[category] = result[category] + ('orange', )
+
+    return result
 
 for area_id, coordinates in CAPTURE_AREAS.items():
-    if area_id == 'line_stats':
-        COORDINATES['line_stats_whole'] = mult_rect(WINDOW_CAPTURE_COORDS, coordinates)
-        COORDINATES[area_id] = generate_line_stats(WINDOW_CAPTURE_COORDS, coordinates, CAPTURE_AREAS["score"][3])
+    if area_id == 'piece_stats':
+        COORDINATES['piece_stats_whole'] = mult_rect(WINDOW_CAPTURE_COORDS, coordinates)
+        COORDINATES[area_id] = generate_piece_stats(WINDOW_CAPTURE_COORDS, coordinates, CAPTURE_AREAS["score"][3])
     elif area_id == 'das_stats':
-        pass
+        COORDINATES['das_stats_whole'] = mult_rect(WINDOW_CAPTURE_COORDS, coordinates)
+        COORDINATES[area_id] = generate_das_stats(WINDOW_CAPTURE_COORDS, coordinates, CAPTURE_AREAS["score"][3])
     else:
         COORDINATES[area_id] = mult_rect(WINDOW_CAPTURE_COORDS, coordinates)
 
@@ -111,37 +131,42 @@ def getWindow():
             return window[0]
     return None
 
-def screenPercToPixels(w,h,rect_xywh):
-    left = rect_xywh[0] * w
-    top = rect_xywh[1] * h
-    right = left + rect_xywh[2]*w
-    bot = top+ rect_xywh[3]*h
-    return (left,top,right,bot)
+def ltwhToLtrb(rect_xywh):
+    left = rect_xywh[0] - WINDOW_CAPTURE_COORDS[0] # substract to be relative to window cut, rather than full window
+    top = rect_xywh[1] - WINDOW_CAPTURE_COORDS[1] # substract to be relative to window cut, rather than full window
+    right = left + rect_xywh[2]
+    bottom = top + rect_xywh[3]
+    return (left, top, right, bottom)
     
 def highlight_calibration(img, areas):
     poly = Image.new('RGBA', (img.width, img.height))
     draw = ImageDraw.Draw(poly)
+    subareas = {}
 
     for area_id in areas:
+        if area_id in ('piece_stats', 'das_stats'):
+            subareas = COORDINATES[area_id]
+            area_id += '_whole'
+
         coordinates = COORDINATES[area_id]
+
         if len(coordinates) == 5:
             fill = HIGHLIGHT_COLORS[ coordinates[4] ]
         else:
-            fill = HIGHLIGHT_COLORS[ 'DEFAULT' ]
+            fill = HIGHLIGHT_COLORS['default']
 
-        if area_id == 'line_stats':
-            pass
-        elif area_id == 'das_stats':
-            pass
-        else:
-            draw.rectangle(screenPercToPixels(img.width, img.height, COORDINATES['area_id']), fill=fill)
+        draw.rectangle(ltwhToLtrb(coordinates), fill=fill)
+
+        for _, coordinates in subareas.items():
+            draw.rectangle(ltwhToLtrb(coordinates), fill=HIGHLIGHT_COLORS['orange'])   
 
     img.paste(poly, mask=poly)
+    del draw
 
     #pieces
     #draw.rectangle(screenPercToPixels(img.width,img.height,statsPerc),fill=blue)
     #print(statsPerc)
-    #for value in generate_line_stats(WINDOW_CAPTURE_COORDS,statsPerc,scorePerc[3],False).values():
+    #for value in generate_piece_stats(WINDOW_CAPTURE_COORDS,statsPerc,scorePerc[3],False).values():
     #    print(value)
     #    draw.rectangle(screenPercToPixels(img.width,img.height,value),fill=orange)
     
@@ -158,12 +183,17 @@ def calibrate(areas, only_highlight=True):
         img.show()
     else:
         for area_id in areas:
-            if area_id == 'line_stats':
-                pass
-            elif area_id == 'das_stats':
-                pass
-            else:
-                img = WindowCapture.ImageCapture(COORDINATES[area_id], hwnd)
+            subareas = {}
+
+            if area_id in ('piece_stats', 'das_stats'):
+                subareas = COORDINATES[area_id]
+                area_id += '_whole'
+
+            img = WindowCapture.ImageCapture(COORDINATES[area_id][:4], hwnd)
+            img.show()
+
+            for _, coordinates in subareas.items():
+                img = WindowCapture.ImageCapture(coordinates[:4], hwnd)
                 img.show()
 
 def captureAndOCR(coords,hwnd,digits,taskName,draw=False,red=False):
@@ -173,6 +203,16 @@ def captureAndOCR(coords,hwnd,digits,taskName,draw=False,red=False):
 def runFunc(func, args):
     return func(*args)
 
+def str2bool(v):
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
 def getCLIArguments():
     parser = argparse.ArgumentParser(description='NESTrisOCR')
 
@@ -180,8 +220,8 @@ def getCLIArguments():
                        default=False,
                        help='Indicate whether this should be a calibration run')
 
-    parser.add_argument('--only_highlight', action='store_const',
-                       const=bool, default=True,
+    parser.add_argument('--only_highlight', type=str2bool, nargs='?',
+                       const=True, default=True,
                        help='Indicate whether this should be a calibration run')
 
     parser.add_argument('--capture', action='store',
@@ -208,7 +248,7 @@ def getCLIArguments():
             sys.exit(1)
 
     if args.capture:
-        if re.search('^[a-z]+(,[a-z]+)*$', args.capture):
+        if re.search('^[a-z_]+(,[a-z_]+)*$', args.capture):
             capture_areas = args.capture
         else:
             eprint('Invalid capture argument format', args.capture)
