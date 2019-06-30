@@ -1,11 +1,20 @@
+WINDOW_NAME = "ezcap VideoGrabber"
 
-WINDOW_NAME = "OBS"
-
-WINDOW_CAPTURE_COORDS = (377, 120, 879, 827)
+WINDOW_CAPTURE_COORDS = (28, 22, 585, 470)
 
 CAPTURE_AREAS = {
+	# all 
 	"score": (0.754, 0.264, 0.187, 0.032),
-	"lines": (0.596, 0.094, 0.092, 0.032),
-	"level": (0.818, 0.701, 0.060, 0.032),
-	"line_stats": (0.188, 0.399, 0.091, 0.434, 'blue')
+	"lines": (0.598, 0.094, 0.092, 0.032),
+	"level": (0.818, 0.705, 0.060, 0.032),
+
+	# original
+	"piece_stats": (0.188, 0.399, 0.091, 0.434, 'blue'),
+
+	# das trainer
+	"das": (0.16, 0.16, 0.060, 0.032),
+	"cur_piece_das": (0.223, 0.23, 0.060, 0.032),
+
+	# piece OCR
+	"cur_piece": (0.068, 0.212, 0.088, 0.05),
 }
