@@ -55,9 +55,16 @@ def setupColour(prefix, outputDict):
         img = Image.open('assets/' + filename)
         
         img = img.convert('L')
+
         if IMAGE_MULT != 1:
-            img = img.resize((IMAGE_SIZE*IMAGE_MULT,
-                              IMAGE_SIZE*IMAGE_MULT),PIL.Image.ANTIALIAS)
+            img = img.resize(
+                (
+                    IMAGE_SIZE * IMAGE_MULT,
+                    IMAGE_SIZE * IMAGE_MULT
+                ),
+                PIL.Image.ANTIALIAS
+            )
+
         outputDict[digit] = img.load()
         
 def setupData():
@@ -97,8 +104,13 @@ def contrastImg(img):
     
 def convertImg(img, count, show):
     img = contrastImg(img)        
-    img = img.resize((((BLOCK_SIZE)*count-1)*IMAGE_MULT,
-                        IMAGE_SIZE*IMAGE_MULT),PIL.Image.ANTIALIAS)
+    img = img.resize(
+        (
+            (BLOCK_SIZE * count - 1) * IMAGE_MULT,
+            IMAGE_SIZE * IMAGE_MULT
+        ),
+        PIL.Image.ANTIALIAS
+    )
     if show:
         img.show()
     img = img.load()        
