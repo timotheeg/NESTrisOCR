@@ -80,35 +80,37 @@ def sub(col1, col2):
 
 
 def getDigit(img, startX, startY, red):
+    scores = {digit:0 for digit in digits}
+
     template = redData if red else data
 
-    ITERATION_COUNT = IMAGE_SIZE * IMAGE_MULT
+    MAX = IMAGE_SIZE * IMAGE_MULT
+
+    y = 0
+    while y < MAX:
+        x = 0
+        while x < MAX:
+            b = img[startX + x, startY + y]
+
+            for digit in digits:
+                a = template[digit][x, y]
+
+                sub = a - b
+                scores[digit] += sub * sub # adding distance
+
+            x += 1
+        y += 1
 
     lowest_score = float("inf")
     lowest_digit = None
 
-    for digit in digits:
-        cur_template = template[digit]
-        score = 0
-
-        y = 0
-        while y < ITERATION_COUNT:
-            x = 0
-            while x < ITERATION_COUNT:
-                a = cur_template[x, y]
-                b = img[startX + x, startY + y]
-
-                sub = a - b
-                score += sub * sub # adding distance
-
-                x += 1
-            y += 1
-                
+    for digit, score in scores.items():
         if score < lowest_score:
             lowest_score = score
             lowest_digit = digit
 
     return lowest_digit
+
 
 #convert to black/white, with custom threshold    
 def contrastImg(img):  
