@@ -11,10 +11,23 @@ BLOCK_SIZE = IMAGE_SIZE+1
 IMAGE_MULT = 2
 
 STAGE_CHECK_5 = True
+
 STAGE_RED_THRESHOLD = 10
 STAGE_BLOCK_WIDTH = 10
 STAGE_BLOCK_HEIGHT = 20
 
+NEXT_PIECE_BLOCKS = {
+    # Alignment 1
+    'J': ((0.253, 0.125), (0.500, 0.125), (0.775, 0.125), (0.775, 0.875)),
+    'L': ((0.253, 0.125), (0.500, 0.125), (0.775, 0.125), (0.253, 0.875)),
+    'S': ((0.500, 0.125), (0.775, 0.125), (0.500, 0.875), (0.253, 0.875)),
+    'Z': ((0.253, 0.125), (0.500, 0.125), (0.500, 0.875), (0.775, 0.875)),
+    'T': ((0.253, 0.125), (0.500, 0.125), (0.775, 0.125), (0.500, 0.875)),
+
+    # Alignment 2
+    'O': ((0.380, 0.125), (0.630, 0.125), (0.380, 0.875), (0.630, 0.875)),
+    'I': ((0.110, 0.500), (0.380, 0.500), (0.630, 0.500), (0.890, 0.500)),
+}
 
 def setupColour(prefix, outputDict):
     #setup white digits
@@ -129,6 +142,23 @@ def scoreStage(stage_img):
         j += 1
 
     return active_blocks, stage_data
+
+def scoreCurrentPiece(img):
+    pass
+
+def scoreNextPiece(img):
+    loaded_img = img.load()
+
+    for name, blocks in NEXT_PIECE_BLOCKS.items():
+        detected = True
+
+        for block in blocks:
+            if not is_block_active(loaded_img, round(block[0] * img.width), round(block[1] * img.height)):
+                detected = False
+                break
+
+        if detected:
+            return name
 
 
 setupData()

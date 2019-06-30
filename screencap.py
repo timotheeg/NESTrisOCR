@@ -13,7 +13,7 @@ else:
     from Win32WindowMgr import WindowMgr
 
 from PIL import Image, ImageDraw
-from fastocr import scoreImage, scoreStage
+from fastocr import scoreImage, scoreStage, scoreCurrentPiece, scoreNextPiece
 from multiprocessing import Pool
 from Networking import TCPClient
 import json
@@ -189,6 +189,14 @@ def captureStage(coords, hwnd, taskName, draw=False, red=False):
     img = WindowCapture.ImageCapture(coords, hwnd)
     return taskName, scoreStage(img)
 
+def captureCurrentPiece(coords, hwnd, taskName, draw=False, red=False):
+    img = WindowCapture.ImageCapture(coords, hwnd)
+    return taskName, scoreCurrentPiece(img)
+
+def captureNextPiece(coords, hwnd, taskName, draw=False, red=False):
+    img = WindowCapture.ImageCapture(coords, hwnd)
+    return taskName, scoreNextPiece(img)
+
 def runFunc(func, args):
     return func(*args)
 
@@ -286,9 +294,9 @@ def main(onCap):
                 elif area_id == 'stage':
                     rawTasks.append((captureStage, (coordinates, hwnd, area_id)))
                 elif area_id == 'next_piece':
-                    pass
+                    rawTasks.append((captureNextPiece, (coordinates, hwnd, area_id)))
                 elif area_id == 'cur_piece':
-                    pass
+                    rawTasks.append((captureCurrentPiece, (coordinates, hwnd, area_id)))
                 else:
                     rawTasks.append((captureAndOCR, (coordinates, hwnd, ocr_char_len, area_id)))
 
