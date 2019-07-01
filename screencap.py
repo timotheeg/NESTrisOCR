@@ -106,24 +106,36 @@ def generate_das_stats(captureCoords, statBoxPerc, statHeight, do_mult=True):
     return result
 
 
-def ltwhToLtrb(rect_xywh, offset):
+def xywhToLtrb(rect_xywh, offset=(0, 0)):
     left = rect_xywh[0] - offset[0] # substract to be relative to window cut, rather than full window
     top = rect_xywh[1] - offset[1] # substract to be relative to window cut, rather than full window
     right = left + rect_xywh[2]
     bottom = top + rect_xywh[3]
     return (left, top, right, bottom)
 
+def ltrbToxywh(rect_ltrb):
+    x = rect_ltrb[0]
+    y = rect_ltrb[1]
+    width  = rect_ltrb[2] - rect_ltrb[0]
+    height = rect_ltrb[3] - rect_ltrb[1]
+    return (x, y, width, height)
 
 
 # we need to compute the minimum window area to extract in one call
 # and then compute the coordinates of each capture area in LTRB format for PIL
-MIN_WINDOW_COORDS = (
-    min( (math.floor(WINDOW_CAPTURE_COORDS[0] + v[0] * WINDOW_CAPTURE_COORDS[2]) for k, v in CAPTURE_AREAS.items())),
-    min( (math.floor(WINDOW_CAPTURE_COORDS[1] + v[1] * WINDOW_CAPTURE_COORDS[3]) for k, v in CAPTURE_AREAS.items())),
-    max( (math.ceil(WINDOW_CAPTURE_COORDS[0] + (v[0] + v[2]) * WINDOW_CAPTURE_COORDS[3]) for k, v in CAPTURE_AREAS.items())),
-    max( (math.ceil(WINDOW_CAPTURE_COORDS[1] + (v[1] + v[3]) * WINDOW_CAPTURE_COORDS[3]) for k, v in CAPTURE_AREAS.items())),
+
+temp_coordinates = [xywhToLtrb(coordinates) for area_id, coordinates in CAPTURE_AREAS.items()]
+
+min_window_coords_ltrb = (
+    min( (coordinates[0] for coordinates in temp_coordinates) ),
+    min( (coordinates[1] for coordinates in temp_coordinates) ),
+    max( (coordinates[2] for coordinates in temp_coordinates) ),
+    max( (coordinates[3] for coordinates in temp_coordinates) ),
 )
 
+MIN_WINDOW_COORDS_XYWH = mult_rect(WINDOW_CAPTURE_COORDS, ltrbToxywh(min_window_coords_ltrb))
+
+    
 for area_id, coordinates in CAPTURE_AREAS.items():
     if area_id == 'piece_stats':
         COORDINATES_XYWH['piece_stats_whole'] = mult_rect(WINDOW_CAPTURE_COORDS, coordinates)
@@ -134,14 +146,13 @@ for area_id, coordinates in CAPTURE_AREAS.items():
     else:
         COORDINATES_XYWH[area_id] = mult_rect(WINDOW_CAPTURE_COORDS, coordinates)
 
-
 for area_id, coordinates in COORDINATES_XYWH.items():
     if type(coordinates) is dict:
         COORDINATES_LTRB[area_id] = {}
         for key, coordinates2 in coordinates.items():
-            COORDINATES_LTRB[area_id][key] = ltwhToLtrb(coordinates2, MIN_WINDOW_COORDS)
+            COORDINATES_LTRB[area_id][key] = xywhToLtrb(coordinates2, MIN_WINDOW_COORDS_XYWH)
     else:
-        COORDINATES_LTRB[area_id] = ltwhToLtrb(coordinates, MIN_WINDOW_COORDS)
+        COORDINATES_LTRB[area_id] = xywhToLtrb(coordinates, MIN_WINDOW_COORDS_XYWH)
 
 
 
@@ -175,10 +186,10 @@ def highlight_calibration(img, areas):
 
         coordinates = COORDINATES_XYWH[area_id]
 
-        draw.rectangle(ltwhToLtrb(coordinates, WINDOW_CAPTURE_COORDS), fill=fill)
+        draw.rectangle(xywhToLtrb(coordinates, WINDOW_CAPTURE_COORDS), fill=fill)
 
         for _, coordinates in subareas.items():
-            draw.rectangle(ltwhToLtrb(coordinates, WINDOW_CAPTURE_COORDS), fill=HIGHLIGHT_COLORS['orange'])   
+            draw.rectangle(xywhToLtrb(coordinates, WINDOW_CAPTURE_COORDS), fill=HIGHLIGHT_COLORS['orange'])   
 
     img.paste(poly, mask=poly)
     del draw
@@ -214,25 +225,25 @@ def calibrate(areas, only_highlight=True):
 def captureAndOCR(coords, window_img, digits, taskName, draw=False, red=False):
     start = time.time()
     img = window_img.crop(coords)
-    print('captureAndOCR', time.time() - start)
+    # print('captureAndOCR', taskName, time.time() - start)
     return taskName, scoreImage(img, digits, draw, red)
 
 def captureStage(coords, window_img, taskName, draw=False, red=False):
     start = time.time()
     img = window_img.crop(coords)
-    print('captureStage', time.time() - start)
+    # print('captureStage', time.time() - start)
     return taskName, scoreStage(img)
 
 def captureCurrentPiece(coords, window_img, taskName, draw=False, red=False):
     start = time.time()
     img = window_img.crop(coords)
-    print('captureCurrentPiece', time.time() - start)
+    # print('captureCurrentPiece', time.time() - start)
     return taskName, scoreCurrentPiece(img)
 
 def captureNextPiece(coords, window_img, taskName, draw=False, red=False):
     start = time.time()
     img = window_img.crop(coords)
-    print('captureNextPiece', time.time() - start)
+    # print('captureNextPiece', time.time() - start)
     return taskName, scoreNextPiece(img)
 
 def runFunc(func, args):
@@ -317,7 +328,7 @@ def main(onCap):
     while True:
         frame_start  = time.time()
         hwnd = getWindow()
-        print('getWindow()', time.time() - frame_start)
+        # print('getWindow()', time.time() - frame_start)
 
         if not hwnd:
             frame_end = frame_start + RATE
@@ -329,14 +340,17 @@ def main(onCap):
         while True:
             frame_start  = time.time()
             hwnd = getWindow(hwnd)
-            print('getWindow(hwnd)', time.time() - frame_start)
+            # print('getWindow(hwnd)', time.time() - frame_start)
 
             if not hwnd:
                 break
 
             pitstop = time.time()
-            window_img = WindowCapture.ImageCapture(MIN_WINDOW_COORDS, hwnd)
-            print('window_capture', time.time() - pitstop)
+            window_img = WindowCapture.ImageCapture(MIN_WINDOW_COORDS_XYWH, hwnd)
+            # print('window_capture', time.time() - pitstop)
+
+            # window_img.show()
+            # sys.exit()
 
             result = {}
             rawTasks = []
@@ -371,11 +385,11 @@ def main(onCap):
                 
             else: #single thread
                 pitstop = time.time()
-                print('before capture', pitstop - frame_start)
+                # print('before capture', pitstop - frame_start)
                 for task in rawTasks:
                     key, number = runFunc(task[0], task[1])
                     result[key] = number
-                    print(key, time.time() - pitstop)
+                    # print(key, time.time() - pitstop)
                     pitstop = time.time()
 
             onCap(result)

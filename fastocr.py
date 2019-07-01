@@ -11,7 +11,7 @@ IMAGE_SIZE = 7
 BLOCK_SIZE = IMAGE_SIZE + 1
 IMAGE_MULT = 2
 
-STAGE_CHECK_5 = False
+STAGE_CHECK_5 = True
 
 STAGE_RED_THRESHOLD = 10
 STAGE_BLOCK_WIDTH = 10
@@ -141,13 +141,13 @@ def convertImg(img, count, show):
 def scoreImage(img, count, show=False, red=False):
     start = time.time()
     img = convertImg(img, count, show)
-    print('convert', time.time() - start)
+    # print('convert', time.time() - start)
     label = ""
 
     for i in range(count):
         start = time.time()
         digit = getDigit(img, i * BLOCK_SIZE * IMAGE_MULT, 0, red)
-        print('getDigit', time.time() - start)
+        # print('getDigit', time.time() - start)
         if digit == 'null':
             return None
         else:
