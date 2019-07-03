@@ -1,22 +1,51 @@
 <html>
 <head>
 <style>
-#box {
+@font-face {
+	font-family: "Press Start";
+	src: url("./prstart.ttf");
+}
+
+@font-face {
+	font-family: "Press Start K";
+	src: url("./prstartk.ttf");
+}
+
+.box {
 	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 300px;
+	height: 200px;
+	padding: 12px;
+
 	color: white;
-	font-family: "Lucida Console", Monaco, monospace;
-	font-style: bold;
+	font-size: 8pt;
+	font-family: "Press Start", "Lucida Console", Monaco, monospace;
+	line-height: 12pt;
+
 	border-image: url('./border.png');
 	border-image-slice: 10 10 10 10 fill;
-	width: 500px;
-	height: 300px;
 	border-image-width: 10px 10px;
-	padding: 10px;
+}
+
+.box.k {
+	font-family: "Press Start K", "Lucida Console", Monaco, monospace;
+	left: 350px;
+	top: 0px;
+
 }
 
 </style>
 </head>
 <body>
-<div id="box">BOOYA</div>
+<div class="box">TRT 95%<br/>
+BRN 05<br/>
+DROUGHT 25
+</div>
+<div class="box k">TRT 95%<br/>
+BRN 05<br/>
+DROUGHT 25
+</div>
 </body>
 <html>
