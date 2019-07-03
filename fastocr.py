@@ -178,7 +178,7 @@ def scoreStage(stage_img):
     offset_x = block_size_w * 0.5
     offset_y = block_size_h * 0.5
 
-    # stage_data = [[] for j in range(STAGE_BLOCK_HEIGHT)]
+    stage_data = [[] for j in range(STAGE_BLOCK_HEIGHT)]
 
     j = 0
     active_blocks = 0
@@ -193,12 +193,12 @@ def scoreStage(stage_img):
 
             active = is_block_active(loaded_stage, x, y)
             active_blocks += active
-            # stage_data[j].append(active)
+            stage_data[j].append(active)
 
             i += 1
         j += 1
 
-    return active_blocks #, stage_data
+    return active_blocks, stage_data
 
 
 def scorePiece(img, block_map):

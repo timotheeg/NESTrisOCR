@@ -1,3 +1,8 @@
+import asyncio
+import datetime
+import random
+import websockets
+
 import sys
 import platform
 import argparse
@@ -313,7 +318,7 @@ def getCLIArguments():
 
 
 
-def main(onCap):
+async def main(websocket, path):
     args = getCLIArguments()
 
     if args.calibrate:
@@ -392,13 +397,23 @@ def main(onCap):
                     # print(key, time.time() - pitstop)
                     pitstop = time.time()
 
-            onCap(result)
+            payload = json.dumps(result)
 
-            print('TOTAL PROCESSING', time.time() - frame_start)
+            print(payload)
 
+            await websocket.send(payload)
+            # onCap(result)
+
+            #print('TOTAL PROCESSING', time.time() - frame_start)
+
+            now = time.time()
             frame_end = frame_start + RATE
-            while time.time() < frame_end:
-                time.sleep(0.001)
+
+            if (now < frame_end):
+                await asyncio.sleep(frame_end - now)
+
+            # while time.time() < frame_end:
+            #     time.sleep(0.001)
         
 class CachedSender(object):
     def __init__(self, client):
@@ -407,8 +422,9 @@ class CachedSender(object):
 
     #convert message to jsonstr and then send if its new.
     def sendResult(self, message):
-        print(message)
-        jsonMessage = json.dumps(message,indent=2)        
+        for row in message['stage'][1]:
+            print(row);
+        jsonMessage = json.dumps(message,indent=2)
         self.client.sendMessage(jsonMessage)
 
     
@@ -417,9 +433,16 @@ def sendResult(client, message):
     client.sendMessage(jsonStr)
         
 if __name__ == '__main__':
-    client = TCPClient.CreateClient('127.0.0.1', 3338)
-    cachedSender = CachedSender(client)
-    main(cachedSender.sendResult)
+
+    start_server = websockets.serve(main, '127.0.0.1', 3338)
+
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()
+
+
+    # client = TCPClient.CreateClient('127.0.0.1', 3338)
+    # cachedSender = CachedSender(client)
+    # main(cachedSender.sendResult)
     
 
         
