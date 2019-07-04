@@ -13,39 +13,65 @@
 
 .box {
 	position: absolute;
-	left: 0px;
-	top: 0px;
-	width: 300px;
-	height: 200px;
+	width: 55px;
+	height: 39px;
 	padding: 12px;
 
 	color: white;
-	font-size: 8pt;
-	font-family: "Press Start", "Lucida Console", Monaco, monospace;
-	line-height: 12pt;
+	font-size: 16px;
+	font-family: "Press Start K", "Lucida Console", Monaco, monospace;
+	line-height: 20px;
+	text-align: center;
 
 	border-image: url('./border.png');
 	border-image-slice: 10 10 10 10 fill;
 	border-image-width: 10px 10px;
 }
 
-.box.k {
-	font-family: "Press Start K", "Lucida Console", Monaco, monospace;
-	left: 350px;
+#tetris_rate {
+	left: 0px;
 	top: 0px;
+}
 
+#burn {
+	left: 90px;
+	top: 0px;
+}
+
+#drought {
+	left: 180px;
+	top: 0px;
+}
+
+.panic {
+	animation: colorize 1s infinite;
+	animation-direction: alternate;
+}
+
+@keyframes colorize {
+  from {color: white;}
+  to {color: red;}
 }
 
 </style>
 </head>
 <body>
-<div class="box">TRT 95%<br/>
-BRN 05<br/>
-DROUGHT 25
+
+<div id="tetris_rate" class="box">
+TRT<br/>
+<span class="value">95%</span>
 </div>
-<div class="box k">TRT 95%<br/>
-BRN 05<br/>
-DROUGHT 25
+
+<div id="burn" class="box">
+BRN<br/>
+<span class="value">05</span>
 </div>
+
+
+<div id="drought" class="box panic">
+DRT<br/>
+<span class="value">15</span>
+</div>
+
 </body>
 <html>
