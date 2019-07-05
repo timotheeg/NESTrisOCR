@@ -16,13 +16,12 @@ html, body, table, tr, th, td {
 	margin: 0;
 	padding: 0;
 	border: 0;
-	font-size: 100%;
 	font: inherit;
 }
 
 .box {
 	position: absolute;
-	width: 55px;
+	width: 80px;
 	height: 39px;
 	padding: 12px;
 
@@ -49,23 +48,58 @@ html, body, table, tr, th, td {
 	top: 0px;
 }
 
+#level {
+	left: 0px;
+	top: 75px;
+}
+
 #burn {
-	left: 90px;
+	left: 110px;
 	top: 0px;
 }
 
-#drought {
-	left: 180px;
+#lines {
+	left: 110px;
+	top: 75px;
+}
+
+#score {
+	left: 460px;
 	top: 0px;
-	width: 155px;
-	height: 70px;
+	width: 190px;
+	height: 75px;
+}
+
+#score .header {
+	padding-bottom: 4px;
+}
+
+#score .content {
+	text-align: left;
+}
+
+#score .content th {
+	font-size: 8px;
+	padding-right: 4px;
+}
+
+#drought {
+	left: 240px;
+	top: 0px;
+	width: 190px;
+	height: 75px;
+}
+
+#drought .header {
+	padding-bottom: 4px;
 }
 
 #drought .content {
 	text-align: left
 }
 
-.hgauge .th {
+.hgauge th {
+	font-size: 8px;
 	padding-right: 4px;
 }
 
@@ -73,19 +107,15 @@ html, body, table, tr, th, td {
 	padding-left: 4px;
 }
 
+.hgauge .gauge {
+	width: 120px;
+}
+
 .hgauge .gauge span {
 	display: inline-block;
 	height: 20px;
-	width: 100px;
+	width: 0;
 	background-color: orange;
-}
-
-#cur_drought .gauge span {
-	width: 0px;
-}
-
-#max_drought .gauge span {
-	width: 65px;
 }
 
 .panic .gauge span {
@@ -109,40 +139,474 @@ html, body, table, tr, th, td {
   to {background-color: red;}
 }
 
+
+#piece_stats {
+	left: 0px;
+	top: 150px;
+	width: 741px;
+	height: 165px;
+}
+
+#piece_stats .content {
+	font-size: 8px;
+	line-height: 8px;
+}
+
+#piece_stats .content .headers th {
+	padding: 4px 0px;
+}
+
+#piece_stats .content .piece th {
+	display: inline-block;
+	background: url(small_pieces_sprites.png);
+	background-repeat: no-repeat;
+	width: 23px;
+	height: 15px;
+}
+
+#piece_stats .content .piece.T th {
+	background-position: 0px 0px;
+}
+
+#piece_stats .content .piece.Z th {
+	background-position: 0px -16px;
+}
+
+#piece_stats .content .piece.J th {
+	background-position: 0px -32px;
+}
+
+#piece_stats .content .piece.O th {
+	background-position: 0px -48px;
+}
+
+#piece_stats .content .piece.S th {
+	background-position: 0px -64px;
+}
+
+#piece_stats .content .piece.L th {
+	background-position: 0px -80px;
+}
+
+#piece_stats .content .piece.I th {
+	background-position: 0px -96px;
+}
+
+#piece_stats .content .count {
+	padding-left: 4px;
+}
+
+#piece_stats .content .drought {
+	color: grey;
+	padding-left: 4px;
+}
+
+#piece_stats .content .percent {
+	padding-left: 4px;
+	width: 50px;
+}
+
+#piece_stats .content td.percent {
+	text-align: left;
+}
+
+#piece_stats .content .percent span {
+	display: inline-block;
+	height: 8px;
+	background-color: grey;
+	width: 0;
+}
+
+#das {
+	top: 350px;
+	width: 741px;
+	height: 94px;
+}
+
+#das .great .label {
+	color: green;
+}
+
+#das .ok .label {
+	color: orange;
+}
+
+#das .bad .label {
+	color: red;
+}
+
+#das .header {
+	padding-bottom: 10px;
+}
+
+
+#lines_stats {
+	top: 480px;
+	width: 300px;
+	height: 200px;
+}
+
+#lines_stats .header {
+	padding-bottom: 4px;
+}
+
+#lines_stats th {
+	text-align: left;
+}
+
+#lines_stats td {
+	text-align: left;
+	padding-left: 10px;
+}
+
+
+#points {
+	top: 480px;
+	left: 330px;
+	width: 300px;
+	height: 200px;
+}
+
+#points .header {
+	padding-bottom: 4px;
+}
+
+#points th {
+	text-align: left;
+}
+
+#points td {
+	text-align: left;
+	padding-left: 10px;
+}
 </style>
 </head>
 <body>
 
 <div class="box" id="tetris_rate">
 	<div class="header">TRT</div>
-	<div class="content value">00%</div>
+	<div class="content">00%</div>
+</div>
+
+<div class="box" id="level">
+	<div class="header">LEVEL</div>
+	<div class="content">00</div>
+</div>
+
+<div class="box" id="lines">
+	<div class="header">LINES</div>
+	<div class="content">000</div>
 </div>
 
 <div class="box" id="burn">
-	<div class="header">BRN</div>
-	<div class="content value">00</div>
+	<div class="header">BURN</div>
+	<div class="content">00</div>
+</div>
+
+<div class="box" id="score">
+	<div class="header">SCORE</div>
+	<table class="content">
+		<tr class="running">
+			<th>Running</th>
+			<td class="value">000000</td>
+		</tr>
+		<tr class="transition">
+			<th>Transition</th>
+			<td class="value">------</td>
+		</tr>
+	</table>
 </div>
 
 <div class="box" id="drought">
-	<div class="header">DRT <span id="num_droughts">00</span></div>
+	<div class="header">I-DRT <span class="count">00</span></div>
 	<table class="content">
-		<tr class="hgauge" id="cur_drought">
-			<th>cur</th>
+		<tr class="hgauge current">
+			<th>Cur</th>
 			<td class="gauge"><span>&nbsp;</span></td>
 			<td class="value">00</td>
 		</tr>
-		<tr class="hgauge panic" id="max_drought">
-			<th>max</th>
+		<tr class="hgauge max panic">
+			<th>Max</th>
 			<td class="gauge"><span>&nbsp;</span></td>
 			<td class="value">00</td>
 		</tr>
 	</table>
 </div>
 
-<div class="box" id="burn">
-	<div class="header">BRN</div>
-	<div class="content value">00</div>
+<div class="box" id="piece_stats">
+	<div class="header">PIECES <span class="total_count">000</span></div>
+	<table class="content">
+		<tr class="headers">
+			<th></th>
+			<th class="count">#</th>
+			<th class="percent">%</th>
+			<th class="distribution">Distribution (last 120)</th>
+			<th class="drought">DRT</th>
+		</tr>
+		<tr class="piece T">
+			<th></th>
+			<td class="count">000</td>
+			<td class="percent"><span>&nbsp;</span></td>
+			<td class="distribution"><canvas width="600" height="4" /></td>
+			<td class="drought">00</td>
+		</tr>
+		<tr class="piece J">
+			<th></th>
+			<td class="count">000</td>
+			<td class="percent"><span>&nbsp;</span></td>
+			<td class="distribution"><canvas width="600" height="4" /></td>
+			<td class="drought">00</td>
+		</tr>
+		<tr class="piece Z">
+			<th></th>
+			<td class="count">000</td>
+			<td class="percent"><span>&nbsp;</span></td>
+			<td class="distribution"><canvas width="600" height="4" /></td>
+			<td class="drought">00</td>
+		</tr>
+		<tr class="piece O">
+			<th></th>
+			<td class="count">000</td>
+			<td class="percent"><span>&nbsp;</span></td>
+			<td class="distribution"><canvas width="600" height="4" /></td>
+			<td class="drought">00</td>
+		</tr>
+		<tr class="piece S">
+			<th></th>
+			<td class="count">000</td>
+			<td class="percent"><span>&nbsp;</span></td>
+			<td class="distribution"><canvas width="600" height="4" /></td>
+			<td class="drought">00</td>
+		</tr>
+		<tr class="piece L">
+			<th></th>
+			<td class="count">000</td>
+			<td class="percent"><span>&nbsp;</span></td>
+			<td class="distribution"><canvas width="600" height="4" /></td>
+			<td class="drought">00</td>
+		</tr>
+		<tr class="piece I">
+			<th></th>
+			<td class="count">000</td>
+			<td class="percent"><span>&nbsp;</span></td>
+			<td class="distribution"><canvas width="600" height="4" /></td>
+			<td class="drought">00</td>
+		</tr>
+	</table>
 </div>
+
+<div class="box" id="das">
+	<div class="header">
+		<span class="cur"><span class="label">DAS </span><span class="count">10</span></span>
+		<span class="avg"><span class="label">AVG </span><span class="count">10.2</span></span>
+		-
+		<span class="bad"><span class="label">&#338;</span><span class="count">000</span></span>
+		<span class="ok"><span class="label">&#338;</span><span class="count">000</span></span>
+		<span class="great"><span class="label">&#338;</span><span class="count">000</span></span>
+	</div>
+	<div class="content"><canvas width="741" height="51" /></div>
+</div>
+
+<div class="box" id="lines_stats">
+	<div class="header">LINES <span class="total_count">000</span></div>
+	<div class="content">
+		<table>
+			<tr class="singles">
+				<th>Singles</th>
+				<td class="count">000</td>
+				<td class="line_count">000</td>
+				<td class="percent">00%</td>
+			</tr>
+			<tr class="singles">
+				<th>Doubles</th>
+				<td class="count">000</td>
+				<td class="line_count">000</td>
+				<td class="percent">00%</td>
+			</tr>
+			<tr class="singles">
+				<th>Triples</th>
+				<td class="count">000</td>
+				<td class="line_count">000</td>
+				<td class="percent">00%</td>
+			</tr>
+			<tr class="singles">
+				<th>Tetris</th>
+				<td class="count">000</td>
+				<td class="line_count">000</td>
+				<td class="percent">00%</td>
+			</tr>
+		</table>
+		<div class="tetris_rate"><canvas width="284" height="51" /></div>
+	</div>
+</div>
+
+<div class="box" id="points">
+	<div class="header">POINTS <span class="total_count">000000</span></div>
+	<div class="content">
+		<table>
+			<tr class="down">
+				<th>Down</th>
+				<td class="points">000000</td>
+				<td class="percent">00%</td>
+			</tr>
+			<tr class="singles">
+				<th>Singles</th>
+				<td class="points">000000</td>
+				<td class="percent">00%</td>
+			</tr>
+			<tr class="doubles">
+				<th>Doubles</th>
+				<td class="points">000000</td>
+				<td class="percent">00%</td>
+			</tr>
+			<tr class="triples">
+				<th>Triples</th>
+				<td class="points">000000</td>
+				<td class="percent">00%</td>
+			</tr>
+			<tr class="tetris">
+				<th>Tetris</th>
+				<td class="points">000000</td>
+				<td class="percent">00%</td>
+			</tr>
+		</table>
+		<div class="ppl"><canvas width="284" height="51" /></div>
+	</div>
+</div>
+
+<script src="constants.js"></script>
+<script src="Game.js"></script>
+<script src="DomRefs.js"></script>
+
+<script>
+	const pieces_by_name = {};
+
+	let pieces = PIECES.map(name => {
+		const
+			piece_row = document.querySelector(`#piece_stats .piece.${name}`),
+			piece = {
+				name,
+				count: 0,
+				percent: 0,
+				drought: 0,
+
+				dom: {
+					count:   piece_row.querySelector('.count'),
+					drought: piece_row.querySelector('.drought'),
+					percent: piece_row.querySelector('.percent span'),
+					ctx:     piece_row.querySelector('canvas').getContext('2d')
+				}
+			};
+
+		pieces_by_name[name] = piece;
+
+		return piece;
+	});
+
+	const game = {
+		das: {
+			great: 0,
+			ok:    0,
+			bad:   0
+		},
+		pieces: []
+	};
+	
+	for (let idx = 0; idx < 120; idx++) {
+		const
+			piece_idx = Math.floor(Math.random() * pieces.length),
+			piece = pieces[piece_idx];
+
+		piece.count++;
+		piece.percent = piece.count / (idx + 1)
+
+		game.pieces.push({
+			piece,
+			das: Math.floor(Math.random() * 16)
+		})
+	}
+
+	// clear stage
+	for (const piece of pieces) {
+		piece.dom.ctx.clearRect(0, 0, 600, 2);
+	}
+
+	game.pieces.forEach((piece, idx) => {
+		piece.piece.dom.ctx.fillStyle = DAS_COLORS[ DAS_THRESHOLDS[piece.das] ];
+		piece.piece.dom.ctx.fillRect(idx * 5, 0, 4, 4);
+	});
+
+	pieces.forEach(piece => {
+		const
+			c = piece.count,
+			p = piece.percent * 100;
+
+		piece.dom.count.textContent = `${c<100?0:''}${c<10?0:''}${c}`;
+		piece.dom.percent.style.width = `${p}%`;
+	});
+
+
+	const das_ctx = document.querySelector('#das canvas').getContext('2d');
+
+	das_ctx.clearRect(0, 0, 741, 51);
+
+
+	game.pieces.forEach((piece, idx) => {
+		const rank = DAS_THRESHOLDS[piece.das];
+
+		game.das[rank]++;
+
+		das_ctx.fillStyle = DAS_COLORS[ rank ];
+		das_ctx.fillRect(idx * 3, (16 - piece.das) * 3, 3, 3);
+	});
+
+	game.pieces.forEach((piece, idx) => {
+		const rank = DAS_THRESHOLDS[piece.das];
+
+		game.das[rank]++;
+
+		das_ctx.fillStyle = DAS_COLORS[ rank ];
+		das_ctx.fillRect((120 + idx) * 3, (16 - piece.das) * 3, 3, 3);
+	});
+
+	for (const [rank, c] of Object.entries(game.das)) {
+		document.querySelector(`#das .${rank} .count`).innerText = `${c<100?0:''}${c<10?0:''}${c}`
+	}
+
+function init() {
+	// get references to all updatable placeholders and canvas
+	dom = new DomRef(document);
+
+	// set up the game object to track game data
+	game = new Game()
+
+	// connect to websocket
+}
+
+function onMessage(event) {
+	// do detection of successives messages
+	// discards useless messages (piece moving down, corrupted data, etc.)
+	// validate event object to know if onLineClear() or onPiece() should be called
+
+}
+
+function onGameStart() {
+	// save existing game object and reset it to start tracking stats again
+}
+
+// {level, score, current_piece, cur_piece_das, lines}
+function onPiece(event) {
+	// update Line pieces and down score (if any)
+}
+
+// {level, score, current_piece, cur_piece_das, lines}
+function onLineClear(event) {
+	// update line and points metrics
+	// call onPiece with same event
+}
+
+
+</script>
 
 </body>
 <html>
