@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <style>
@@ -11,6 +12,14 @@
 	src: url("./prstartk.ttf");
 }
 
+html, body, table, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+}
+
 .box {
 	position: absolute;
 	width: 55px;
@@ -21,11 +30,18 @@
 	font-size: 16px;
 	font-family: "Press Start K", "Lucida Console", Monaco, monospace;
 	line-height: 20px;
-	text-align: center;
 
 	border-image: url('./border.png');
 	border-image-slice: 10 10 10 10 fill;
 	border-image-width: 10px 10px;
+}
+
+.box .header {
+	text-align: center;
+}
+
+.box .content {
+	text-align: center;
 }
 
 #tetris_rate {
@@ -41,36 +57,91 @@
 #drought {
 	left: 180px;
 	top: 0px;
+	width: 155px;
+	height: 70px;
 }
 
-.panic {
-	animation: colorize 1s infinite;
+#drought .content {
+	text-align: left
+}
+
+.hgauge .th {
+	padding-right: 4px;
+}
+
+.hgauge .value {
+	padding-left: 4px;
+}
+
+.hgauge .gauge span {
+	display: inline-block;
+	height: 20px;
+	width: 100px;
+	background-color: orange;
+}
+
+#cur_drought .gauge span {
+	width: 0px;
+}
+
+#max_drought .gauge span {
+	width: 65px;
+}
+
+.panic .gauge span {
+	background-color: red;
+	animation: panic_colorize_or 0.65s infinite;
 	animation-direction: alternate;
 }
 
-@keyframes colorize {
+.panic .value {
+	animation: panic_colorize_wr 0.65s infinite;
+	animation-direction: alternate;
+}
+
+@keyframes panic_colorize_wr {
   from {color: white;}
   to {color: red;}
+}
+
+@keyframes panic_colorize_or {
+  from {background-color: orange;}
+  to {background-color: red;}
 }
 
 </style>
 </head>
 <body>
 
-<div id="tetris_rate" class="box">
-TRT<br/>
-<span class="value">95%</span>
+<div class="box" id="tetris_rate">
+	<div class="header">TRT</div>
+	<div class="content value">00%</div>
 </div>
 
-<div id="burn" class="box">
-BRN<br/>
-<span class="value">05</span>
+<div class="box" id="burn">
+	<div class="header">BRN</div>
+	<div class="content value">00</div>
 </div>
 
+<div class="box" id="drought">
+	<div class="header">DRT <span id="num_droughts">00</span></div>
+	<table class="content">
+		<tr class="hgauge" id="cur_drought">
+			<th>cur</th>
+			<td class="gauge"><span>&nbsp;</span></td>
+			<td class="value">00</td>
+		</tr>
+		<tr class="hgauge panic" id="max_drought">
+			<th>max</th>
+			<td class="gauge"><span>&nbsp;</span></td>
+			<td class="value">00</td>
+		</tr>
+	</table>
+</div>
 
-<div id="drought" class="box panic">
-DRT<br/>
-<span class="value">15</span>
+<div class="box" id="burn">
+	<div class="header">BRN</div>
+	<div class="content value">00</div>
 </div>
 
 </body>
