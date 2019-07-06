@@ -3,21 +3,36 @@
 class DomRefs {
 	constructor(doc) {
 		// store refs by component
-		this.tetris_rate = doc.querySelector('#tetris_rate .content');
+		this.tetris_rate = {
+			element: doc.querySelector('#tetris_rate'),
+			value:   doc.querySelector('#tetris_rate .content')
+		};
 
-		this.burn = doc.querySelector('#burn .content');
+		this.burn = {
+			element: doc.querySelector('#burn'),
+			count:   doc.querySelector('#burn .content')
+		};
 
-		this.level = doc.querySelector('#level .content');
+		this.level = {
+			element: doc.querySelector('#level'),
+			value:   doc.querySelector('#level .content')
+		};
 
-		this.lines = doc.querySelector('#lines .content');
+		this.lines = {
+			element: doc.querySelector('#lines'),
+			count:   doc.querySelector('#lines .content')
+		};
 
-
-		// =====================
+		// ===============================================================
+		// ===============================================================
 
 		const droughts = doc.querySelector('#droughts');
 
 		this.droughts = {
+			element: droughts,
+
 			num: droughts.querySelector('.header .count'),
+
 			cur: {
 				gauge: droughts.querySelector('.hgauge.current .value'),
 				value: droughts.querySelector('.hgauge.current .gauge span')
@@ -28,34 +43,43 @@ class DomRefs {
 			},
 		};
 
-		// =====================
+		// ===============================================================
+		// ===============================================================
 
 		const score = doc.querySelector('#score');
 
 		this.score = {
+			element:    score,
 			current:    score.querySelector('.content .running .value'),
 			transition: score.querySelector('.content .transition .value'),
 		};
 
-		// =====================
+		// ===============================================================
+		// ===============================================================
 
 		const das = doc.querySelector('#das');
 
 		this.das = {
+			element: das, 
+
 			cur:   das.querySelector('.cur .count'),
 			avg:   das.querySelector('.avg .count'),
+
 			great: das.querySelector('.great .count'),
 			ok:    das.querySelector('.ok .count'),
 			bad:   das.querySelector('.bad .count'),
+
 			ctx:   das.querySelector('.content canvas').getContext('2d'),
 		};
 
-		// =====================
+		// ===============================================================
+		// ===============================================================
 
 		const lines_stats = doc.querySelector('#lines_stats');
 
 		this.lines = {
-			count: lines_stats.querySelector('.header .total_count'),
+			element: lines_stats,
+			count:   lines_stats.querySelector('.header .count'),
 		};
 
 		[
@@ -74,12 +98,14 @@ class DomRefs {
 			}
 		});
 
-		// =====================
+		// ===============================================================
+		// ===============================================================
 
 		const points = doc.querySelector('#lines_stats');
 
 		this.points = {
-			count: lines_stats.querySelector('.header .total_count'),
+			element: points,
+			count:   points.querySelector('.header .count'),
 		};
 
 		[
@@ -90,7 +116,7 @@ class DomRefs {
 			'tetris'
 		]
 		.forEach(category => {
-			const row = lines_stats.querySelector(`tr.${category}`);
+			const row = points.querySelector(`tr.${category}`);
 
 			this.points[category] = {
 				count:   row.querySelector('.count'),
@@ -98,12 +124,18 @@ class DomRefs {
 			}
 		});
 
-		// =====================
+		// ===============================================================
+		// ===============================================================
 
-		this.pieces = {};
+		const piece_stats = doc.querySelector('#piece_stats');
+
+		this.pieces = {
+			element: piece_stats,
+			count:   piece_stats.querySelector(`.header .count`)
+		};
 
 		PIECES.forEach(name => {
-			const piece_row = doc.querySelector(`#piece_stats .piece.${name}`);
+			const piece_row = piece_stats.querySelector(`.piece.${name}`);
 
 			this.pieces[name] = {
 				count:   piece_row.querySelector('.count'),

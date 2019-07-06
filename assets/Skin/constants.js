@@ -2,6 +2,13 @@ const
 
 	PIECES = ['T', 'J', 'Z', 'O', 'S', 'L', 'I'],
 
+	LINES = {
+		1: 'singles',
+		2: 'doubles',
+		3: 'triples',
+		4: 'tetris',
+	},
+
 	DAS_COLORS = {
 		great: 'green',
 		ok:    'orange',
@@ -26,4 +33,10 @@ const
 		14: 'ok',
 		15: 'great',
 		16: 'great'
-	};
+	}, 
+
+	DROUGHT_PANIC_THRESHOLD = 13,
+
+	SCORE_BASES = [0, 40, 100, 300, 1200]
+	
+;
