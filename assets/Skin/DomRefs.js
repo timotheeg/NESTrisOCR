@@ -31,15 +31,17 @@ class DomRefs {
 		this.droughts = {
 			element: droughts,
 
-			num: droughts.querySelector('.header .count'),
+			count: droughts.querySelector('.header .count'),
 
 			cur: {
-				gauge: droughts.querySelector('.hgauge.current .value'),
-				value: droughts.querySelector('.hgauge.current .gauge span')
+				element: droughts.querySelector('.hgauge.current'),
+				gauge:   droughts.querySelector('.hgauge.current .gauge span'),
+				value:   droughts.querySelector('.hgauge.current .value')
 			},
 			max: {
-				gauge: droughts.querySelector('.hgauge.max .value'),
-				value: droughts.querySelector('.hgauge.max .gauge span')
+				element: droughts.querySelector('.hgauge.max'),
+				gauge:   droughts.querySelector('.hgauge.max .gauge span'),
+				value:   droughts.querySelector('.hgauge.max .value')
 			},
 		};
 
@@ -77,7 +79,7 @@ class DomRefs {
 
 		const lines_stats = doc.querySelector('#lines_stats');
 
-		this.lines = {
+		this.lines_stats = {
 			element: lines_stats,
 			count:   lines_stats.querySelector('.header .count'),
 		};
@@ -91,7 +93,7 @@ class DomRefs {
 		.forEach(category => {
 			const row = lines_stats.querySelector(`tr.${category}`);
 
-			this.lines[category] = {
+			this.lines_stats[category] = {
 				count:   row.querySelector('.count'),
 				lines:   row.querySelector('.line_count'),
 				percent: row.querySelector('.percent'),
@@ -101,7 +103,7 @@ class DomRefs {
 		// ===============================================================
 		// ===============================================================
 
-		const points = doc.querySelector('#lines_stats');
+		const points = doc.querySelector('#points');
 
 		this.points = {
 			element: points,

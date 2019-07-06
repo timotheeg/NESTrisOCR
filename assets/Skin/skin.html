@@ -83,18 +83,18 @@ html, body, table, tr, th, td {
 	padding-right: 4px;
 }
 
-#drought {
+#droughts {
 	left: 240px;
 	top: 0px;
 	width: 190px;
 	height: 75px;
 }
 
-#drought .header {
+#droughts .header {
 	padding-bottom: 4px;
 }
 
-#drought .content {
+#droughts .content {
 	text-align: left
 }
 
@@ -317,15 +317,15 @@ html, body, table, tr, th, td {
 	</table>
 </div>
 
-<div class="box" id="drought">
-	<div class="header">I-DRT <span class="count">00</span></div>
+<div class="box" id="droughts">
+	<div class="header">I-DRT <span class="count">000</span></div>
 	<table class="content">
 		<tr class="hgauge current">
 			<th>Cur</th>
 			<td class="gauge"><span>&nbsp;</span></td>
 			<td class="value">00</td>
 		</tr>
-		<tr class="hgauge max panic">
+		<tr class="hgauge max">
 			<th>Max</th>
 			<td class="gauge"><span>&nbsp;</span></td>
 			<td class="value">00</td>
@@ -334,7 +334,7 @@ html, body, table, tr, th, td {
 </div>
 
 <div class="box" id="piece_stats">
-	<div class="header">PIECES <span class="total_count">000</span></div>
+	<div class="header">PIECES <span class="count">000</span></div>
 	<table class="content">
 		<tr class="headers">
 			<th></th>
@@ -397,8 +397,8 @@ html, body, table, tr, th, td {
 
 <div class="box" id="das">
 	<div class="header">
-		<span class="cur"><span class="label">DAS </span><span class="count">10</span></span>
-		<span class="avg"><span class="label">AVG </span><span class="count">10.2</span></span>
+		<span class="cur"><span class="label">DAS </span><span class="count">00</span></span>
+		<span class="avg"><span class="label">AVG </span><span class="count">00.0</span></span>
 		-
 		<span class="bad"><span class="label">&#338;</span><span class="count">000</span></span>
 		<span class="ok"><span class="label">&#338;</span><span class="count">000</span></span>
@@ -408,7 +408,7 @@ html, body, table, tr, th, td {
 </div>
 
 <div class="box" id="lines_stats">
-	<div class="header">LINES <span class="total_count">000</span></div>
+	<div class="header">LINES <span class="count">000</span></div>
 	<div class="content">
 		<table>
 			<tr class="singles">
@@ -417,19 +417,19 @@ html, body, table, tr, th, td {
 				<td class="line_count">000</td>
 				<td class="percent">00%</td>
 			</tr>
-			<tr class="singles">
+			<tr class="doubles">
 				<th>Doubles</th>
 				<td class="count">000</td>
 				<td class="line_count">000</td>
 				<td class="percent">00%</td>
 			</tr>
-			<tr class="singles">
+			<tr class="triples">
 				<th>Triples</th>
 				<td class="count">000</td>
 				<td class="line_count">000</td>
 				<td class="percent">00%</td>
 			</tr>
-			<tr class="singles">
+			<tr class="tetris">
 				<th>Tetris</th>
 				<td class="count">000</td>
 				<td class="line_count">000</td>
@@ -441,32 +441,32 @@ html, body, table, tr, th, td {
 </div>
 
 <div class="box" id="points">
-	<div class="header">POINTS <span class="total_count">000000</span></div>
+	<div class="header">POINTS <span class="count">000000</span></div>
 	<div class="content">
 		<table>
 			<tr class="down">
 				<th>Down</th>
-				<td class="points">000000</td>
+				<td class="count">000000</td>
 				<td class="percent">00%</td>
 			</tr>
 			<tr class="singles">
 				<th>Singles</th>
-				<td class="points">000000</td>
+				<td class="count">000000</td>
 				<td class="percent">00%</td>
 			</tr>
 			<tr class="doubles">
 				<th>Doubles</th>
-				<td class="points">000000</td>
+				<td class="count">000000</td>
 				<td class="percent">00%</td>
 			</tr>
 			<tr class="triples">
 				<th>Triples</th>
-				<td class="points">000000</td>
+				<td class="count">000000</td>
 				<td class="percent">00%</td>
 			</tr>
 			<tr class="tetris">
 				<th>Tetris</th>
-				<td class="points">000000</td>
+				<td class="count">000000</td>
 				<td class="percent">00%</td>
 			</tr>
 		</table>
@@ -477,136 +477,8 @@ html, body, table, tr, th, td {
 <script src="constants.js"></script>
 <script src="Game.js"></script>
 <script src="DomRefs.js"></script>
-
-<script>
-	const pieces_by_name = {};
-
-	let pieces = PIECES.map(name => {
-		const
-			piece_row = document.querySelector(`#piece_stats .piece.${name}`),
-			piece = {
-				name,
-				count: 0,
-				percent: 0,
-				drought: 0,
-
-				dom: {
-					count:   piece_row.querySelector('.count'),
-					drought: piece_row.querySelector('.drought'),
-					percent: piece_row.querySelector('.percent span'),
-					ctx:     piece_row.querySelector('canvas').getContext('2d')
-				}
-			};
-
-		pieces_by_name[name] = piece;
-
-		return piece;
-	});
-
-	const game = {
-		das: {
-			great: 0,
-			ok:    0,
-			bad:   0
-		},
-		pieces: []
-	};
-	
-	for (let idx = 0; idx < 120; idx++) {
-		const
-			piece_idx = Math.floor(Math.random() * pieces.length),
-			piece = pieces[piece_idx];
-
-		piece.count++;
-		piece.percent = piece.count / (idx + 1)
-
-		game.pieces.push({
-			piece,
-			das: Math.floor(Math.random() * 16)
-		})
-	}
-
-	// clear stage
-	for (const piece of pieces) {
-		piece.dom.ctx.clearRect(0, 0, 600, 2);
-	}
-
-	game.pieces.forEach((piece, idx) => {
-		piece.piece.dom.ctx.fillStyle = DAS_COLORS[ DAS_THRESHOLDS[piece.das] ];
-		piece.piece.dom.ctx.fillRect(idx * 5, 0, 4, 4);
-	});
-
-	pieces.forEach(piece => {
-		const
-			c = piece.count,
-			p = piece.percent * 100;
-
-		piece.dom.count.textContent = `${c<100?0:''}${c<10?0:''}${c}`;
-		piece.dom.percent.style.width = `${p}%`;
-	});
-
-
-	const das_ctx = document.querySelector('#das canvas').getContext('2d');
-
-	das_ctx.clearRect(0, 0, 741, 51);
-
-
-	game.pieces.forEach((piece, idx) => {
-		const rank = DAS_THRESHOLDS[piece.das];
-
-		game.das[rank]++;
-
-		das_ctx.fillStyle = DAS_COLORS[ rank ];
-		das_ctx.fillRect(idx * 3, (16 - piece.das) * 3, 3, 3);
-	});
-
-	game.pieces.forEach((piece, idx) => {
-		const rank = DAS_THRESHOLDS[piece.das];
-
-		game.das[rank]++;
-
-		das_ctx.fillStyle = DAS_COLORS[ rank ];
-		das_ctx.fillRect((120 + idx) * 3, (16 - piece.das) * 3, 3, 3);
-	});
-
-	for (const [rank, c] of Object.entries(game.das)) {
-		document.querySelector(`#das .${rank} .count`).innerText = `${c<100?0:''}${c<10?0:''}${c}`
-	}
-
-function init() {
-	// get references to all updatable placeholders and canvas
-	dom = new DomRef(document);
-
-	// set up the game object to track game data
-	game = new Game()
-
-	// connect to websocket
-}
-
-function onMessage(event) {
-	// do detection of successives messages
-	// discards useless messages (piece moving down, corrupted data, etc.)
-	// validate event object to know if onLineClear() or onPiece() should be called
-
-}
-
-function onGameStart() {
-	// save existing game object and reset it to start tracking stats again
-}
-
-// {level, score, current_piece, cur_piece_das, lines}
-function onPiece(event) {
-	// update Line pieces and down score (if any)
-}
-
-// {level, score, current_piece, cur_piece_das, lines}
-function onLineClear(event) {
-	// update line and points metrics
-	// call onPiece with same event
-}
-
-
-</script>
+<script src="sample_frames.js"></script>
+<script src="main.js"></script>
 
 </body>
 <html>

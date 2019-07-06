@@ -1,5 +1,6 @@
 class Game {
 	constructor(start_level) {
+		this.started = false;
 
 		// will store all pieces that have been played in the game
 		this.pieces = [];
@@ -11,11 +12,12 @@ class Game {
 			burn:  0,
 
 			score: {
-				running:    0,
+				current:    0,
 				transition: null
 			},
 
 			i_droughts: {
+				count: 0,
 				cur: 0,
 				max: 0
 			},
@@ -70,10 +72,12 @@ class Game {
 
 	// event: {score, level, lines, das, cur_piece, next_piece, }
 	onPiece(event) {
+		this.started = true;
+
 		const p = event.cur_piece;
 
 		this.data.pieces.count++;
-		this.data.pieces[p].num++;
+		this.data.pieces[p].count++;
 
 		PIECES.forEach(name => {
 			const stats = this.data.pieces[name];
@@ -85,14 +89,18 @@ class Game {
 		this.data.pieces[p].drought = 0;
 
 		if (p != 'I') {
-			this.i_droughts.cur++;
+			this.data.i_droughts.cur++;
 
-			if (this.i_droughts.cur > this.i_droughts.max) {
-				this.i_droughts.max = this.i_droughts.cur;
+			if (this.data.i_droughts.cur == DROUGHT_PANIC_THRESHOLD) {
+				this.data.i_droughts.count++;
+			}
+
+			if (this.data.i_droughts.cur > this.data.i_droughts.max) {
+				this.data.i_droughts.max = this.data.i_droughts.cur;
 			}
 		}
 		else {
-			this.i_droughts.cur = 0;
+			this.data.i_droughts.cur = 0;
 		}
 
 		this.data.pieces[p].drought = 0;
@@ -111,10 +119,10 @@ class Game {
 		const
 			num_lines =    event.lines - this.data.lines.count,
 			lines_score =  this.getScore(this.data.level, num_lines),
-			actual_score = event.score - this.data.score.running;
+			actual_score = event.score - this.data.score.current;
 
 		if (lines_score < actual_score) {
-			const down_score = actual_score - expected_min_score;
+			const down_score = actual_score - lines_score;
 
 			this.data.points.down += down_score;
 		}
@@ -131,7 +139,7 @@ class Game {
 		this.data.points[num_lines].count += lines_score;
 
 		// update percentages for everyone
-		for (const clear_type=4; clear_type--;) {
+		for (let clear_type=4; clear_type; clear_type--) {
 			const line_stats = this.data.lines[clear_type];
 			line_stats.percent = line_stats.lines / this.data.lines.count;
 
@@ -141,6 +149,9 @@ class Game {
 
 		// update stat for down
 		this.data.points.down.percent = this.data.points.down.count / event.score;
+
+		// update score
+		this.data.score.current = event.score;
 
 		// check transition score
 		if (event.level > this.data.level) {
@@ -155,6 +166,9 @@ class Game {
 		// update burn if needed
 		if (num_lines < 4) {
 			this.data.burn += num_lines;
+		}
+		else {
+			this.data.burn = 0;
 		}
 
 		// should this be called here or somewhere else?
