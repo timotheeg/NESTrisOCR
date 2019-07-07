@@ -237,7 +237,10 @@ def captureStage(coords, window_img, taskName, draw=False, red=False):
     start = time.time()
     img = window_img.crop(coords)
     # print('captureStage', time.time() - start)
-    return taskName, scoreStage(img)
+
+    score = scoreStage(img)
+
+    return taskName, score
 
 def captureCurrentPiece(coords, window_img, taskName, draw=False, red=False):
     start = time.time()

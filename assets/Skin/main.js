@@ -17,14 +17,22 @@ if (!CanvasRenderingContext2D.prototype.clear) {
 
 /*
 const socket = new WebSocket('ws://127.0.0.1:3338');
-socket.addEventListener('message', onFrame);
+socket.addEventListener('message', (frame => {
+	try{
+		onFrame(JSON.parse(frame.data));
+	}
+	catch(e) {
+		// socket.close();
+		console.error(e);
+	}
+}));
 /**/
 
 fake_idx = 0
 interval = setInterval(() => {onFrame(frames[fake_idx++])}, 16);
 
 const
-	fields = ['score', 'level', 'lines', 'cur_piece_das'],
+	fields = ['score', 'level', 'lines', 'cur_piece_das', 'cur_piece', 'next_piece'],
 	dom =    new DomRefs(document);
 
 var
@@ -33,22 +41,31 @@ var
 
 function onFrame(event) {
 	// validation
-	if (!fields.every(field => event[field]) && game && game.started) {
+	if (!fields.every(field => event[field])) {
 		// could be pause?
 		// could be score screen?
 		// TODO: save previous game
-		game = last_valid_event = null;
 		return;
 	}
 
 	// transformation
 	const transformed = {
+		diff: {
+			cleared_lines: 0,
+			score:         0,
+			cur_piece_das: false,
+			cur_piece:     false,
+			next_piece:    false,
+			stage_top_row: false,
+			stage_blocks:  false
+		},
+
 		score:         parseInt(event.score, 10),
 		lines:         parseInt(event.lines, 10),
 		level:         parseInt(event.level, 10),
 		cur_piece_das: parseInt(event.cur_piece_das, 10),
 		cur_piece:     event.cur_piece,
-		next_piece:    event.next_piece_das,
+		next_piece:    event.next_piece,
 		stage: {
 			num_blocks: event.stage[0],
 			top_row:    event.stage[1][0].join('')
@@ -61,15 +78,30 @@ function onFrame(event) {
 
 	if (transformed.stage.num_blocks % 2 == 1) return;
 
+	console.log(1);
+
 	if (!game) {
 		game = new Game(transformed.level);
 	}
 
 	if (last_valid_event) {
+		// populate diff
+		const diff = transformed.diff;
+
+		diff.cleared_lines = transformed.lines - last_valid_event.lines;
+		diff.score         = transformed.score - last_valid_event.score;
+		diff.cur_piece_das = transformed.cur_piece_das != last_valid_event.cur_piece_das;
+		diff.cur_piece     = transformed.cur_piece != last_valid_event.cur_piece;
+		diff.next_piece    = transformed.next_piece != last_valid_event.next_piece;
+		diff.stage_top_row = transformed.stage_top_row != last_valid_event.stage_top_row;
+		diff.stage_blocks  = transformed.stage_blocks != last_valid_event.stage_blocks;
+
+		console.log(transformed);
+
+		console.log(2);
 		const 
 			old_stage = last_valid_event.stage,
 			new_stage = transformed.stage;
-
 
 		if (new_stage.num_blocks > old_stage.num_blocks) {
 			if (new_stage.num_blocks - old_stage.num_blocks != 4) {
@@ -78,14 +110,16 @@ function onFrame(event) {
 			else {
 				piece_entry = true;
 			}
+			console.log(3);
 		}
-		else if (old_stage.num_blocks == new_stage.num_blocks) {
-			return;
-		}
+
+		console.log(4, old_stage.top_row, new_stage.top_row);
 
 		if (old_stage.top_row === new_stage.top_row) {
 			return;
 		}
+
+		console.log(5);
 
 		cleared_lines = event.lines - last_valid_event.lines;
 	}
@@ -96,6 +130,8 @@ function onFrame(event) {
 	}
 
 	last_valid_event = transformed;
+
+	console.log(transformed);
 
 	if (cleared_lines) {
 		game.onLine(transformed);

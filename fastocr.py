@@ -1,3 +1,4 @@
+import os
 import PIL
 import time
 from PIL import Image, ImageEnhance
@@ -13,7 +14,7 @@ IMAGE_MULT = 2
 
 STAGE_CHECK_5 = True
 
-STAGE_RED_THRESHOLD = 10
+BLOCK_LUMA_THRESHOLD = 10
 STAGE_BLOCK_WIDTH = 10
 STAGE_BLOCK_HEIGHT = 20
 
@@ -32,13 +33,13 @@ NEXT_PIECE_BLOCKS = {
 
 CURRENT_PIECE_BLOCKS = {
     # Alignment 1
-    'Z': ((0.115, 0.192), (0.462, 0.192), (0.462, 0.923), (0.769, 0.923)),
-    'S': ((0.462, 0.192), (0.769, 0.192), (0.462, 0.923), (0.115, 0.923)),
-    'T': ((0.115, 0.192), (0.462, 0.192), (0.769, 0.192), (0.462, 0.923)),
+    'Z': ((0.115, 0.192), (0.462, 0.192), (0.462, 0.846), (0.769, 0.846)),
+    'S': ((0.462, 0.192), (0.769, 0.192), (0.462, 0.846), (0.115, 0.846)),
+    'T': ((0.115, 0.192), (0.462, 0.192), (0.769, 0.192), (0.462, 0.846)),
 
     # Alignment 2
-    'L': ((0.115, 0.115), (0.462, 0.115), (0.769, 0.115), (0.115, 0.808)),
-    'J': ((0.115, 0.115), (0.462, 0.115), (0.769, 0.115), (0.769, 0.808)),
+    'L': ((0.115, 0.115), (0.462, 0.115), (0.731, 0.115), (0.115, 0.808)),
+    'J': ((0.115, 0.115), (0.462, 0.115), (0.731, 0.115), (0.769, 0.808)),
 
     # Alignment 3
     'O': ((0.269, 0.231), (0.635, 0.231), (0.269, 0.846), (0.635, 0.846)),
@@ -155,17 +156,30 @@ def scoreImage(img, count, show=False, red=False):
 
     return label
 
+def luma(pixel):
+    return pixel[0] * 0.299 + pixel[1] * 0.587 + pixel[2] * 0.114
+
 def is_block_active(stage_img, x, y):
     # fastest, but perhaps not so accurate?
-    active = stage_img[x, y][0] > STAGE_RED_THRESHOLD
+    _luma = luma(stage_img[x, y])
+    active = _luma > BLOCK_LUMA_THRESHOLD
 
     # better check for piece
     if STAGE_CHECK_5:
         active = (active
-            or (stage_img[x-1, y-1][0] > STAGE_RED_THRESHOLD)
-            or (stage_img[x+1, y-1][0] > STAGE_RED_THRESHOLD)
-            or (stage_img[x-1, y+1][0] > STAGE_RED_THRESHOLD)
-            or (stage_img[x+1, y+1][0] > STAGE_RED_THRESHOLD)
+            and (luma(stage_img[x-1, y-1]) > BLOCK_LUMA_THRESHOLD)
+            and (luma(stage_img[x+1, y-1]) > BLOCK_LUMA_THRESHOLD)
+            and (luma(stage_img[x-1, y+1]) > BLOCK_LUMA_THRESHOLD)
+            and (luma(stage_img[x+1, y+1]) > BLOCK_LUMA_THRESHOLD)
+        )
+
+    if os.environ.get('DEBUG'):
+        print(
+            (x, y, _luma),
+            (x-1, y-1, luma(stage_img[x-1, y-1])),
+            (x+1, y-1, luma(stage_img[x+1, y-1])),
+            (x-1, y+1, luma(stage_img[x-1, y+1])),
+            (x+1, y+1, luma(stage_img[x+1, y+1]))
         )
 
     return 1 if active else 0
@@ -192,7 +206,7 @@ def scoreStage(stage_img):
             y = round(offset_y + block_size_h * j)
 
             active = is_block_active(loaded_stage, x, y)
-            active_blocks += active
+            active_blocks += (1 if active else 0)
             stage_data[j].append(active)
 
             i += 1
@@ -207,7 +221,13 @@ def scorePiece(img, block_map):
     for name, blocks in block_map.items():
         detected = True
 
+        if os.environ.get('DEBUG'):
+            print(name, img.width, img.height)
+    
         for block in blocks:
+            if os.environ.get('DEBUG'):
+                print((block[0], block[1]), (block[0] * img.width, block[1] * img.height))
+    
             if not is_block_active(loaded_img, round(block[0] * img.width), round(block[1] * img.height)):
                 detected = False
                 break
