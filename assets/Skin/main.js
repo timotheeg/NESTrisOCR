@@ -28,8 +28,67 @@ socket.addEventListener('message', (frame => {
 }));
 /**/
 
-fake_idx = 0
-interval = setInterval(() => {onFrame(frames[fake_idx++])}, 16);
+let timeline_idx = 0;
+// interval = setInterval(() => {onFrame(frames[timeline_idx++])}, 16);
+
+function oneFrame(debug=false) {
+	const
+		frame1_copy = {...frames[timeline_idx]},
+		stage1 = frame1_copy.stage,
+
+		frame2_copy = {...frames[timeline_idx+1]},
+		stage2 = frame2_copy.stage;
+
+	delete frame1_copy.stage;
+	delete frame2_copy.stage;
+
+	frame1_txt = ''
+		+ timeline_idx
+		+ ' '
+		+ stage1[0]
+		+ '\n'
+		+ JSON.stringify(frame1_copy)
+		+ ' '
+		+ stage1[1].join('\n');
+
+	frame2_txt = ''
+		+ (timeline_idx + 1)
+		+ ' '
+		+ stage2[0]
+		+ '\n'
+		+ JSON.stringify(frame2_copy)
+		+ ' '
+		+ stage2[1].join('\n');
+
+	document.querySelector('#cur_frame').value = frame1_txt;
+	document.querySelector('#next_frame').value = frame2_txt;
+
+	onFrame(frames[timeline_idx++], debug);
+}
+
+document.querySelector('#goto_next_frame').addEventListener('click', () => {
+	oneFrame();
+});
+
+document.querySelector('#goto_next_frame_debug').addEventListener('click', () => {
+	oneFrame(true);
+});
+
+document.querySelector('#skip .btn').addEventListener('click', () => {
+	const
+		input = document.querySelector('#skip .to').value,
+		to = parseInt(input, 10);
+
+	if (isNaN(to)) {
+		console.error('invalid input', input);
+		return;
+	}
+
+	while (timeline_idx < to ) {
+		oneFrame();
+	}
+});
+
 
 const
 	fields = ['score', 'level', 'lines', 'cur_piece_das', 'cur_piece', 'next_piece'],
@@ -39,7 +98,7 @@ var
 	game = null,
 	last_valid_event = null;
 
-function onFrame(event) {
+function onFrame(event, debug) {
 	// validation
 	if (!fields.every(field => event[field])) {
 		// could be pause?
@@ -72,6 +131,10 @@ function onFrame(event) {
 		}
 	};
 
+	if (debug) {
+		debugger;
+	}
+
 	let
 		piece_entry =   false,
 		cleared_lines = 0;
@@ -93,8 +156,8 @@ function onFrame(event) {
 		diff.cur_piece_das = transformed.cur_piece_das != last_valid_event.cur_piece_das;
 		diff.cur_piece     = transformed.cur_piece != last_valid_event.cur_piece;
 		diff.next_piece    = transformed.next_piece != last_valid_event.next_piece;
-		diff.stage_top_row = transformed.stage_top_row != last_valid_event.stage_top_row;
-		diff.stage_blocks  = transformed.stage_blocks != last_valid_event.stage_blocks;
+		diff.stage_top_row = transformed.stage.top_row != last_valid_event.stage.top_row;
+		diff.stage_blocks  = transformed.stage.num_blocks - last_valid_event.stage.num_blocks;
 
 		console.log(transformed);
 
@@ -103,44 +166,45 @@ function onFrame(event) {
 			old_stage = last_valid_event.stage,
 			new_stage = transformed.stage;
 
-		if (new_stage.num_blocks > old_stage.num_blocks) {
-			if (new_stage.num_blocks - old_stage.num_blocks != 4) {
-				return;
-			}
-			else {
-				piece_entry = true;
-			}
-			console.log(3);
+		// check for piece entry
+		if (diff.stage_blocks === 4) {
+			game.onPiece(transformed);
+			renderPiece();
 		}
 
-		console.log(4, old_stage.top_row, new_stage.top_row);
-
-		if (old_stage.top_row === new_stage.top_row) {
-			return;
+		else if (diff.stage_blocks < 0) {
+			if (diff.stage_blocks > -10) {
+				// glitch likely caused by interlacing
+				// clearing lines is at least 10 blocks
+				// we can ignore this event as invalid
+				return;
+			}
+			else if (diff.stage_blocks % 10 === 0) {
+				// we've just cleared lines BUT, we might just ignore the event anyway
+				// IF the score and liens have not been udated yet
+				if (diff.score <= 0 || diff.cleared_lines <= 0) {
+					return;
+				}
+				else {
+					game.onLine(transformed);
+					renderLine();
+				}
+			}
 		}
 
 		console.log(5);
-
-		cleared_lines = event.lines - last_valid_event.lines;
 	}
 	else {
-		if (transformed.stage.num_blocks % 4 === 0) {
-			piece_entry = true;
-		}		
+		// how to ensure we're saving a valid first event?
+		// render everything
+		// game.onInitialState(transformed);
+		// TODO: Find way to start recording half way
+		game.onPiece(transformed);
+		renderPiece();
+		renderLine();
 	}
 
 	last_valid_event = transformed;
-
-	console.log(transformed);
-
-	if (cleared_lines) {
-		game.onLine(transformed);
-		renderPiece();
-	}
-	else if (piece_entry) {
-		game.onPiece(transformed);
-		renderPiece();
-	}
 }
 
 
@@ -151,8 +215,7 @@ const line_categories = [
 	[4, 'tetris']
 ];
 
-
-function renderPiece() {
+function renderLine() {
 	// massive population of all data shown on screen
 
 	// do the small boxes first
@@ -170,6 +233,26 @@ function renderPiece() {
 		dom.score.transition.textContent = '------';
 	}
 
+	// lines and points
+	dom.lines_stats.count.textContent = dom.lines.count.textContent;
+	dom.points.count.textContent = game.data.score.current.toString().padStart(6, '0');
+
+	line_categories.forEach(tuple => {
+		const [num_lines, name] = tuple;
+
+		dom.lines_stats[name].count.textContent = game.data.lines[num_lines].count.toString().padStart(3, '0');
+		dom.lines_stats[name].lines.textContent = game.data.lines[num_lines].lines.toString().padStart(3, '0');
+		dom.lines_stats[name].percent.textContent = Math.round(game.data.lines[num_lines].percent * 100).toString().padStart(2, '0') + '%';
+
+		dom.points[name].count.textContent = game.data.points[num_lines].count.toString().padStart(6, '0');
+		dom.points[name].percent.textContent = Math.round(game.data.points[num_lines].percent * 100).toString().padStart(2, '0') + '%';
+	});
+
+	dom.points.down.count.textContent = game.data.points.down.count.toString().padStart(6, '0');
+	dom.points.down.percent.textContent = Math.round(game.data.points.down.percent * 100).toString().padStart(2, '0') + '%';
+}
+
+function renderPiece() {
 	dom.pieces.count.textContent = game.data.pieces.count.toString().padStart(3, '0');
 
 	PIECES.forEach(name => {
@@ -223,26 +306,6 @@ function renderPiece() {
 	else {
 		dom.droughts.max.element.classList.remove('panic');
 	}
-
-
-	// lines and points
-	dom.lines_stats.count.textContent = dom.lines.count.textContent;
-	dom.points.count.textContent = game.data.score.current.toString().padStart(6, '0');
-
-	line_categories.forEach(tuple => {
-		const [num_lines, name] = tuple;
-
-		dom.lines_stats[name].count.textContent = game.data.lines[num_lines].count.toString().padStart(3, '0');
-		dom.lines_stats[name].lines.textContent = game.data.lines[num_lines].lines.toString().padStart(3, '0');
-		dom.lines_stats[name].percent.textContent = Math.round(game.data.lines[num_lines].percent * 100).toString().padStart(2, '0') + '%';
-
-		dom.points[name].count.textContent = game.data.points[num_lines].count.toString().padStart(6, '0');
-		dom.points[name].percent.textContent = Math.round(game.data.points[num_lines].percent * 100).toString().padStart(2, '0') + '%';
-	});
-
-	dom.points.down.count.textContent = game.data.points.down.count.toString().padStart(6, '0');
-	dom.points.down.percent.textContent = Math.round(game.data.points.down.percent * 100).toString().padStart(2, '0') + '%';
-
 
 	// das
 	dom.das.cur.textContent = game.data.das.cur.toString().padStart(2, '0');

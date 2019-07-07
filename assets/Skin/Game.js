@@ -70,6 +70,10 @@ class Game {
 		});
 	}
 
+	onInitialState() {
+		// TODO
+	}
+
 	// event: {score, level, lines, das, cur_piece, next_piece, }
 	onPiece(event) {
 		this.started = true;
@@ -124,7 +128,7 @@ class Game {
 		if (lines_score < actual_score) {
 			const down_score = actual_score - lines_score;
 
-			this.data.points.down += down_score;
+			this.data.points.down.count += down_score;
 		}
 
 		// update total lines
@@ -170,9 +174,6 @@ class Game {
 		else {
 			this.data.burn = 0;
 		}
-
-		// should this be called here or somewhere else?
-		this.onPiece(event);
 	}
 
 	getScore(level, num_lines) {

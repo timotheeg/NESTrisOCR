@@ -168,11 +168,11 @@ html, body, table, tr, th, td {
 	background-position: 0px 0px;
 }
 
-#piece_stats .content .piece.Z th {
+#piece_stats .content .piece.J th {
 	background-position: 0px -16px;
 }
 
-#piece_stats .content .piece.J th {
+#piece_stats .content .piece.Z th {
 	background-position: 0px -32px;
 }
 
@@ -259,7 +259,6 @@ html, body, table, tr, th, td {
 	padding-left: 10px;
 }
 
-
 #points {
 	top: 480px;
 	left: 330px;
@@ -279,9 +278,51 @@ html, body, table, tr, th, td {
 	text-align: left;
 	padding-left: 10px;
 }
+
+#goto_next_frame {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+}
+
+#goto_next_frame_debug {
+	position: absolute;
+	bottom: 0px;
+	left: 100px;
+}
+
+#cur_frame, #next_frame {
+	font-family: monospace;
+	display: block;
+	font-size: 16px;
+	width: 500px;
+	height: 420px;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+
+#next_frame {
+	top: 430px;
+}
+
+#skip {
+	position: absolute;
+	bottom: 0px;
+	left: 250px;
+}
+
 </style>
 </head>
 <body>
+
+<textarea id="cur_frame"></textarea>
+<textarea id="next_frame"></textarea>
+
+
+<button id="goto_next_frame">Next Frame</button>
+<button id="goto_next_frame_debug">Next Frame Debug</button>
+<div id="skip"><input class="to"></body><button class="btn">Skip to</button></div>
 
 <div class="box" id="tetris_rate">
 	<div class="header">TRT</div>
@@ -350,14 +391,14 @@ html, body, table, tr, th, td {
 			<td class="distribution"><canvas width="600" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
-		<tr class="piece Z">
+		<tr class="piece J">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent"><span>&nbsp;</span></td>
 			<td class="distribution"><canvas width="600" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
-		<tr class="piece J">
+		<tr class="piece Z">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent"><span>&nbsp;</span></td>
