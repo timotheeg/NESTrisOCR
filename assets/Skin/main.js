@@ -92,20 +92,16 @@ document.querySelector('#skip .btn').addEventListener('click', () => {
 
 const
 	fields = ['score', 'level', 'lines', 'cur_piece_das', 'cur_piece', 'next_piece'],
-	dom =    new DomRefs(document);
+	dom    = new DomRefs(document);
 
 var
 	game = null,
-	last_valid_event = null;
+	last_valid_state = null, 
+	pending_piece = false,
+	pending_line = false;
 
 function onFrame(event, debug) {
-	// validation
-	if (!fields.every(field => event[field])) {
-		// could be pause?
-		// could be score screen?
-		// TODO: save previous game
-		return;
-	}
+	// TODO: detect a reset to zero and setup a new Game
 
 	// transformation
 	const transformed = {
@@ -140,71 +136,83 @@ function onFrame(event, debug) {
 		cleared_lines = 0;
 
 	if (transformed.stage.num_blocks % 2 == 1) return;
-
-	console.log(1);
+	if (isNaN(transformed.level)) return;
 
 	if (!game) {
 		game = new Game(transformed.level);
 	}
 
-	if (last_valid_event) {
+	if (last_valid_state) {
 		// populate diff
 		const diff = transformed.diff;
 
-		diff.cleared_lines = transformed.lines - last_valid_event.lines;
-		diff.score         = transformed.score - last_valid_event.score;
-		diff.cur_piece_das = transformed.cur_piece_das != last_valid_event.cur_piece_das;
-		diff.cur_piece     = transformed.cur_piece != last_valid_event.cur_piece;
-		diff.next_piece    = transformed.next_piece != last_valid_event.next_piece;
-		diff.stage_top_row = transformed.stage.top_row != last_valid_event.stage.top_row;
-		diff.stage_blocks  = transformed.stage.num_blocks - last_valid_event.stage.num_blocks;
+		diff.level         = transformed.level !== last_valid_state.level;
+		diff.cleared_lines = transformed.lines - last_valid_state.lines;
+		diff.score         = transformed.score - last_valid_state.score;
+		diff.cur_piece_das = transformed.cur_piece_das !== last_valid_state.cur_piece_das;
+		diff.cur_piece     = transformed.cur_piece !== last_valid_state.cur_piece;
+		diff.next_piece    = transformed.next_piece !== last_valid_state.next_piece;
+		diff.stage_top_row = transformed.stage.top_row !== last_valid_state.stage.top_row;
+		diff.stage_blocks  = transformed.stage.num_blocks - last_valid_state.stage.num_blocks;
 
-		console.log(transformed);
+		// check if a change to cur_piece_stats
+		if (pending_piece || diff.cur_piece_das || diff.cur_piece || diff.next_piece) {
+			if (transformed.cur_piece && transformed.next_piece && transformed.cur_piece_das) {
+				game.onPiece(transformed);
+				renderPiece();
+				pending_piece = false;
 
-		console.log(2);
-		const 
-			old_stage = last_valid_event.stage,
-			new_stage = transformed.stage;
+				Object.assign(last_valid_state, {
+					cur_piece: transformed.cur_piece,
+					next_piece: transformed.next_piece,
+					cur_piece_das: transformed.cur_piece_das
+				});
+			}
+			else {
+				pending_piece = true;
+			}
+		}
 
-		// check for piece entry
+		// check for score change
+		if (pending_line || diff.score) {
+			if (transformed.score && !isNaN(transformed.lines) && !isNaN(transformed.level)) {
+				game.onLine(transformed);
+				renderLine();
+				pending_line = false;
+
+				Object.assign(last_valid_state, {
+					score: transformed.score,
+					lines: transformed.lines,
+					level: transformed.level
+				});
+			}
+			else {
+				pending_line = true;
+			}
+		}
+
 		if (diff.stage_blocks === 4) {
-			game.onPiece(transformed);
-			renderPiece();
+			last_valid_state.stage = transformed.stage;
 		}
-
 		else if (diff.stage_blocks < 0) {
-			if (diff.stage_blocks > -10) {
-				// glitch likely caused by interlacing
-				// clearing lines is at least 10 blocks
-				// we can ignore this event as invalid
-				return;
-			}
-			else if (diff.stage_blocks % 10 === 0) {
-				// we've just cleared lines BUT, we might just ignore the event anyway
-				// IF the score and liens have not been udated yet
-				if (diff.score <= 0 || diff.cleared_lines <= 0) {
-					return;
-				}
-				else {
-					game.onLine(transformed);
-					renderLine();
-				}
+			if (diff.stage_blocks % 10 === 0) {
+				last_valid_state.stage = transformed.stage;
 			}
 		}
-
-		console.log(5);
 	}
 	else {
-		// how to ensure we're saving a valid first event?
-		// render everything
-		// game.onInitialState(transformed);
-		// TODO: Find way to start recording half way
-		game.onPiece(transformed);
-		renderPiece();
-		renderLine();
-	}
+		if (transformed.cur_piece && transformed.next_piece && !isNaN(transformed.cur_piece_das)) {
+			game.onPiece(transformed);
+			renderPiece();
+			renderLine();
+			pending_piece = false;
 
-	last_valid_event = transformed;
+			last_valid_state = transformed; // TODO: figure out score management
+		}
+		else {
+			pending_piece = true;
+		}
+	}
 }
 
 

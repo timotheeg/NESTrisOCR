@@ -131,22 +131,27 @@ class Game {
 			this.data.points.down.count += down_score;
 		}
 
-		// update total lines
+		// update total lines and points
 		this.data.lines.count = event.lines;
-
-		// update lines stats for clearing type (single, double, etc...)
-		this.data.lines[num_lines].count += 1;
-		this.data.lines[num_lines].lines += num_lines;
-
-		// update points stats for clearing type (single, double, etc...)
 		this.data.points.count = event.score;
-		this.data.points[num_lines].count += lines_score;
+
+		if (num_lines) {
+			// update lines stats for clearing type (single, double, etc...)
+			this.data.lines[num_lines].count += 1;
+			this.data.lines[num_lines].lines += num_lines;
+
+			// update points stats for clearing type (single, double, etc...)
+			this.data.points[num_lines].count += lines_score;
+
+			// update percentages for everyone
+			for (let clear_type=4; clear_type; clear_type--) {
+				const line_stats = this.data.lines[clear_type];
+				line_stats.percent = line_stats.lines / this.data.lines.count;
+			}
+		}
 
 		// update percentages for everyone
 		for (let clear_type=4; clear_type; clear_type--) {
-			const line_stats = this.data.lines[clear_type];
-			line_stats.percent = line_stats.lines / this.data.lines.count;
-
 			const point_stats = this.data.points[clear_type];
 			point_stats.percent = point_stats.count / event.score;
 		}
@@ -158,8 +163,8 @@ class Game {
 		this.data.score.current = event.score;
 
 		// check transition score
-		if (event.level > this.data.level) {
-			if (event.level > this.data.start_level) {
+		if (event.level > this.data.level ) {
+			if (this.data.score.transition === null && event.level === this.data.start_level + 1) {
 				this.data.score.transition = event.score;
 			}
 		}
@@ -168,11 +173,13 @@ class Game {
 		this.data.level = event.level;
 
 		// update burn if needed
-		if (num_lines < 4) {
-			this.data.burn += num_lines;
-		}
-		else {
-			this.data.burn = 0;
+		if (num_lines) {
+			if (num_lines < 4) {
+				this.data.burn += num_lines;
+			}
+			else {
+				this.data.burn = 0;
+			}
 		}
 	}
 
