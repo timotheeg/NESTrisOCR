@@ -1,18 +1,16 @@
 class Game {
-	constructor(start_level) {
-		this.started = false;
-
+	constructor(event) {
 		// will store all pieces that have been played in the game
 		this.pieces = [];
 
 		this.data = {
-			start_level,
+			start_level: event.level,
 
-			level: start_level,
+			level: event.level,
 			burn:  0,
 
 			score: {
-				current:    0,
+				current:    event.score,
 				transition: null
 			},
 
@@ -36,11 +34,11 @@ class Game {
 			},
 
 			lines: {
-				count: 0,
+				count: event.lines,
 			},
 
 			points: {
-				count: 0,
+				count: event.score,
 				down: {
 					count:   0,
 					percent: 0
@@ -70,14 +68,8 @@ class Game {
 		});
 	}
 
-	onInitialState() {
-		// TODO
-	}
-
 	// event: {score, level, lines, das, cur_piece, next_piece, }
 	onPiece(event) {
-		this.started = true;
-
 		const p = event.cur_piece;
 
 		this.data.pieces.count++;
