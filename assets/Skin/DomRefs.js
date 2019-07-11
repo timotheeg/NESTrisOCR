@@ -143,7 +143,7 @@ class DomRefs {
 			this.pieces[name] = {
 				count:   piece_row.querySelector('.count'),
 				drought: piece_row.querySelector('.drought'),
-				percent: piece_row.querySelector('.percent span'),
+				percent: piece_row.querySelector('.percent'),
 				ctx:     piece_row.querySelector('canvas').getContext('2d')
 			};
 		});

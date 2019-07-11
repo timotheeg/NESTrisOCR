@@ -145,11 +145,13 @@ function onFrame(event, debug) {
 			&& !isNaN(transformed.lines)
 			&& !isNaN(transformed.level)
 		) {
-			game = new Game(transformed)
 			last_valid_state = transformed;
+			game = new Game(transformed);
+			pending_piece = pending_line = true;
 		}
-
-		return;
+		else {
+			return;
+		}
 	}
 
 	// TODO: game end state, and reset last_valid_state
@@ -189,7 +191,7 @@ function onFrame(event, debug) {
 
 	// check for score change
 	if (pending_line || diff.score) {
-		if (transformed.score && !isNaN(transformed.lines) && transformed.lines < 29) {
+		if (transformed.score && !isNaN(transformed.lines) && !isNaN(transformed.level) && transformed.level < 30) {
 			game.onLine(transformed);
 			renderLine();
 			pending_line = false;
@@ -255,30 +257,31 @@ function renderLine() {
 
 		dom.lines_stats[name].count.textContent = game.data.lines[num_lines].count.toString().padStart(3, '0');
 		dom.lines_stats[name].lines.textContent = game.data.lines[num_lines].lines.toString().padStart(3, '0');
-		dom.lines_stats[name].percent.textContent = Math.round(game.data.lines[num_lines].percent * 100).toString().padStart(2, '0') + '%';
+		dom.lines_stats[name].percent.textContent = Math.round(game.data.lines[num_lines].percent * 100).toString().padStart(2, '0').padStart(3, ' ') + '%';
 
 		dom.points[name].count.textContent = game.data.points[num_lines].count.toString().padStart(6, '0');
-		dom.points[name].percent.textContent = Math.round(game.data.points[num_lines].percent * 100).toString().padStart(2, '0') + '%';
+		dom.points[name].percent.textContent = Math.round(game.data.points[num_lines].percent * 100).toString().padStart(2, '0').padStart(3, ' ') + '%';
 	});
 
 	dom.points.drops.count.textContent = game.data.points.drops.count.toString().padStart(6, '0');
-	dom.points.drops.percent.textContent = Math.round(game.data.points.drops.percent * 100).toString().padStart(2, '0') + '%';
+	dom.points.drops.percent.textContent = Math.round(game.data.points.drops.percent * 100).toString().padStart(2, '0').padStart(3, ' ') + '%';
 
 	// graph tetris rate
 	dom.lines_stats.trt_ctx.clear();
 
 	const
-		pixel_size = 3,
-		max_pixels = Math.floor(dom.lines_stats.trt_ctx.canvas.width / pixel_size),
-		y_scale = dom.lines_stats.trt_ctx.canvas.height / 100
+		ctx = dom.lines_stats.trt_ctx,
+		pixel_size = 4,
+		max_pixels = Math.floor(ctx.canvas.width / pixel_size),
+		y_scale = (ctx.canvas.height - pixel_size) / pixel_size,
 		cur_x = 0,
 		to_draw = game.tetris_rate.slice(-1 * max_pixels);
 
 	for (let idx = to_draw.length; idx--;) {
-		dom.das.ctx.fillStyle = 'white';
-		dom.das.ctx.fillRect(
-			idx * pixel_size,
-			Math.floor((100 - to_draw[idx]) * y_scale * pixel_size),
+		ctx.fillStyle = 'white';
+		ctx.fillRect(
+			idx * (pixel_size + 1),
+			Math.floor((1 - to_draw[idx]) * y_scale * pixel_size),
 			pixel_size,
 			pixel_size
 		);
