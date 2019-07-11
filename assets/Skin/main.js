@@ -272,7 +272,7 @@ function renderLine() {
 	const
 		ctx = dom.lines_stats.trt_ctx,
 		pixel_size = 4,
-		max_pixels = Math.floor(ctx.canvas.width / pixel_size),
+		max_pixels = Math.floor(ctx.canvas.width / (pixel_size + 1)),
 		y_scale = (ctx.canvas.height - pixel_size) / pixel_size,
 		cur_x = 0,
 		to_draw = game.tetris_rate.slice(-1 * max_pixels);
@@ -281,7 +281,7 @@ function renderLine() {
 		ctx.fillStyle = 'white';
 		ctx.fillRect(
 			idx * (pixel_size + 1),
-			Math.floor((1 - to_draw[idx]) * y_scale * pixel_size),
+			Math.round((1 - to_draw[idx]) * y_scale * pixel_size),
 			pixel_size,
 			pixel_size
 		);
@@ -322,9 +322,11 @@ function renderPiece() {
 	}
 
 	// droughts
+	// TODO: Counter can go to 99 but bar should stop at max width
+	// TODO: Use Canvas rather than span
 	dom.droughts.count.textContent = game.data.i_droughts.count.toString().padStart(3, '0');
 	dom.droughts.cur.value.textContent = game.data.i_droughts.cur.toString().padStart(2, '0');
-	dom.droughts.cur.gauge.style.width = `${game.data.i_droughts.cur * 2}px`;
+	dom.droughts.cur.gauge.style.width = `${game.data.i_droughts.cur * 4}px`;
 
 	if (game.data.i_droughts.cur >= DROUGHT_PANIC_THRESHOLD) {
 		dom.droughts.cur.element.classList.add('panic');
@@ -334,7 +336,7 @@ function renderPiece() {
 	}
 
 	dom.droughts.max.value.textContent = game.data.i_droughts.max.toString().padStart(2, '0');
-	dom.droughts.max.gauge.style.width = `${game.data.i_droughts.max * 2}px`;
+	dom.droughts.max.gauge.style.width = `${game.data.i_droughts.max * 4}px`;
 
 	if (game.data.i_droughts.max == game.data.i_droughts.cur && game.data.i_droughts.max >= DROUGHT_PANIC_THRESHOLD) {
 		dom.droughts.max.element.classList.add('panic');
@@ -353,8 +355,8 @@ function renderPiece() {
 	// clear
 	dom.das.ctx.clear();
 
-	pixel_size = 3;
-	max_pixels = Math.floor(dom.das.ctx.canvas.width / pixel_size);
+	pixel_size = 4;
+	max_pixels = Math.floor(dom.das.ctx.canvas.width / (pixel_size + 1));
 	cur_x = 0;
 	to_draw = game.pieces.slice(-1 * max_pixels);
 
@@ -365,7 +367,7 @@ function renderPiece() {
 
 		dom.das.ctx.fillStyle = color;
 		dom.das.ctx.fillRect(
-			idx * pixel_size,
+			idx * (pixel_size + 1),
 			(16 - das) * pixel_size,
 			pixel_size,
 			pixel_size

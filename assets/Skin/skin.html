@@ -21,7 +21,7 @@ html, body, table, tr, th, td {
 
 .box {
 	position: absolute;
-	width: 80px;
+	width: 81px;
 	height: 39px;
 	padding: 12px;
 
@@ -44,28 +44,28 @@ html, body, table, tr, th, td {
 }
 
 #tetris_rate {
-	left: 0px;
-	top: 0px;
+	left: 807px;
+	top: 136px;
 }
 
 #level {
-	left: 0px;
-	top: 75px;
+	left: 807px;
+	top: 70px;
 }
 
 #burn {
-	left: 110px;
-	top: 0px;
+	left: 807px;
+	top: 202px;
 }
 
 #lines {
-	left: 110px;
-	top: 75px;
+	left: 807px;
+	top: 4px;
 }
 
 #score {
-	left: 460px;
-	top: 0px;
+	right: 151px;
+	top: 4px;
 	width: 190px;
 	height: 75px;
 }
@@ -83,15 +83,22 @@ html, body, table, tr, th, td {
 	padding-right: 4px;
 }
 
-#droughts {
-	left: 240px;
-	top: 0px;
+#controls {
 	width: 190px;
-	height: 75px;
+	height: 93px;
+	left: 698px;
+	top: 269px;
+}
+
+#droughts {
+	left: 337px;
+	top: 269px;
+	width: 333px;
+	height: 93px;
 }
 
 #droughts .header {
-	padding-bottom: 4px;
+	padding-bottom: 10px;
 }
 
 #droughts .content {
@@ -108,13 +115,13 @@ html, body, table, tr, th, td {
 }
 
 .hgauge .gauge {
-	width: 120px;
+	width: 258px;
 }
 
 .hgauge .gauge span {
 	display: inline-block;
-	height: 20px;
-	width: 0;
+	height: 26px;
+	width: 0px;
 	background-color: orange;
 }
 
@@ -141,9 +148,9 @@ html, body, table, tr, th, td {
 
 
 #piece_stats {
-	left: 0px;
-	top: 150px;
-	width: 741px;
+	left: 4px;
+	top: 389px;
+	width: 884px;
 	height: 165px;
 }
 
@@ -197,7 +204,7 @@ html, body, table, tr, th, td {
 }
 
 #piece_stats .content .drought {
-	color: grey;
+	color: lightgrey;
 	padding-left: 4px;
 }
 
@@ -212,9 +219,10 @@ html, body, table, tr, th, td {
 }
 
 #das {
-	top: 350px;
-	width: 741px;
-	height: 94px;
+	left: 4px;
+	top: 581px;
+	width: 884px;
+	height: 111px;
 }
 
 #das .great .label {
@@ -235,9 +243,10 @@ html, body, table, tr, th, td {
 
 
 #lines_stats {
-	top: 480px;
-	width: 314px;
-	height: 200px;
+	top: 4px;
+	left: 4px;
+	width: 306px;
+	height: 190px;
 }
 
 #lines_stats .header {
@@ -255,17 +264,19 @@ html, body, table, tr, th, td {
 
 #lines_stats td.percent {
 	text-align: right;
+	padding-left: 4px;
+	width: 64px;
 }
 
 #lines_stats .tetris_rate {
-	padding-top: 16px;
+	padding-top: 14px;
 }
 
 #points {
-	top: 480px;
-	left: 340px;
-	width: 314px;
-	height: 200px;
+	top: 221px;
+	left: 4px;
+	width: 306px;
+	height: 141px;
 }
 
 #points .header {
@@ -278,11 +289,12 @@ html, body, table, tr, th, td {
 
 #points td {
 	text-align: left;
-	padding-left: 10px;
+	padding-left: 12px;
 }
 
 #points td.percent {
 	text-align: right;
+	width: 64px;
 }
 
 #goto_next_frame {
@@ -318,6 +330,37 @@ html, body, table, tr, th, td {
 	left: 250px;
 }
 
+#stream_bg {
+	position: absolute;
+	top:0;
+	left:0;
+	width: 1280px;
+	height: 720px;
+	background-color: #000;
+}
+
+#tetris_stage {
+	position: absolute;
+	bottom: 4px;
+	right: 4px;
+	width: 337px;
+	height: 590px;
+}
+
+#next_piece {
+	width: 123px;
+	height: 75px;
+	top: 4px;
+	right: 4px;
+}
+
+#video {
+	top: 4px;
+	left: 337px;
+	width: 443px;
+	height: 238px;
+}
+
 </style>
 </head>
 <body>
@@ -329,6 +372,19 @@ html, body, table, tr, th, td {
 <button id="goto_next_frame">Next Frame</button>
 <button id="goto_next_frame_debug">Next Frame Debug</button>
 <div id="skip"><input class="to"></body><button class="btn">Skip to</button></div>
+
+<div id="stream_bg">
+
+<div class="box" id="video"></div>
+
+<div class="box" id="tetris_stage"></div>
+
+<div class="box" id="controls"></div>
+
+<div class="box" id="next_piece">
+	<div class="header">NEXT</div>
+	<div class="content"></div>
+</div>
 
 <div class="box" id="tetris_rate">
 	<div class="header">TRT</div>
@@ -387,56 +443,56 @@ html, body, table, tr, th, td {
 			<th></th>
 			<th class="count">#</th>
 			<th class="percent">%</th>
-			<th class="distribution">Distribution (last 120)</th>
+			<th class="distribution">Distribution (last 150)</th>
 			<th class="drought">DRT</th>
 		</tr>
 		<tr class="piece T">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="600" height="4" /></td>
+			<td class="distribution"><canvas width="750" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece J">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="600" height="4" /></td>
+			<td class="distribution"><canvas width="750" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece Z">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="600" height="4" /></td>
+			<td class="distribution"><canvas width="750" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece O">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="600" height="4" /></td>
+			<td class="distribution"><canvas width="750" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece S">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="600" height="4" /></td>
+			<td class="distribution"><canvas width="750" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece L">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="600" height="4" /></td>
+			<td class="distribution"><canvas width="750" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece I">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="600" height="4" /></td>
+			<td class="distribution"><canvas width="750" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 	</table>
@@ -451,7 +507,7 @@ html, body, table, tr, th, td {
 		<span class="ok"><span class="label">&#338;</span><span class="count">000</span></span>
 		<span class="great"><span class="label">&#338;</span><span class="count">000</span></span>
 	</div>
-	<div class="content"><canvas width="741" height="51" /></div>
+	<div class="content"><canvas width="884" height="68" /></div>
 </div>
 
 <div class="box" id="lines_stats">
@@ -483,7 +539,7 @@ html, body, table, tr, th, td {
 				<td class="percent">00%</td>
 			</tr>
 		</table>
-		<div class="tetris_rate"><canvas width="310" height="60" /></div>
+		<div class="tetris_rate"><canvas width="306" height="60" /></div>
 	</div>
 </div>
 
@@ -520,6 +576,8 @@ html, body, table, tr, th, td {
 		<div class="ppl"><canvas width="284" height="51" /></div>
 	</div>
 </div>
+
+</div><!-- End Stream BG -->
 
 <script src="constants.js"></script>
 <script src="Game.js"></script>
