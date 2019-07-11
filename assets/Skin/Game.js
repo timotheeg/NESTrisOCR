@@ -3,6 +3,8 @@ class Game {
 		// will store all pieces that have been played in the game
 		this.pieces = [];
 
+		this.tetris_rate = [0]; // entry will be added every time lines are cleared
+
 		this.data = {
 			start_level: event.level,
 
@@ -39,7 +41,7 @@ class Game {
 
 			points: {
 				count: event.score,
-				down: {
+				drops: {
 					count:   0,
 					percent: 0
 				}
@@ -118,9 +120,9 @@ class Game {
 			actual_score = event.score - this.data.score.current;
 
 		if (lines_score < actual_score) {
-			const down_score = actual_score - lines_score;
+			const drops_score = actual_score - lines_score;
 
-			this.data.points.down.count += down_score;
+			this.data.points.drops.count += drops_score;
 		}
 
 		// update total lines and points
@@ -140,6 +142,9 @@ class Game {
 				const line_stats = this.data.lines[clear_type];
 				line_stats.percent = line_stats.lines / this.data.lines.count;
 			}
+
+			// record new tetris rate
+			this.tetris_rate.push(this.data.lines[4].percent);
 		}
 
 		// update percentages for everyone
@@ -148,8 +153,8 @@ class Game {
 			point_stats.percent = point_stats.count / event.score;
 		}
 
-		// update stat for down
-		this.data.points.down.percent = this.data.points.down.count / event.score;
+		// update stat for drops
+		this.data.points.drops.percent = this.data.points.drops.count / event.score;
 
 		// update score
 		this.data.score.current = event.score;

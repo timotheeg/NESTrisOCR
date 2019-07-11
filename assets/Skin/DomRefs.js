@@ -80,8 +80,9 @@ class DomRefs {
 		const lines_stats = doc.querySelector('#lines_stats');
 
 		this.lines_stats = {
-			element: lines_stats,
-			count:   lines_stats.querySelector('.header .count'),
+			element:     lines_stats,
+			trt_ctx:     lines_stats.querySelector('canvas').getContext('2d'),
+			count:       lines_stats.querySelector('.header .count'),
 		};
 
 		[
@@ -111,7 +112,7 @@ class DomRefs {
 		};
 
 		[
-			'down',
+			'drops',
 			'singles',
 			'doubles',
 			'triples',

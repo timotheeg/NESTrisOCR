@@ -236,13 +236,13 @@ html, body, table, tr, th, td {
 }
 
 #das .header {
-	padding-bottom: 10px;
+	padding-bottom: 16px;
 }
 
 
 #lines_stats {
 	top: 480px;
-	width: 300px;
+	width: 314px;
 	height: 200px;
 }
 
@@ -259,10 +259,18 @@ html, body, table, tr, th, td {
 	padding-left: 10px;
 }
 
+#lines_stats td.percent {
+	text-align: right;
+}
+
+#lines_stats .tetris_rate {
+	padding-top: 10px;
+}
+
 #points {
 	top: 480px;
-	left: 330px;
-	width: 300px;
+	left: 340px;
+	width: 314px;
 	height: 200px;
 }
 
@@ -277,6 +285,10 @@ html, body, table, tr, th, td {
 #points td {
 	text-align: left;
 	padding-left: 10px;
+}
+
+#points td.percent {
+	text-align: right;
 }
 
 #goto_next_frame {
@@ -456,7 +468,7 @@ html, body, table, tr, th, td {
 				<th>Singles</th>
 				<td class="count">000</td>
 				<td class="line_count">000</td>
-				<td class="percent">00%</td>
+				<td class="percent">&nbsp;00%</td>
 			</tr>
 			<tr class="doubles">
 				<th>Doubles</th>
@@ -477,7 +489,7 @@ html, body, table, tr, th, td {
 				<td class="percent">00%</td>
 			</tr>
 		</table>
-		<div class="tetris_rate"><canvas width="284" height="51" /></div>
+		<div class="tetris_rate"><canvas width="310" height="51" /></div>
 	</div>
 </div>
 
@@ -485,8 +497,8 @@ html, body, table, tr, th, td {
 	<div class="header">POINTS <span class="count">000000</span></div>
 	<div class="content">
 		<table>
-			<tr class="down">
-				<th>Down</th>
+			<tr class="drops">
+				<th>Drops</th>
 				<td class="count">000000</td>
 				<td class="percent">00%</td>
 			</tr>
@@ -508,7 +520,7 @@ html, body, table, tr, th, td {
 			<tr class="tetris">
 				<th>Tetris</th>
 				<td class="count">000000</td>
-				<td class="percent">00%</td>
+				<td class="percent">&nbsp;00%</td>
 			</tr>
 		</table>
 		<div class="ppl"><canvas width="284" height="51" /></div>

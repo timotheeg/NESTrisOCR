@@ -135,8 +135,6 @@ function onFrame(event, debug) {
 		piece_entry =   false,
 		cleared_lines = 0;
 
-	if (transformed.stage.num_blocks % 2 == 1) return;
-
 	if (!last_valid_state) {
 		// waiting for one good frame
 		// not guarantee to work well, we may want to gather good data over multiple frames
@@ -159,6 +157,8 @@ function onFrame(event, debug) {
 	// populate diff
 	const diff = transformed.diff;
 
+	let has_new_piece = false;
+
 	diff.level         = transformed.level !== last_valid_state.level;
 	diff.cleared_lines = transformed.lines - last_valid_state.lines;
 	diff.score         = transformed.score - last_valid_state.score;
@@ -171,6 +171,7 @@ function onFrame(event, debug) {
 	// check if a change to cur_piece_stats
 	if (pending_piece || diff.cur_piece_das || diff.cur_piece || diff.next_piece) {
 		if (transformed.cur_piece && transformed.next_piece && transformed.cur_piece_das) {
+			has_new_piece = true;
 			game.onPiece(transformed);
 			renderPiece();
 			pending_piece = false;
@@ -188,7 +189,7 @@ function onFrame(event, debug) {
 
 	// check for score change
 	if (pending_line || diff.score) {
-		if (transformed.score && !isNaN(transformed.lines)) {
+		if (transformed.score && !isNaN(transformed.lines) && transformed.lines < 29) {
 			game.onLine(transformed);
 			renderLine();
 			pending_line = false;
@@ -204,8 +205,13 @@ function onFrame(event, debug) {
 		}
 	}
 
+	if (transformed.stage.num_blocks % 2 == 1) return;
+
 	if (diff.stage_blocks === 4) {
 		last_valid_state.stage = transformed.stage;
+		if (!has_new_piece) {
+			pending_piece = true;
+		}
 	}
 	else if (diff.stage_blocks < 0) {
 		if (diff.stage_blocks % 10 === 0) {
@@ -255,8 +261,28 @@ function renderLine() {
 		dom.points[name].percent.textContent = Math.round(game.data.points[num_lines].percent * 100).toString().padStart(2, '0') + '%';
 	});
 
-	dom.points.down.count.textContent = game.data.points.down.count.toString().padStart(6, '0');
-	dom.points.down.percent.textContent = Math.round(game.data.points.down.percent * 100).toString().padStart(2, '0') + '%';
+	dom.points.drops.count.textContent = game.data.points.drops.count.toString().padStart(6, '0');
+	dom.points.drops.percent.textContent = Math.round(game.data.points.drops.percent * 100).toString().padStart(2, '0') + '%';
+
+	// graph tetris rate
+	dom.lines_stats.trt_ctx.clear();
+
+	const
+		pixel_size = 3,
+		max_pixels = Math.floor(dom.lines_stats.trt_ctx.canvas.width / pixel_size),
+		y_scale = dom.lines_stats.trt_ctx.canvas.height / 100
+		cur_x = 0,
+		to_draw = game.tetris_rate.slice(-1 * max_pixels);
+
+	for (let idx = to_draw.length; idx--;) {
+		dom.das.ctx.fillStyle = 'white';
+		dom.das.ctx.fillRect(
+			idx * pixel_size,
+			Math.floor((100 - to_draw[idx]) * y_scale * pixel_size),
+			pixel_size,
+			pixel_size
+		);
+	}
 }
 
 function renderPiece() {
