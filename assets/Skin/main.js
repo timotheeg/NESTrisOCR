@@ -15,7 +15,7 @@ if (!CanvasRenderingContext2D.prototype.clear) {
 }
 
 
-/*
+/**/
 const socket = new WebSocket('ws://127.0.0.1:3338');
 socket.addEventListener('message', (frame => {
 	try{
@@ -145,8 +145,10 @@ function onFrame(event, debug) {
 			&& !isNaN(transformed.lines)
 			&& !isNaN(transformed.level)
 		) {
-			last_valid_state = transformed;
-			game = new Game(transformed);
+			game = new Game(transformed)
+			renderPiece(transformed)
+			renderLine(transformed);
+			last_valid_state = { ...transformed };
 			pending_piece = pending_line = true;
 		}
 		else {
@@ -170,6 +172,18 @@ function onFrame(event, debug) {
 	diff.stage_top_row = transformed.stage.top_row !== last_valid_state.stage.top_row;
 	diff.stage_blocks  = transformed.stage.num_blocks - last_valid_state.stage.num_blocks;
 
+	if (diff.score && transformed.score === 0) {
+		// new game started
+		if (isNaN(transformed.lines) || isNaN(transformed.level) || transformed.level > 29 ) {
+			return; // but not fully formed valid state
+		}
+
+		game = new Game(transformed);
+		renderLine(transformed);
+		last_valid_state = transformed;
+		pending_piece = true;
+	}
+
 	// check if a change to cur_piece_stats
 	if (pending_piece || diff.cur_piece_das || diff.cur_piece || diff.next_piece) {
 		if (transformed.cur_piece && transformed.next_piece && transformed.cur_piece_das) {
@@ -191,6 +205,13 @@ function onFrame(event, debug) {
 
 	// check for score change
 	if (pending_line || diff.score) {
+		if (diff.score > 20 && diff.cleared_lines <= 0) {
+			// line increment is probably delayed for some reason...
+			// wait one frame
+			pending_line = true;
+			return;
+		}
+
 		if (transformed.score && !isNaN(transformed.lines) && !isNaN(transformed.level) && transformed.level < 30) {
 			game.onLine(transformed);
 			renderLine();
@@ -327,22 +348,22 @@ function renderPiece() {
 	dom.droughts.count.textContent = game.data.i_droughts.count.toString().padStart(3, '0');
 	dom.droughts.cur.value.textContent = game.data.i_droughts.cur.toString().padStart(2, '0');
 	dom.droughts.cur.gauge.style.width = `${game.data.i_droughts.cur * 4}px`;
-
-	if (game.data.i_droughts.cur >= DROUGHT_PANIC_THRESHOLD) {
-		dom.droughts.cur.element.classList.add('panic');
-	}
-	else {
-		dom.droughts.cur.element.classList.remove('panic');
-	}
-
 	dom.droughts.max.value.textContent = game.data.i_droughts.max.toString().padStart(2, '0');
 	dom.droughts.max.gauge.style.width = `${game.data.i_droughts.max * 4}px`;
 
-	if (game.data.i_droughts.max == game.data.i_droughts.cur && game.data.i_droughts.max >= DROUGHT_PANIC_THRESHOLD) {
-		dom.droughts.max.element.classList.add('panic');
+	if (game.data.i_droughts.cur >= DROUGHT_PANIC_THRESHOLD) {
+		if (game.data.i_droughts.max == game.data.i_droughts.cur) {
+			dom.droughts.element.classList.remove('panic');
+			dom.droughts.element.classList.add('max_panic');
+		}
+		else {
+			dom.droughts.element.classList.remove('max_panic');
+			dom.droughts.element.classList.add('panic');
+		}
 	}
 	else {
-		dom.droughts.max.element.classList.remove('panic');
+		dom.droughts.element.classList.remove('max_panic');
+		dom.droughts.element.classList.remove('panic');
 	}
 
 	// das

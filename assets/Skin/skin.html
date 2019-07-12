@@ -125,13 +125,14 @@ html, body, table, tr, th, td {
 	background-color: orange;
 }
 
-.panic .gauge span {
-	background-color: red;
-	animation: panic_colorize_or 0.65s infinite;
+.panic .current .value {
+	animation: panic_colorize_wr 0.65s infinite;
 	animation-direction: alternate;
 }
 
-.panic .value {
+.max_panic .current .value,
+.max_panic .max .value
+{
 	animation: panic_colorize_wr 0.65s infinite;
 	animation-direction: alternate;
 }
@@ -139,11 +140,6 @@ html, body, table, tr, th, td {
 @keyframes panic_colorize_wr {
   from {color: white;}
   to {color: red;}
-}
-
-@keyframes panic_colorize_or {
-  from {background-color: orange;}
-  to {background-color: red;}
 }
 
 
@@ -238,7 +234,7 @@ html, body, table, tr, th, td {
 }
 
 #das .header {
-	padding-bottom: 16px;
+	padding-bottom: 20px;
 }
 
 

@@ -3,7 +3,7 @@ class Game {
 		// will store all pieces that have been played in the game
 		this.pieces = [];
 
-		this.tetris_rate = [0]; // entry will be added every time lines are cleared
+		this.tetris_rate = []; // entry will be added every time lines are cleared
 
 		this.data = {
 			start_level: event.level,
@@ -130,17 +130,22 @@ class Game {
 		this.data.points.count = event.score;
 
 		if (num_lines) {
-			// update lines stats for clearing type (single, double, etc...)
-			this.data.lines[num_lines].count += 1;
-			this.data.lines[num_lines].lines += num_lines;
+			if (num_lines > 0 && num_lines <= 4) {
+				// update lines stats for clearing type (single, double, etc...)
+				this.data.lines[num_lines].count += 1;
+				this.data.lines[num_lines].lines += num_lines;
 
-			// update points stats for clearing type (single, double, etc...)
-			this.data.points[num_lines].count += lines_score;
+				// update points stats for clearing type (single, double, etc...)
+				this.data.points[num_lines].count += lines_score;
 
-			// update percentages for everyone
-			for (let clear_type=4; clear_type; clear_type--) {
-				const line_stats = this.data.lines[clear_type];
-				line_stats.percent = line_stats.lines / this.data.lines.count;
+				// update percentages for everyone
+				for (let clear_type=4; clear_type; clear_type--) {
+					const line_stats = this.data.lines[clear_type];
+					line_stats.percent = line_stats.lines / this.data.lines.count;
+				}
+			}
+			else {
+				console.log('invalid num_lines', num_lines, event);
 			}
 
 			// record new tetris rate
@@ -160,7 +165,7 @@ class Game {
 		this.data.score.current = event.score;
 
 		// check transition score
-		if (event.level > this.data.level ) {
+		if (event.level > this.data.level) {
 			if (this.data.score.transition === null && event.level === this.data.start_level + 1) {
 				this.data.score.transition = event.score;
 			}
