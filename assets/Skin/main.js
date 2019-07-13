@@ -209,10 +209,8 @@ function onFrame(event, debug) {
 			// line increment is probably delayed for some reason...
 			// wait one frame
 			pending_line = true;
-			return;
 		}
-
-		if (transformed.score && !isNaN(transformed.lines) && !isNaN(transformed.level) && transformed.level < 30) {
+		else if (transformed.score && !isNaN(transformed.lines) && !isNaN(transformed.level) && transformed.level < 30) {
 			game.onLine(transformed);
 			renderLine();
 			pending_line = false;
