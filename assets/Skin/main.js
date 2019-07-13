@@ -325,12 +325,13 @@ function renderPiece() {
 	});
 
 	let
+		idx,
 		pixel_size = 4;
 		max_pixels = Math.floor(dom.pieces.T.ctx.canvas.width / (pixel_size + 1));
 		cur_x = 0;
 		to_draw = game.pieces.slice(-1 * max_pixels);
 
-	for (let idx = to_draw.length; idx--;) {
+	for (idx = to_draw.length; idx--;) {
 		const
 			p =     to_draw[idx].cur_piece,
 			das =   to_draw[idx].cur_piece_das,
@@ -351,14 +352,55 @@ function renderPiece() {
 	// TODO: Use Canvas rather than span
 	dom.droughts.count.textContent = game.data.i_droughts.count.toString().padStart(3, '0');
 	dom.droughts.cur.value.textContent = game.data.i_droughts.cur.toString().padStart(2, '0');
-	dom.droughts.cur.gauge.style.width = `${game.data.i_droughts.cur * 4}px`;
+	dom.droughts.last.value.textContent = game.data.i_droughts.last.toString().padStart(2, '0');
 	dom.droughts.max.value.textContent = game.data.i_droughts.max.toString().padStart(2, '0');
-	dom.droughts.max.gauge.style.width = `${game.data.i_droughts.max * 4}px`;
+
+	pixel_size = 4;
+	max_pixels = Math.floor(dom.droughts.cur.ctx.canvas.width / (pixel_size + 1));
+	color = 'orange';
+
+	const
+		cur_drought = game.data.i_droughts.cur,
+		cur_ctx     = dom.droughts.cur.ctx;
+
+	if (cur_drought > 0) {
+		if (cur_drought <= max_pixels) {
+			cur_ctx.fillStyle = color;
+			cur_ctx.fillRect(
+				(cur_drought - 1) * (pixel_size + 1),
+				0,
+				pixel_size,
+				cur_ctx.canvas.height
+			);
+		}
+	}
+	else {
+		cur_ctx.clear();
+	}
+
+	['last', 'max'].forEach(key => {
+		const 
+			ctx   = dom.droughts[key].ctx,
+			value = game.data.i_droughts[key];
+
+		ctx.clear();
+
+		ctx.fillStyle = color;
+
+		for (idx = Math.min(value, max_pixels); idx-- > 0; ) {
+			ctx.fillRect(
+				idx * (pixel_size + 1),
+				0,
+				pixel_size,
+				ctx.canvas.height
+			);
+		}
+	});
 
 	if (game.data.i_droughts.cur >= DROUGHT_PANIC_THRESHOLD) {
 		if (game.data.i_droughts.max == game.data.i_droughts.cur) {
 			dom.droughts.element.classList.remove('panic');
-			dom.droughts.element.classList.add('max_panic');
+			dom.droughts.element.classList.add('max_panic'); // doing this to synchronize animation
 		}
 		else {
 			dom.droughts.element.classList.remove('max_panic');

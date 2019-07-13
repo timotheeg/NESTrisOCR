@@ -98,7 +98,7 @@ html, body, table, tr, th, td {
 }
 
 #droughts .header {
-	padding-bottom: 10px;
+	padding-bottom: 6px;
 }
 
 #droughts .content {
@@ -112,17 +112,6 @@ html, body, table, tr, th, td {
 
 .hgauge .value {
 	padding-left: 4px;
-}
-
-.hgauge .gauge {
-	width: 258px;
-}
-
-.hgauge .gauge span {
-	display: inline-block;
-	height: 26px;
-	width: 0px;
-	background-color: orange;
 }
 
 .panic .current .value {
@@ -234,9 +223,14 @@ html, body, table, tr, th, td {
 }
 
 #das .header {
-	padding-bottom: 20px;
+	padding-bottom: 15px;
 }
 
+#das canvas {
+	border-style: dashed;
+	border-color: #505050;
+	border-width: 1px 0;
+}
 
 #lines_stats {
 	top: 4px;
@@ -265,7 +259,13 @@ html, body, table, tr, th, td {
 }
 
 #lines_stats .tetris_rate {
-	padding-top: 14px;
+	padding-top: 9px;
+}
+
+#lines_stats .tetris_rate canvas {
+	border-style: dashed;
+	border-color: #505050;
+	border-width: 1px 0;
 }
 
 #points {
@@ -421,12 +421,17 @@ html, body, table, tr, th, td {
 	<table class="content">
 		<tr class="hgauge current">
 			<th>Cur</th>
-			<td class="gauge"><span>&nbsp;</span></td>
+			<td class="gauge"><canvas width="256" height="16" /></td>
+			<td class="value">00</td>
+		</tr>
+		<tr class="hgauge last">
+			<th>Last</th>
+			<td class="gauge"><canvas width="256" height="16" /></td>
 			<td class="value">00</td>
 		</tr>
 		<tr class="hgauge max">
 			<th>Max</th>
-			<td class="gauge"><span>&nbsp;</span></td>
+			<td class="gauge"><canvas width="256" height="16" /></td>
 			<td class="value">00</td>
 		</tr>
 	</table>
@@ -535,7 +540,7 @@ html, body, table, tr, th, td {
 				<td class="percent">00%</td>
 			</tr>
 		</table>
-		<div class="tetris_rate"><canvas width="306" height="60" /></div>
+		<div class="tetris_rate"><canvas width="305" height="60" /></div>
 	</div>
 </div>
 

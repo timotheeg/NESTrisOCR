@@ -35,12 +35,17 @@ class DomRefs {
 
 			cur: {
 				element: droughts.querySelector('.hgauge.current'),
-				gauge:   droughts.querySelector('.hgauge.current .gauge span'),
+				ctx:     droughts.querySelector('.hgauge.current .gauge canvas').getContext('2d'),
 				value:   droughts.querySelector('.hgauge.current .value')
+			},
+			last: {
+				element: droughts.querySelector('.hgauge.last'),
+				ctx:     droughts.querySelector('.hgauge.last .gauge canvas').getContext('2d'),
+				value:   droughts.querySelector('.hgauge.last .value')
 			},
 			max: {
 				element: droughts.querySelector('.hgauge.max'),
-				gauge:   droughts.querySelector('.hgauge.max .gauge span'),
+				ctx:     droughts.querySelector('.hgauge.max .gauge canvas').getContext('2d'),
 				value:   droughts.querySelector('.hgauge.max .value')
 			},
 		};

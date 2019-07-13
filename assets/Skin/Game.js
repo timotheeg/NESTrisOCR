@@ -18,8 +18,9 @@ class Game {
 
 			i_droughts: {
 				count: 0,
-				cur: 0,
-				max: 0
+				cur:   0,
+				last:  0,
+				max:   0
 			},
 
 			das: {
@@ -98,6 +99,10 @@ class Game {
 			}
 		}
 		else {
+			if (this.data.i_droughts.cur > 0) {
+				this.data.i_droughts.last = this.data.i_droughts.cur;
+			}
+
 			this.data.i_droughts.cur = 0;
 		}
 
