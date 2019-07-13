@@ -215,6 +215,11 @@ function onFrame(event, debug) {
 			// wait one frame
 			pending_line = true;
 		}
+		else if (diff.cleared_lines < 0 || diff.cleared_lines > 4) {
+			// invalid reading!
+			// wait for a good frame
+			pending_line = true;
+		}
 		else if (transformed.score && !isNaN(transformed.lines) && !isNaN(transformed.level) && transformed.level < 30) {
 			game.onLine(transformed);
 			renderLine();
