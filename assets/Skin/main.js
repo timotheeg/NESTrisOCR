@@ -91,14 +91,19 @@ document.querySelector('#skip .btn').addEventListener('click', () => {
 
 
 const
-	fields = ['score', 'level', 'lines', 'cur_piece_das', 'cur_piece', 'next_piece'],
-	dom    = new DomRefs(document);
+	dom = new DomRefs(document),
+
+	PIECE_COOLDOWN_FRAMES  = 10;
+
+
 
 var
 	game = null,
-	last_valid_state = null, 
+	last_valid_state = null,
+	pending_game = false,
 	pending_piece = false,
-	pending_line = false;
+	pending_line = false,
+	new_piece_cooldown_frames = 0;
 
 function onFrame(event, debug) {
 	// TODO: detect a reset to zero and setup a new Game
@@ -158,10 +163,10 @@ function onFrame(event, debug) {
 
 	// TODO: game end state, and reset last_valid_state
 
+	new_piece_cooldown_frames--;
+
 	// populate diff
 	const diff = transformed.diff;
-
-	let has_new_piece = false;
 
 	diff.level         = transformed.level !== last_valid_state.level;
 	diff.cleared_lines = transformed.lines - last_valid_state.lines;
@@ -187,7 +192,7 @@ function onFrame(event, debug) {
 	// check if a change to cur_piece_stats
 	if (pending_piece || diff.cur_piece_das || diff.cur_piece || diff.next_piece) {
 		if (transformed.cur_piece && transformed.next_piece && transformed.cur_piece_das) {
-			has_new_piece = true;
+			new_piece_cooldown_frames = PIECE_COOLDOWN_FRAMES;
 			game.onPiece(transformed);
 			renderPiece();
 			pending_piece = false;
@@ -230,12 +235,13 @@ function onFrame(event, debug) {
 
 	if (diff.stage_blocks === 4) {
 		last_valid_state.stage = transformed.stage;
-		if (!has_new_piece) {
+
+		if (new_piece_cooldown_frames <= 0) {
 			pending_piece = true;
 		}
 	}
 	else if (diff.stage_blocks < 0) {
-		if (diff.stage_blocks % 10 === 0) {
+		if (diff.stage_blocks % 10 === 0) { // works no matter how many lines are cleared!
 			last_valid_state.stage = transformed.stage;
 		}
 	}
