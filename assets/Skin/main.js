@@ -212,26 +212,28 @@ function onFrame(event, debug) {
 
 	// check for score change
 	if (pending_line || diff.score) {
-		if (diff.score > 20 && diff.cleared_lines <= 0) {
-			// line increment is probably delayed for some reason...
-			// wait one frame
-			pending_line = true;
-		}
-		else if (diff.cleared_lines < 0 || diff.cleared_lines > 4) {
-			// invalid reading!
-			// wait for a good frame
-			pending_line = true;
-		}
-		else if (transformed.score && !isNaN(transformed.lines) && !isNaN(transformed.level) && transformed.level < 30) {
-			game.onLine(transformed);
-			renderLine();
-			pending_line = false;
+		if (
+			transformed.score
+			&& !isNaN(transformed.lines)
+			&& !isNaN(transformed.level)
+			&& transformed.level < 30
+			&& diff.cleared_lines >= 0
+			&& diff.cleared_lines <= 4
+		) {
+			if (diff.score > 20 && diff.cleared_lines <= 0) {
+				pending_line = true;
+			}
+			else {
+				game.onLine(transformed);
+				renderLine();
+				pending_line = false;
 
-			Object.assign(last_valid_state, {
-				score: transformed.score,
-				lines: transformed.lines,
-				level: transformed.level
-			});
+				Object.assign(last_valid_state, {
+					score: transformed.score,
+					lines: transformed.lines,
+					level: transformed.level
+				});
+			}
 		}
 		else {
 			pending_line = true;

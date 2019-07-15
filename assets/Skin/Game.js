@@ -124,15 +124,12 @@ class Game {
 			lines_score =  this.getScore(this.data.level, num_lines),
 			actual_score = event.score - this.data.score.current;
 
-		if (lines_score < actual_score) {
-			const drops_score = actual_score - lines_score;
-
-			this.data.points.drops.count += drops_score;
-		}
-
 		// update total lines and points
 		this.data.lines.count = event.lines;
 		this.data.points.count = event.score;
+
+		// update drop score
+		this.data.points.drops.count += actual_score - lines_score;
 
 		if (num_lines) {
 			if (num_lines > 0 && num_lines <= 4) {
@@ -158,7 +155,7 @@ class Game {
 		}
 
 		// update percentages for everyone
-		for (let clear_type=4; clear_type; clear_type--) {
+		for (let clear_type = 4; clear_type; clear_type--) {
 			const point_stats = this.data.points[clear_type];
 			point_stats.percent = point_stats.count / event.score;
 		}
