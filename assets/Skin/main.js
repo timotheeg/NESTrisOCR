@@ -150,8 +150,9 @@ function onFrame(event, debug) {
 			&& !isNaN(transformed.lines)
 			&& !isNaN(transformed.level)
 		) {
-			game = new Game(transformed)
-			renderPiece(transformed)
+			game = new Game(transformed);
+			clearStage();
+			renderPiece(transformed);
 			renderLine(transformed);
 			last_valid_state = { ...transformed };
 			pending_piece = pending_line = true;
@@ -184,8 +185,9 @@ function onFrame(event, debug) {
 		}
 
 		game = new Game(transformed);
+		clearStage();
 		renderLine(transformed);
-		last_valid_state = transformed;
+		last_valid_state = { ...transformed };
 		pending_piece = true;
 	}
 
@@ -259,6 +261,12 @@ const line_categories = [
 	[3, 'triples'],
 	[4, 'tetris']
 ];
+
+function clearStage() {
+	dom.droughts.cur.ctx.clear();
+	dom.droughts.last.ctx.clear();
+	dom.droughts.max.ctx.clear();
+}
 
 function renderLine() {
 	// massive population of all data shown on screen
@@ -365,8 +373,14 @@ function renderPiece() {
 	color = 'orange';
 
 	const
-		cur_drought = game.data.i_droughts.cur,
-		cur_ctx     = dom.droughts.cur.ctx;
+		cur_drought  = game.data.i_droughts.cur,
+		cur_ctx      = dom.droughts.cur.ctx,
+
+		last_drought = game.data.i_droughts.last,
+		last_ctx     = dom.droughts.last.ctx,
+
+		max_drought  = game.data.i_droughts.max,
+		max_ctx      = dom.droughts.max.ctx;
 
 	if (cur_drought > 0) {
 		if (cur_drought <= max_pixels) {
@@ -378,29 +392,36 @@ function renderPiece() {
 				cur_ctx.canvas.height
 			);
 		}
+
+		if (max_drought === cur_drought) {
+			// draw the same block current has
+			max_ctx.fillStyle = color;
+			max_ctx.fillRect(
+				(max_drought - 1) * (pixel_size + 1),
+				0,
+				pixel_size,
+				max_ctx.canvas.height
+			);
+		}
 	}
 	else {
+		// clear current but not max (only a new game would clear max)
 		cur_ctx.clear();
 	}
 
-	['last', 'max'].forEach(key => {
-		const 
-			ctx   = dom.droughts[key].ctx,
-			value = game.data.i_droughts[key];
-
-		ctx.clear();
-
-		ctx.fillStyle = color;
-
-		for (idx = Math.min(value, max_pixels); idx-- > 0; ) {
-			ctx.fillRect(
-				idx * (pixel_size + 1),
-				0,
-				pixel_size,
-				ctx.canvas.height
-			);
-		}
-	});
+	// we clear and redraw the last gauge,
+	// could be optimize by storing previous value and redraw on change,
+	// but this will do for now
+	last_ctx.clear();
+	last_ctx.fillStyle = color;
+	for (idx = Math.min(last_drought, max_pixels); idx-- > 0; ) {
+		last_ctx.fillRect(
+			idx * (pixel_size + 1),
+			0,
+			pixel_size,
+			last_ctx.canvas.height
+		);
+	}
 
 	if (game.data.i_droughts.cur >= DROUGHT_PANIC_THRESHOLD) {
 		if (game.data.i_droughts.max == game.data.i_droughts.cur) {
