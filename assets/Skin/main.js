@@ -180,7 +180,7 @@ function onFrame(event, debug) {
 
 	if (diff.score && transformed.score === 0) {
 		// new game started
-		if (isNaN(transformed.lines) || isNaN(transformed.level) || transformed.level > 29 ) {
+		if (isNaN(transformed.lines) || isNaN(transformed.level) || transformed.level > 29) {
 			return; // but not fully formed valid state
 		}
 
@@ -193,7 +193,7 @@ function onFrame(event, debug) {
 
 	// check if a change to cur_piece_stats
 	if (pending_piece || diff.cur_piece_das || diff.cur_piece || diff.next_piece) {
-		if (transformed.cur_piece && transformed.next_piece && transformed.cur_piece_das) {
+		if (transformed.cur_piece && transformed.next_piece && !isNaN(transformed.cur_piece_das) && transformed.cur_piece_das <= 16) {
 			new_piece_cooldown_frames = PIECE_COOLDOWN_FRAMES;
 			game.onPiece(transformed);
 			renderPiece();
