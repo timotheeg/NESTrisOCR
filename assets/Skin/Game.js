@@ -3,7 +3,7 @@ class Game {
 		// will store all pieces that have been played in the game
 		this.pieces = [];
 
-		this.tetris_rate = []; // entry will be added every time lines are cleared
+		this.line_events = []; // entry will be added every time lines are cleared
 
 		this.data = {
 			start_level: event.level,
@@ -150,8 +150,11 @@ class Game {
 				console.log('invalid num_lines', num_lines, event);
 			}
 
-			// record new tetris rate
-			this.tetris_rate.push(this.data.lines[4].percent);
+			// record line event
+			this.line_events.push({
+				num_lines,
+				tetris_rate: this.data.lines[4].percent
+			});
 		}
 
 		// update percentages for everyone

@@ -315,13 +315,15 @@ function renderLine() {
 		max_pixels = Math.floor(ctx.canvas.width / (pixel_size + 1)),
 		y_scale = (ctx.canvas.height - pixel_size) / pixel_size,
 		cur_x = 0,
-		to_draw = game.tetris_rate.slice(-1 * max_pixels);
+		to_draw = game.line_events.slice(-1 * max_pixels);
 
 	for (let idx = to_draw.length; idx--;) {
-		ctx.fillStyle = 'white';
+		const { num_lines, tetris_rate } = to_draw[idx];
+
+		ctx.fillStyle = LINES[num_lines].color;
 		ctx.fillRect(
 			idx * (pixel_size + 1),
-			Math.round((1 - to_draw[idx]) * y_scale * pixel_size),
+			Math.round((1 - tetris_rate) * y_scale * pixel_size),
 			pixel_size,
 			pixel_size
 		);

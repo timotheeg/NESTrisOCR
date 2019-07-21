@@ -3,10 +3,10 @@ const
 	PIECES = ['T', 'J', 'Z', 'O', 'S', 'L', 'I'],
 
 	LINES = {
-		1: 'singles',
-		2: 'doubles',
-		3: 'triples',
-		4: 'tetris',
+		1: { name: 'singles', color: '#1678FF' },
+		2: { name: 'doubles', color: '#FF9F00' },
+		3: { name: 'triples', color: '#FF00B9' },
+		4: { name: 'tetris',  color: '#FFFFFF' },
 	},
 
 	DAS_COLORS = {
