@@ -121,7 +121,7 @@ class Game {
 	onLine(event) {
 		const
 			num_lines =    event.lines - this.data.lines.count,
-			lines_score =  this.getScore(this.data.level, num_lines),
+			lines_score =  this.getScore(event.level, num_lines),
 			actual_score = event.score - this.data.score.current;
 
 		// update total lines and points
