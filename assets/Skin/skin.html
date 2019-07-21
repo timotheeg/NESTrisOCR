@@ -43,6 +43,14 @@ html, body, table, tr, th, td {
 	text-align: center;
 }
 
+.external {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	color: grey;
+}
+
 #tetris_rate {
 	left: 807px;
 	top: 136px;
@@ -324,7 +332,6 @@ html, body, table, tr, th, td {
 }
 
 #tetris_stage {
-	position: absolute;
 	bottom: 4px;
 	right: 4px;
 	width: 337px;
@@ -359,11 +366,11 @@ html, body, table, tr, th, td {
 
 <div id="stream_bg">
 
-<div class="box" id="video"></div>
+<div class="box external" id="video">PLAYER VIDEO FEED<br />GOES HERE</div>
 
-<div class="box" id="tetris_stage"></div>
+<div class="box external" id="tetris_stage">TETRIS STAGE<br />GOES HERE</div>
 
-<div class="box" id="controls"></div>
+<div class="box external" id="controls">CONTROLS<br />GO HERE</div>
 
 <div class="box" id="next_piece">
 	<div class="header">NEXT</div>
