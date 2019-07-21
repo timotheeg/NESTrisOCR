@@ -345,6 +345,7 @@ function renderPiece() {
 	});
 
 	let
+		last_i_piece_idx = -Infinity,
 		idx,
 		pixel_size = 4;
 		max_pixels = Math.floor(dom.pieces.T.ctx.canvas.width / (pixel_size + 1));
@@ -363,6 +364,25 @@ function renderPiece() {
 			idx * (pixel_size + 1),
 			0,
 			pixel_size,
+			pixel_size
+		);
+
+		if (p === 'I' && idx > last_i_piece_idx) {
+			last_i_piece_idx = idx;
+		}
+	}
+
+	if (game.data.i_droughts.cur >= DROUGHT_PANIC_THRESHOLD) {
+		// TODO: animate drought bar from 0 to DROUGHT_PANIC_THRESHOLD
+		const
+			ctx     = dom.pieces.I.ctx,
+			start_x = (last_i_piece_idx + 1) * (pixel_size + 1);
+
+		ctx.fillStyle = 'orange';
+		ctx.fillRect(
+			start_x,
+			0,
+			(Math.min(max_pixels, to_draw.length) * (pixel_size + 1)) - start_x,
 			pixel_size
 		);
 	}
