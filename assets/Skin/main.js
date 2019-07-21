@@ -1,4 +1,3 @@
-
 if (!CanvasRenderingContext2D.prototype.clear) {
 	CanvasRenderingContext2D.prototype.clear = function (preserveTransform) {
 		if (preserveTransform) {
@@ -13,6 +12,17 @@ if (!CanvasRenderingContext2D.prototype.clear) {
 		}
 	};
 }
+
+
+// initial setup for colors based con constants.js
+for (const {name, color} of Object.values(LINES)) {
+	document.querySelector(`#lines_stats tr.${name} th`).style.color = color;
+}
+
+for (const [rating, color] of Object.entries(DAS_COLORS)) {
+	document.querySelector(`#das .${rating} .label `).style.color = color;
+}
+
 
 
 /**/
@@ -257,13 +267,6 @@ function onFrame(event, debug) {
 }
 
 
-const line_categories = [
-	[1, 'singles'],
-	[2, 'doubles'],
-	[3, 'triples'],
-	[4, 'tetris']
-];
-
 function clearStage() {
 	dom.droughts.cur.ctx.clear();
 	dom.droughts.last.ctx.clear();
@@ -292,8 +295,8 @@ function renderLine() {
 	dom.lines_stats.count.textContent = dom.lines.count.textContent;
 	dom.points.count.textContent = game.data.score.current.toString().padStart(6, '0');
 
-	line_categories.forEach(tuple => {
-		const [num_lines, name] = tuple;
+	for (const [num_lines, values] of Object.entries(LINES)) {
+		const { name } = values;
 
 		dom.lines_stats[name].count.textContent = game.data.lines[num_lines].count.toString().padStart(3, '0');
 		dom.lines_stats[name].lines.textContent = game.data.lines[num_lines].lines.toString().padStart(3, '0');
@@ -301,7 +304,7 @@ function renderLine() {
 
 		dom.points[name].count.textContent = game.data.points[num_lines].count.toString().padStart(6, '0');
 		dom.points[name].percent.textContent = Math.round(game.data.points[num_lines].percent * 100).toString().padStart(2, '0').padStart(3, ' ') + '%';
-	});
+	}
 
 	dom.points.drops.count.textContent = game.data.points.drops.count.toString().padStart(6, '0');
 	dom.points.drops.percent.textContent = Math.round(game.data.points.drops.percent * 100).toString().padStart(2, '0').padStart(3, ' ') + '%';
