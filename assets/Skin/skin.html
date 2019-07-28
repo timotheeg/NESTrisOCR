@@ -21,7 +21,7 @@ html, body, table, tr, th, td {
 
 .box {
 	position: absolute;
-	width: 81px;
+	width: 83px;
 	height: 39px;
 	padding: 12px;
 
@@ -52,30 +52,30 @@ html, body, table, tr, th, td {
 }
 
 #tetris_rate {
-	left: 807px;
-	top: 136px;
+	left: 1170px;
+	top: 130px;
 }
 
 #level {
-	left: 807px;
-	top: 70px;
+	left: 1063px;
+	top: 193px;
 }
 
 #burn {
-	left: 807px;
-	top: 202px;
+	left: 1170px;
+	top: 193px;
 }
 
 #lines {
-	left: 807px;
-	top: 4px;
+	left: 1063px;
+	top: 130px;
 }
 
 #score {
-	right: 151px;
+	left: 764px;
 	top: 4px;
-	width: 190px;
-	height: 75px;
+	width: 124px;
+	height: 68px;
 }
 
 #score .header {
@@ -94,15 +94,15 @@ html, body, table, tr, th, td {
 #controls {
 	width: 190px;
 	height: 93px;
-	left: 698px;
-	top: 269px;
+	left: 1063px;
+	top: 256px;
 }
 
 #droughts {
-	left: 337px;
-	top: 269px;
-	width: 333px;
-	height: 93px;
+	left: 764px;
+	top: 602px;
+	width: 275px;
+	height: 90px;
 }
 
 #droughts .header {
@@ -142,9 +142,9 @@ html, body, table, tr, th, td {
 
 #piece_stats {
 	left: 4px;
-	top: 389px;
-	width: 884px;
-	height: 165px;
+	top: 398px;
+	width: 736px;
+	height: 160px;
 }
 
 #piece_stats .content {
@@ -258,9 +258,9 @@ html, body, table, tr, th, td {
 
 #das {
 	left: 4px;
-	top: 581px;
-	width: 884px;
-	height: 111px;
+	top: 582px;
+	width: 736px;
+	height: 110px;
 }
 
 #das .header {
@@ -275,9 +275,9 @@ html, body, table, tr, th, td {
 
 #lines_stats {
 	top: 4px;
-	left: 4px;
-	width: 306px;
-	height: 190px;
+	left: 490px;
+	width: 250px;
+	height: 210px;
 }
 
 #lines_stats .header {
@@ -286,6 +286,7 @@ html, body, table, tr, th, td {
 
 #lines_stats th {
 	text-align: left;
+	font-size: 8px;
 }
 
 #lines_stats td {
@@ -310,10 +311,10 @@ html, body, table, tr, th, td {
 }
 
 #points {
-	top: 221px;
-	left: 4px;
-	width: 306px;
-	height: 141px;
+	top: 238px;
+	left: 490px;
+	width: 250px;
+	height: 136px;
 }
 
 #points .header {
@@ -322,6 +323,7 @@ html, body, table, tr, th, td {
 
 #points th {
 	text-align: left;
+	font-size: 8px;
 }
 
 #points td {
@@ -377,24 +379,38 @@ html, body, table, tr, th, td {
 }
 
 #tetris_stage {
-	bottom: 4px;
-	right: 4px;
-	width: 337px;
-	height: 590px;
+	top: 96px;
+	left: 764px;
+	width: 275px;
+	height: 482px;
 }
 
 #next_piece {
-	width: 123px;
-	height: 75px;
+	width: 127px;
+	height: 68px;
 	top: 4px;
-	right: 4px;
+	left: 912px;
 }
 
 #video {
 	top: 4px;
-	left: 337px;
-	width: 443px;
-	height: 238px;
+	left: 1063px;
+	width: 190px;
+	height: 102px;
+}
+
+#history {
+	top: 4px;
+	left: 4px;
+	width: 462px;
+	height: 370px;
+}
+
+#chat {
+	top: 373px;
+	left: 1063px;
+	width: 190px;
+	height: 319px;
 }
 
 </style>
@@ -416,6 +432,10 @@ html, body, table, tr, th, td {
 <div class="box external" id="tetris_stage">TETRIS STAGE<br />GOES HERE</div>
 
 <div class="box external" id="controls">CONTROLS<br />GO HERE</div>
+
+<div class="box external" id="chat">CHAT<br />GOES HERE</div>
+
+<div class="box external" id="history">HISTORY<br />GOES HERE</div>
 
 <div class="box" id="next_piece">
 	<div class="header">NEXT</div>
@@ -446,11 +466,11 @@ html, body, table, tr, th, td {
 	<div class="header">SCORE</div>
 	<table class="content">
 		<tr class="running">
-			<th>Running</th>
+			<th>Ru</th>
 			<td class="value">000000</td>
 		</tr>
 		<tr class="transition">
-			<th>Transition</th>
+			<th>Tr</th>
 			<td class="value">------</td>
 		</tr>
 	</table>
@@ -461,17 +481,17 @@ html, body, table, tr, th, td {
 	<table class="content">
 		<tr class="hgauge current">
 			<th>Cur</th>
-			<td class="gauge"><canvas width="256" height="16" /></td>
+			<td class="gauge"><canvas width="198" height="16" /></td>
 			<td class="value">00</td>
 		</tr>
 		<tr class="hgauge last">
 			<th>Last</th>
-			<td class="gauge"><canvas width="256" height="16" /></td>
+			<td class="gauge"><canvas width="198" height="16" /></td>
 			<td class="value">00</td>
 		</tr>
 		<tr class="hgauge max">
 			<th>Max</th>
-			<td class="gauge"><canvas width="256" height="16" /></td>
+			<td class="gauge"><canvas width="198" height="16" /></td>
 			<td class="value">00</td>
 		</tr>
 	</table>
@@ -484,56 +504,56 @@ html, body, table, tr, th, td {
 			<th></th>
 			<th class="count">#</th>
 			<th class="percent">%</th>
-			<th class="distribution">Distribution (last 150)</th>
+			<th class="distribution">Distribution (last 120)</th>
 			<th class="drought">DRT</th>
 		</tr>
 		<tr class="piece T">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="750" height="4" /></td>
+			<td class="distribution"><canvas width="606" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece J">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="750" height="4" /></td>
+			<td class="distribution"><canvas width="606" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece Z">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="750" height="4" /></td>
+			<td class="distribution"><canvas width="606" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece O">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="750" height="4" /></td>
+			<td class="distribution"><canvas width="606" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece S">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="750" height="4" /></td>
+			<td class="distribution"><canvas width="606" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece L">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="750" height="4" /></td>
+			<td class="distribution"><canvas width="606" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece I">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="750" height="4" /></td>
+			<td class="distribution"><canvas width="606" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 	</table>
@@ -549,7 +569,7 @@ html, body, table, tr, th, td {
 		<span class="ok"><span class="label">&#338;</span><span class="count">000</span></span>
 		<span class="great"><span class="label">&#338;</span><span class="count">000</span></span>
 	</div>
-	<div class="content"><canvas width="884" height="68" /></div>
+	<div class="content"><canvas width="736" height="68" /></div>
 </div>
 
 <div class="box" id="lines_stats">
@@ -581,7 +601,7 @@ html, body, table, tr, th, td {
 				<td class="percent">00%</td>
 			</tr>
 		</table>
-		<div class="tetris_rate"><canvas width="305" height="65" /></div>
+		<div class="tetris_rate"><canvas width="250" height="85" /></div>
 	</div>
 </div>
 
