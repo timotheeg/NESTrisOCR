@@ -10,7 +10,7 @@ const
 	},
 
 	DAS_COLORS = {
-		great: 'green',
+		great: 'limegreen',
 		ok:    'orange',
 		bad:   'red'
 	},

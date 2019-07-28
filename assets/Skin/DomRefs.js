@@ -69,7 +69,6 @@ class DomRefs {
 		this.das = {
 			element: das, 
 
-			cur:   das.querySelector('.cur .count'),
 			avg:   das.querySelector('.avg .count'),
 
 			great: das.querySelector('.great .count'),

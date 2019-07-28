@@ -271,6 +271,8 @@ function clearStage() {
 	dom.droughts.cur.ctx.clear();
 	dom.droughts.last.ctx.clear();
 	dom.droughts.max.ctx.clear();
+
+	dom.pieces.element.classList.remove('l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9');
 }
 
 function renderLine() {
@@ -331,6 +333,10 @@ function renderLine() {
 			pixel_size
 		);
 	}
+
+	// set piece colors for piece distribution
+	dom.pieces.element.classList.remove(`l${(game.data.level - 1) % 10}`)
+	dom.pieces.element.classList.add(`l${game.data.level % 10}`)
 }
 
 function renderPiece() {
@@ -466,7 +472,6 @@ function renderPiece() {
 	}
 
 	// das
-	dom.das.cur.textContent = game.data.das.cur.toString().padStart(2, '0');
 	dom.das.avg.textContent = game.data.das.avg.toFixed(1).padStart(4, '0');
 	dom.das.great.textContent = game.data.das.great.toString().padStart(3, '0');
 	dom.das.ok.textContent = game.data.das.ok.toString().padStart(3, '0');
