@@ -347,48 +347,95 @@ function renderPiece() {
 		dom.pieces[name].drought.textContent = game.data.pieces[name].drought.toString().padStart(2, '0');
 		dom.pieces[name].percent.textContent = Math.round(game.data.pieces[name].percent * 100).toString().padStart(2, '0') + '%';
 
+		dom.pieces[name].ctx.resetTransform();
 		dom.pieces[name].ctx.clear();
 	});
 
 	let
-		last_i_piece_idx = -Infinity,
+		last_i_piece_idx = -1,
 		idx,
-		pixel_size = 4;
-		max_pixels = Math.floor(dom.pieces.T.ctx.canvas.width / (pixel_size + 1));
-		cur_x = 0;
-		to_draw = game.pieces.slice(-1 * max_pixels);
+		pixel_size = 4,
+		max_pixels = Math.floor(dom.pieces.T.ctx.canvas.width / (pixel_size + 1)),
+		cur_x = 0,
+		draw_start = Math.max(0, game.pieces.length - max_pixels),
+		i_piece_indexes = [];
 
-	for (idx = to_draw.length; idx--;) {
+	// handle all pieces except I pieces
+	for (idx = 0; idx < game.pieces.length; idx++) {
+		const p = game.pieces[idx].cur_piece;
+
+		if (p === 'I') {
+			i_piece_indexes.push(idx);
+			continue;
+		}
+		else if (idx < draw_start) {
+			continue;
+		}
+
 		const
-			p =     to_draw[idx].cur_piece,
-			das =   to_draw[idx].cur_piece_das,
+			das =   game.pieces[idx].cur_piece_das,
 			color = DAS_COLORS[ DAS_THRESHOLDS[das] ],
 			ctx =   dom.pieces[p].ctx;
 
 		ctx.fillStyle = color;
 		ctx.fillRect(
-			idx * (pixel_size + 1),
+			(idx - draw_start) * (pixel_size + 1),
 			0,
 			pixel_size,
 			pixel_size
 		);
-
-		if (p === 'I' && idx > last_i_piece_idx) {
-			last_i_piece_idx = idx;
-		}
 	}
 
+	// handle I pieces and drought display
+	dom.pieces.I.ctx.resetTransform();
+	dom.pieces.I.ctx.transform(1, 0, 0, 1, - draw_start * (pixel_size + 1), 0);
+
+	for (let i_idx = 0; i_idx < i_piece_indexes.length; i_idx++) {
+		const
+			i_piece_idx = i_piece_indexes[i_idx],
+			das =         game.pieces[i_piece_idx].cur_piece_das,
+			color =       DAS_COLORS[ DAS_THRESHOLDS[das] ],
+			ctx =         dom.pieces.I.ctx;
+
+			ctx.fillStyle = color;
+			ctx.fillRect(
+				i_piece_idx * (pixel_size + 1),
+				0,
+				pixel_size,
+				pixel_size
+			);
+
+			if (i_idx > 0) {
+				const last_i_piece_idx = i_piece_indexes[i_idx - 1];
+
+				if (i_piece_idx - last_i_piece_idx < DROUGHT_PANIC_THRESHOLD) {
+					continue;
+				}
+
+				ctx.fillStyle = 'orange';
+				ctx.fillRect(
+					(last_i_piece_idx + 1) * (pixel_size + 1),
+					0,
+					(i_piece_idx - last_i_piece_idx - 1) * (pixel_size + 1) - 1,
+					pixel_size
+				);
+			}
+	};
+
+	// handle current drought if necessary
 	if (game.data.i_droughts.cur >= DROUGHT_PANIC_THRESHOLD) {
 		// TODO: animate drought bar from 0 to DROUGHT_PANIC_THRESHOLD
-		const
-			ctx     = dom.pieces.I.ctx,
-			start_x = (last_i_piece_idx + 1) * (pixel_size + 1);
+		let start_x = 0;
 
-		ctx.fillStyle = 'orange';
-		ctx.fillRect(
+		if (i_piece_indexes.length) {
+			start_x = (i_piece_indexes.pop() + 1) * (pixel_size + 1);
+		}
+
+		dom.pieces.I.ctx.fillStyle = 'orange';
+		dom.pieces.I.ctx.fillRect(
 			start_x,
 			0,
-			(Math.min(max_pixels, to_draw.length) * (pixel_size + 1)) - start_x,
+			game.data.i_droughts.cur * (pixel_size + 1) - 1,
 			pixel_size
 		);
 	}
