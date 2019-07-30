@@ -406,6 +406,18 @@ html, body, table, tr, th, td {
 	height: 370px;
 }
 
+#history th {
+	padding-top: 12px;
+}
+
+#history th.past_games {
+	padding-top: 0;
+}
+
+#history td:first-child {
+	padding-right: 32px;
+}
+
 #chat {
 	top: 373px;
 	left: 1063px;
@@ -435,7 +447,59 @@ html, body, table, tr, th, td {
 
 <div class="box external" id="chat">CHAT<br />GOES HERE</div>
 
-<div class="box external" id="history">HISTORY<br />GOES HERE</div>
+<div class="box" id="history">
+	<table>
+		<tr>
+			<th colspan="2" class="past_games">PAST GAMES</th>
+		</tr>
+		<tr>
+			<th>TIM</th>
+			<th>TRISTAN</th>
+		</tr>
+		<tr>
+			<th colspan="2" class="pbs">PBs</th>
+		</tr>
+		<tr>
+			<td>
+				15 000000 00%<br />
+				18 000000 00%<br />
+				19 000000 00%
+			</td>
+			<td>
+				15 000000 00%<br />
+				18 000000 00%<br />
+				19 000000 00%
+			</td>
+		</tr>
+		<tr>
+			<th colspan="2" class="latest">LATEST</th>
+		</tr>
+		<tr>
+			<td>
+				15 000000 00%<br />
+				15 000000 00%<br />
+				15 000000 00%<br />
+				15 000000 00%<br />
+				15 000000 00%<br />
+				15 000000 00%<br />
+				15 000000 00%<br />
+				18 000000 00%<br />
+				19 000000 00%
+			</td>
+			<td>
+				15 000000 00%<br />
+				15 000000 00%<br />
+				15 000000 00%<br />
+				15 000000 00%<br />
+				15 000000 00%<br />
+				15 000000 00%<br />
+				15 000000 00%<br />
+				18 000000 00%<br />
+				19 000000 00%
+			</td>
+		</tr>
+	</table>
+</div>
 
 <div class="box" id="next_piece">
 	<div class="header">NEXT</div>
