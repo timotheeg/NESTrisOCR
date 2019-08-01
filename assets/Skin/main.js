@@ -171,6 +171,12 @@ function onFrame(event, debug) {
 			return;
 		}
 	}
+	else {
+		if (transformed.stage.num_blocks === 200) {
+			reportGame(game);
+			return;
+		}
+	}
 
 	// TODO: game end state, and reset last_valid_state
 
@@ -266,6 +272,24 @@ function onFrame(event, debug) {
 	}
 }
 
+function reportGame(game) {
+	if (game.reported) return;
+
+	game.reported = true;
+
+    fetch(
+		'http://localhost:3000/report_game',
+		{
+			method: 'POST', // *GET, POST, PUT, DELETE, etc.
+			mode: 'no-cors', // no-cors, cors, *same-origin
+			headers: new Headers({'content-type': 'application/json'}),
+			body: JSON.stringify(game.data),
+		}
+	)
+	.then(response => response.json())
+	.then(renderPastGamesAndPBs)
+	.catch(console.error) // noop
+}
 
 function clearStage() {
 	dom.droughts.cur.ctx.clear();
@@ -273,6 +297,18 @@ function clearStage() {
 	dom.droughts.max.ctx.clear();
 
 	dom.pieces.element.classList.remove('l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9');
+}
+
+function renderPastGamesAndPBs(data) {
+	for (const [name, records] of Object.entries(data.players)) {
+		['pbs', 'latest'].forEach(category => {
+			dom.history[name][category].innerHTML = records[category].slice(0, 9).map(record => {
+				if (!record) record = {score: 0, tetris_rate: 0, start_level: 0};
+
+				return `${record.start_level.toString().padStart(2, '0')} ${record.score.toString().padStart(6, '0')} ${Math.round(record.tetris_rate * 100).toString().padStart(2, '0')}%`;
+			}).join('<br />');
+		});
+	}
 }
 
 function renderLine() {
@@ -441,7 +477,6 @@ function renderPiece() {
 	}
 
 	// droughts
-	// TODO: Counter can go to 99 but bar should stop at max width
 	// TODO: Use Canvas rather than span
 	dom.droughts.count.textContent = game.data.i_droughts.count.toString().padStart(3, '0');
 	dom.droughts.cur.value.textContent = game.data.i_droughts.cur.toString().padStart(2, '0');

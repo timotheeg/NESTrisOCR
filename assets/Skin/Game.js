@@ -115,7 +115,10 @@ class Game {
 		das_stats.avg   =  das_stats.total / (this.pieces.length + 1);
 		das_stats[DAS_THRESHOLDS[das_stats.cur]]++; // great, ok, bad
 
-		this.pieces.push(event);
+		this.pieces.push({
+			cur_piece:     event.cur_piece,
+			cur_piece_das: event.cur_piece_das
+		});
 	}
 
 	onLine(event) {

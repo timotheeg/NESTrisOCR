@@ -53,6 +53,23 @@ class DomRefs {
 		// ===============================================================
 		// ===============================================================
 
+		const history = doc.querySelector('#history');
+
+		this.history = {
+			element: history,
+			TIM: {
+				pbs:    history.querySelector('tr.pbs td.TIM'),
+				latest: history.querySelector('tr.latest td.TIM'),
+			},
+			TRISTAN: {
+				pbs:    history.querySelector('tr.pbs td.TRISTAN'),
+				latest: history.querySelector('tr.latest td.TRISTAN'),
+			}    
+		};
+
+		// ===============================================================
+		// ===============================================================
+
 		const score = doc.querySelector('#score');
 
 		this.score = {

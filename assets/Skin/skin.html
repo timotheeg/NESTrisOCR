@@ -406,12 +406,34 @@ html, body, table, tr, th, td {
 	height: 370px;
 }
 
+#history .avatar {
+	position: absolute;
+	width: 40px;
+	height: 40px;
+	top: 37px;
+	left: 70px;
+	background: url(avatar_timothee.png);
+	background-repeat: no-repeat;
+}
+
+#history .avatar.tristan {
+	width: 38px;
+	top: 37px;
+	left: 418px;
+	background: url(avatar_tristan.png);
+	background-repeat: no-repeat;
+}
+
 #history th {
 	padding-top: 12px;
 }
 
 #history th.past_games {
 	padding-top: 0;
+}
+
+#history td {
+	vertical-align: top;
 }
 
 #history td:first-child {
@@ -448,34 +470,36 @@ html, body, table, tr, th, td {
 <div class="box external" id="chat">CHAT<br />GOES HERE</div>
 
 <div class="box" id="history">
+	<div class="avatar tim"></div>
+	<div class="avatar tristan"></div>
 	<table>
 		<tr>
 			<th colspan="2" class="past_games">PAST GAMES</th>
 		</tr>
-		<tr>
-			<th>TIM</th>
-			<th>TRISTAN</th>
+		<tr class="name">
+			<th class="TIM">TIM</th>
+			<th class="TRISTAN">TRISTAN</th>
 		</tr>
 		<tr>
-			<th colspan="2" class="pbs">PBs</th>
+			<th colspan="2">PBs</th>
 		</tr>
-		<tr>
-			<td>
+		<tr class="pbs">
+			<td class="TIM">
 				15 000000 00%<br />
 				18 000000 00%<br />
 				19 000000 00%
 			</td>
-			<td>
+			<td class="TRISTAN">
 				15 000000 00%<br />
 				18 000000 00%<br />
 				19 000000 00%
 			</td>
 		</tr>
 		<tr>
-			<th colspan="2" class="latest">LATEST</th>
+			<th colspan="2">LATEST</th>
 		</tr>
-		<tr>
-			<td>
+		<tr class="latest">
+			<td class="TIM">
 				15 000000 00%<br />
 				15 000000 00%<br />
 				15 000000 00%<br />
@@ -486,7 +510,7 @@ html, body, table, tr, th, td {
 				18 000000 00%<br />
 				19 000000 00%
 			</td>
-			<td>
+			<td class="TRISTAN">
 				15 000000 00%<br />
 				15 000000 00%<br />
 				15 000000 00%<br />
