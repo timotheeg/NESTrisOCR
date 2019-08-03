@@ -441,21 +441,19 @@ function renderPiece() {
 				pixel_size
 			);
 
-			if (i_idx > 0) {
-				const last_i_piece_idx = i_piece_indexes[i_idx - 1];
+			const last_i_piece_idx = i_idx > 0 ? i_piece_indexes[i_idx - 1] : -1;
 
-				if (i_piece_idx - last_i_piece_idx < DROUGHT_PANIC_THRESHOLD) {
-					continue;
-				}
-
-				ctx.fillStyle = 'orange';
-				ctx.fillRect(
-					(last_i_piece_idx + 1) * (pixel_size + 1),
-					0,
-					(i_piece_idx - last_i_piece_idx - 1) * (pixel_size + 1) - 1,
-					pixel_size
-				);
+			if (i_piece_idx - last_i_piece_idx - 1 < DROUGHT_PANIC_THRESHOLD) {
+				continue;
 			}
+
+			ctx.fillStyle = 'orange';
+			ctx.fillRect(
+				(last_i_piece_idx + 1) * (pixel_size + 1),
+				0,
+				(i_piece_idx - last_i_piece_idx - 1) * (pixel_size + 1) - 1,
+				pixel_size
+			);
 	};
 
 	// handle current drought if necessary
