@@ -21,7 +21,7 @@ html, body, table, tr, th, td {
 
 .box {
 	position: absolute;
-	width: 83px;
+	width: 86px;
 	height: 39px;
 	padding: 12px;
 
@@ -52,27 +52,27 @@ html, body, table, tr, th, td {
 }
 
 #tetris_rate {
-	left: 1170px;
-	top: 130px;
+	left: 1166px;
+	top: 133px;
 }
 
 #level {
-	left: 1063px;
-	top: 193px;
+	left: 1057px;
+	top: 196px;
 }
 
 #burn {
-	left: 1170px;
-	top: 193px;
+	left: 1166px;
+	top: 196px;
 }
 
 #lines {
-	left: 1063px;
-	top: 130px;
+	left: 1057px;
+	top: 133px;
 }
 
 #score {
-	left: 764px;
+	left: 758px;
 	top: 4px;
 	width: 124px;
 	height: 68px;
@@ -92,14 +92,14 @@ html, body, table, tr, th, td {
 }
 
 #controls {
-	width: 190px;
+	width: 196px;
 	height: 93px;
-	left: 1063px;
-	top: 256px;
+	left: 1057px;
+	top: 259px;
 }
 
 #droughts {
-	left: 764px;
+	left: 758px;
 	top: 602px;
 	width: 275px;
 	height: 90px;
@@ -143,7 +143,7 @@ html, body, table, tr, th, td {
 #piece_stats {
 	left: 4px;
 	top: 398px;
-	width: 736px;
+	width: 730px;
 	height: 160px;
 }
 
@@ -259,7 +259,7 @@ html, body, table, tr, th, td {
 #das {
 	left: 4px;
 	top: 582px;
-	width: 736px;
+	width: 730px;
 	height: 110px;
 }
 
@@ -275,7 +275,7 @@ html, body, table, tr, th, td {
 
 #lines_stats {
 	top: 4px;
-	left: 490px;
+	left: 484px;
 	width: 250px;
 	height: 210px;
 }
@@ -312,7 +312,7 @@ html, body, table, tr, th, td {
 
 #points {
 	top: 238px;
-	left: 490px;
+	left: 484px;
 	width: 250px;
 	height: 136px;
 }
@@ -380,7 +380,7 @@ html, body, table, tr, th, td {
 
 #tetris_stage {
 	top: 96px;
-	left: 764px;
+	left: 758px;
 	width: 275px;
 	height: 482px;
 }
@@ -389,46 +389,28 @@ html, body, table, tr, th, td {
 	width: 127px;
 	height: 68px;
 	top: 4px;
-	left: 912px;
+	left: 906px;
 }
 
 #video {
 	top: 4px;
-	left: 1063px;
-	width: 190px;
-	height: 102px;
+	left: 1057px;
+	width: 196px;
+	height: 105px;
 }
 
 #history {
 	top: 4px;
 	left: 4px;
-	width: 462px;
+	width: 456px;
 	height: 370px;
 }
 
-#history .avatar {
-	position: absolute;
-	width: 40px;
-	height: 40px;
-	top: 37px;
-	left: 70px;
-	background: url(avatar_timothee.png);
-	background-repeat: no-repeat;
-}
-
-#history .avatar.tristan {
-	width: 38px;
-	top: 37px;
-	left: 418px;
-	background: url(avatar_tristan.png);
-	background-repeat: no-repeat;
-}
-
 #history th {
-	padding-top: 12px;
+	padding-top: 10px;
 }
 
-#history th.past_games {
+#history th.title {
 	padding-top: 0;
 }
 
@@ -440,11 +422,16 @@ html, body, table, tr, th, td {
 	padding-right: 32px;
 }
 
+#history tr.pbs td {
+	padding-left: 28px;
+	padding-right: 0px;
+}
+
 #chat {
-	top: 373px;
-	left: 1063px;
-	width: 190px;
-	height: 319px;
+	top: 376px;
+	left: 1057px;
+	width: 196px;
+	height: 316px;
 }
 
 </style>
@@ -470,36 +457,26 @@ html, body, table, tr, th, td {
 <div class="box external" id="chat">CHAT<br />GOES HERE</div>
 
 <div class="box" id="history">
-	<div class="avatar tim"></div>
-	<div class="avatar tristan"></div>
 	<table>
 		<tr>
-			<th colspan="2" class="past_games">PAST GAMES</th>
-		</tr>
-		<tr class="name">
-			<th class="TIM">TIM</th>
-			<th class="TRISTAN">TRISTAN</th>
+			<th colspan="2" class="title">HIGH SCORES (<span class="name">TIM</span>)</th>
 		</tr>
 		<tr>
 			<th colspan="2">PBs</th>
 		</tr>
 		<tr class="pbs">
-			<td class="TIM">
-				15 000000 00%<br />
-				18 000000 00%<br />
-				19 000000 00%
-			</td>
-			<td class="TRISTAN">
-				15 000000 00%<br />
-				18 000000 00%<br />
-				19 000000 00%
+			<td colspan="2">
+				15 18 000000 000 00.0 00%<br />
+				18 18 000000 000 00.0 00%<br />
+				19 19 000000 000 00.0 00%
 			</td>
 		</tr>
 		<tr>
-			<th colspan="2">LATEST</th>
+			<th>TODAY</th>
+			<th>OVERALL</th>
 		</tr>
-		<tr class="latest">
-			<td class="TIM">
+		<tr>
+			<td class="today">
 				15 000000 00%<br />
 				15 000000 00%<br />
 				15 000000 00%<br />
@@ -508,9 +485,11 @@ html, body, table, tr, th, td {
 				15 000000 00%<br />
 				15 000000 00%<br />
 				18 000000 00%<br />
+				18 000000 00%<br />
+				18 000000 00%<br />
 				19 000000 00%
 			</td>
-			<td class="TRISTAN">
+			<td class="overall">
 				15 000000 00%<br />
 				15 000000 00%<br />
 				15 000000 00%<br />
@@ -518,6 +497,8 @@ html, body, table, tr, th, td {
 				15 000000 00%<br />
 				15 000000 00%<br />
 				15 000000 00%<br />
+				18 000000 00%<br />
+				18 000000 00%<br />
 				18 000000 00%<br />
 				19 000000 00%
 			</td>
@@ -599,49 +580,49 @@ html, body, table, tr, th, td {
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="606" height="4" /></td>
+			<td class="distribution"><canvas width="600" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece J">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="606" height="4" /></td>
+			<td class="distribution"><canvas width="600" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece Z">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="606" height="4" /></td>
+			<td class="distribution"><canvas width="600" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece O">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="606" height="4" /></td>
+			<td class="distribution"><canvas width="600" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece S">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="606" height="4" /></td>
+			<td class="distribution"><canvas width="600" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece L">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="606" height="4" /></td>
+			<td class="distribution"><canvas width="600" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 		<tr class="piece I">
 			<th></th>
 			<td class="count">000</td>
 			<td class="percent">00%</td>
-			<td class="distribution"><canvas width="606" height="4" /></td>
+			<td class="distribution"><canvas width="600" height="4" /></td>
 			<td class="drought">00</td>
 		</tr>
 	</table>
@@ -657,7 +638,7 @@ html, body, table, tr, th, td {
 		<span class="ok"><span class="label">&#338;</span><span class="count">000</span></span>
 		<span class="great"><span class="label">&#338;</span><span class="count">000</span></span>
 	</div>
-	<div class="content"><canvas width="736" height="68" /></div>
+	<div class="content"><canvas width="730" height="68" /></div>
 </div>
 
 <div class="box" id="lines_stats">

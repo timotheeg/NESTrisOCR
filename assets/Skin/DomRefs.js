@@ -57,14 +57,13 @@ class DomRefs {
 
 		this.history = {
 			element: history,
-			TIM: {
-				pbs:    history.querySelector('tr.pbs td.TIM'),
-				latest: history.querySelector('tr.latest td.TIM'),
-			},
-			TRISTAN: {
-				pbs:    history.querySelector('tr.pbs td.TRISTAN'),
-				latest: history.querySelector('tr.latest td.TRISTAN'),
-			}    
+
+			name:         history.querySelector('.name'),
+			pbs:          history.querySelector('tr.pbs td'),
+			high_scores: {
+				today:   history.querySelector('tr td.today'),
+				overall: history.querySelector('tr td.overall'),
+			}
 		};
 
 		// ===============================================================

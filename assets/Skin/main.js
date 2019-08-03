@@ -300,15 +300,50 @@ function clearStage() {
 }
 
 function renderPastGamesAndPBs(data) {
-	for (const [name, records] of Object.entries(data.players)) {
-		['pbs', 'latest'].forEach(category => {
-			dom.history[name][category].innerHTML = records[category].slice(0, 9).map(record => {
-				if (!record) record = {score: 0, tetris_rate: 0, start_level: 0};
+	dom.history.name.textContent = data.current_player;
 
-				return `${record.start_level.toString().padStart(2, '0')} ${record.score.toString().padStart(6, '0')} ${Math.round(record.tetris_rate * 100).toString().padStart(2, '0')}%`;
-			}).join('<br />');
-		});
-	}
+	// pbs
+	dom.history.pbs.innerHTML = data.pbs.map(record => {
+		if (!record) {
+			record = {
+				start_level: 0,
+				end_level: 0,
+				score: 0,
+				lines: 0,
+				das_avg: 0,
+				tetris_rate: 0,
+			};
+		}
+
+		return [
+			record.start_level.toString().padStart(2, '0'),
+			record.end_level.toString().padStart(2, '0'),
+			record.score.toString().padStart(6, '0'),
+			record.lines.toString().padStart(3, '0'),
+			record.das_avg.toFixed(1).padStart(4, '0'),
+			`${Math.round(record.tetris_rate * 100).toString().padStart(2, '0')}%`
+		].join(' ');
+	}).join('</br>');
+
+	// high scores
+	['today', 'overall'].forEach(category => {
+		dom.history.high_scores[category].innerHTML = data.high_scores[category].map(record => {
+			if (!record) {
+				record = {
+					score: 0,
+					tetris_rate: 0,
+					start_level: 0
+				};
+			}
+
+			return [
+				record.start_level.toString().padStart(2, '0'),
+				record.score.toString().padStart(6, '0'),
+				`${Math.round(record.tetris_rate * 100).toString().padStart(2, '0')}%`
+			].join(' ');
+
+		}).join('<br />');
+	});
 }
 
 function renderLine() {
