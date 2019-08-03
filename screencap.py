@@ -402,7 +402,7 @@ async def main(websocket, path):
 
             payload = json.dumps(result)
 
-            print(payload)
+            # print(payload)
 
             await websocket.send(payload)
             # onCap(result)

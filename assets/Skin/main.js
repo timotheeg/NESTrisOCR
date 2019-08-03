@@ -38,6 +38,9 @@ socket.addEventListener('message', (frame => {
 }));
 /**/
 
+// get High Scores
+getStats();
+
 let timeline_idx = 0;
 // interval = setInterval(() => {onFrame(frames[timeline_idx++])}, 16);
 
@@ -159,6 +162,7 @@ function onFrame(event, debug) {
 			&& !isNaN(transformed.score)
 			&& !isNaN(transformed.lines)
 			&& !isNaN(transformed.level)
+			&& transformed.stage.num_blocks != 200
 		) {
 			game = new Game(transformed);
 			clearStage();
@@ -174,7 +178,6 @@ function onFrame(event, debug) {
 	else {
 		if (transformed.stage.num_blocks === 200) {
 			reportGame(game);
-			return;
 		}
 	}
 
@@ -198,6 +201,10 @@ function onFrame(event, debug) {
 		// new game started
 		if (isNaN(transformed.lines) || isNaN(transformed.level) || transformed.level > 29) {
 			return; // but not fully formed valid state
+		}
+
+		if (game) {
+			reportGame(game);
 		}
 
 		game = new Game(transformed);
@@ -270,6 +277,16 @@ function onFrame(event, debug) {
 			last_valid_state.stage = transformed.stage;
 		}
 	}
+}
+
+function getStats() {
+    fetch(
+		'http://localhost:3000/get_stats',
+		{ mode: 'no-cors' }
+	)
+	.then(response => response.json())
+	.then(renderPastGamesAndPBs)
+	.catch(console.error) // noop
 }
 
 function reportGame(game) {
