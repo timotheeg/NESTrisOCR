@@ -53,17 +53,35 @@ class DomRefs {
 		// ===============================================================
 		// ===============================================================
 
-		const history = doc.querySelector('#history');
+		const pbs = doc.querySelector('#pbs');
 
-		this.history = {
-			element: history,
+		this.pbs = {
+			element: pbs,
+			name: pbs.querySelector('.header .name')
+		};
 
-			name:         history.querySelector('.name'),
-			pbs:          history.querySelector('tr.pbs td'),
-			high_scores: {
-				today:   history.querySelector('tr td.today'),
-				overall: history.querySelector('tr td.overall'),
-			}
+		['s15', 's18', 's19'].forEach(level_class => {
+			this.pbs[level_class] = {
+				start_level: pbs.querySelector(`.${level_class} .start_level`),
+				end_level:   pbs.querySelector(`.${level_class} .end_level`),
+				score:       pbs.querySelector(`.${level_class} .score`),
+				lines:       pbs.querySelector(`.${level_class} .lines`),
+				das_avg:     pbs.querySelector(`.${level_class} .das_avg`),
+				tetris_rate: pbs.querySelector(`.${level_class} .tetris_rate`),
+			};
+		});
+
+		// ===============================================================
+		// ===============================================================
+
+		const high_scores = doc.querySelector('#high_scores');
+
+		this.high_scores = {
+			element: high_scores,
+
+			name:    high_scores.querySelector('.header .name'),
+			today:   high_scores.querySelector('.today tbody'),
+			overall: high_scores.querySelector('.overall tbody'),
 		};
 
 		// ===============================================================

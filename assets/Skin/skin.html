@@ -399,32 +399,59 @@ html, body, table, tr, th, td {
 	height: 105px;
 }
 
-#history {
+#pbs {
 	top: 4px;
 	left: 4px;
 	width: 456px;
-	height: 370px;
+	height: 110px;
 }
 
-#history th {
-	padding-top: 10px;
+#pbs .content {
+	margin: 0 auto;
 }
 
-#history th.title {
-	padding-top: 0;
+#pbs th {
+	padding: 0;
+	font-size: 8px;
+	text-align: center;
 }
 
-#history td {
+#pbs td {
+	text-align: center;
+	padding: 0 10px;
+}
+
+#high_scores {
+	top: 138px;
+	left: 4px;
+	width: 456px;
+	height: 236px;
+}
+
+#high_scores .header {
+	padding-bottom: 10px;
+}
+
+#high_scores td.today, #high_scores td.overall {
 	vertical-align: top;
+	width: 220px;
 }
 
-#history td:first-child {
-	padding-right: 32px;
+#high_scores td.today {
+	padding-right: 18px;
 }
 
-#history tr.pbs td {
-	padding-left: 28px;
-	padding-right: 0px;
+#high_scores td th {
+	font-size: 8px;
+}
+
+#high_scores td td {
+	vertical-align: top;
+	padding: 0 6px;
+}
+
+#high_scores td table {
+	line-height: 21px;
 }
 
 #chat {
@@ -456,51 +483,151 @@ html, body, table, tr, th, td {
 
 <div class="box external" id="chat">CHAT<br />GOES HERE</div>
 
-<div class="box" id="history">
-	<table>
+<div class="box" id="pbs">
+	<div class="header">PBs (<span class="name">TIM</span>)</div>
+	<table class="content" align="center">
+		<thead>
+			<tr>
+				<th>Start</th>
+				<th>End</th>
+				<th>Score</th>
+				<th>Lines</th>
+				<th>Das</th>
+				<th>Trt</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="s15">
+				<td class="start_level">15</td>
+				<td class="end_level">--</td>
+				<td class="score">------</td>
+				<td class="lines">---</td>
+				<td class="das_avg">--.-</td>
+				<td class="tetris_rate">--%</td>
+			</tr>
+			<tr class="s18">
+				<td class="start_level">18</td>
+				<td class="end_level">--</td>
+				<td class="score">------</td>
+				<td class="lines">---</td>
+				<td class="das_avg">--.-</td>
+				<td class="tetris_rate">--%</td>
+			</tr>
+			<tr class="s19">
+				<td class="start_level">19</td>
+				<td class="end_level">--</td>
+				<td class="score">------</td>
+				<td class="lines">---</td>
+				<td class="das_avg">--.-</td>
+				<td class="tetris_rate">--%</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<div class="box" id="high_scores">
+	<div class="header">HIGH SCORES (<span class="name">TIM</span>)</div>
+	<table class="content">
 		<tr>
-			<th colspan="2" class="title">HIGH SCORES (<span class="name">TIM</span>)</th>
-		</tr>
-		<tr>
-			<th colspan="2">PBs</th>
-		</tr>
-		<tr class="pbs">
-			<td colspan="2">
-				15 18 000000 000 00.0 00%<br />
-				18 18 000000 000 00.0 00%<br />
-				19 19 000000 000 00.0 00%
-			</td>
-		</tr>
-		<tr>
-			<th>TODAY</th>
-			<th>OVERALL</th>
+			<th>Today</th>
+			<th>Overall</th>
 		</tr>
 		<tr>
 			<td class="today">
-				15 000000 00%<br />
-				15 000000 00%<br />
-				15 000000 00%<br />
-				15 000000 00%<br />
-				15 000000 00%<br />
-				15 000000 00%<br />
-				15 000000 00%<br />
-				18 000000 00%<br />
-				18 000000 00%<br />
-				18 000000 00%<br />
-				19 000000 00%
+				<table>
+					<thead>
+						<tr>
+							<th>Start</th>
+							<th>Score</th>
+							<th>Trt</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>00</td>
+							<td>000000</td>
+							<td>00%</td>
+						</tr>
+						<tr>
+							<td>00</td>
+							<td>000000</td>
+							<td>00%</td>
+						</tr>
+						<tr>
+							<td>00</td>
+							<td>000000</td>
+							<td>00%</td>
+						</tr>
+						<tr>
+							<td>00</td>
+							<td>000000</td>
+							<td>00%</td>
+						</tr>
+						<tr>
+							<td>00</td>
+							<td>000000</td>
+							<td>00%</td>
+						</tr>
+						<tr>
+							<td>00</td>
+							<td>000000</td>
+							<td>00%</td>
+						</tr>
+						<tr>
+							<td>00</td>
+							<td>000000</td>
+							<td>00%</td>
+						</tr>
+					<tbody>
+				</table>
 			</td>
 			<td class="overall">
-				15 000000 00%<br />
-				15 000000 00%<br />
-				15 000000 00%<br />
-				15 000000 00%<br />
-				15 000000 00%<br />
-				15 000000 00%<br />
-				15 000000 00%<br />
-				18 000000 00%<br />
-				18 000000 00%<br />
-				18 000000 00%<br />
-				19 000000 00%
+				<table>
+					<thead>
+						<tr>
+							<th>Start</th>
+							<th>Score</th>
+							<th>Trt</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>00</td>
+							<td>000000</td>
+							<td>00%</td>
+						</tr>
+						<tr>
+							<td>00</td>
+							<td>000000</td>
+							<td>00%</td>
+						</tr>
+						<tr>
+							<td>00</td>
+							<td>000000</td>
+							<td>00%</td>
+						</tr>
+						<tr>
+							<td>00</td>
+							<td>000000</td>
+							<td>00%</td>
+						</tr>
+						<tr>
+							<td>00</td>
+							<td>000000</td>
+							<td>00%</td>
+						</tr>
+						<tr>
+							<td>00</td>
+							<td>000000</td>
+							<td>00%</td>
+						</tr>
+						<tr>
+							<td>00</td>
+							<td>000000</td>
+							<td>00%</td>
+						</tr>
+					<tbody>
+				</table>
 			</td>
 		</tr>
 	</table>

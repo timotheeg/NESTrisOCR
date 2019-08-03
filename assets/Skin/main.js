@@ -317,34 +317,29 @@ function clearStage() {
 }
 
 function renderPastGamesAndPBs(data) {
-	dom.history.name.textContent = data.current_player;
+	dom.pbs.name.textContent = data.current_player;
+	dom.high_scores.name.textContent = data.current_player;
 
 	// pbs
-	dom.history.pbs.innerHTML = data.pbs.map(record => {
-		if (!record) {
-			record = {
-				start_level: 0,
-				end_level: 0,
-				score: 0,
-				lines: 0,
-				das_avg: 0,
-				tetris_rate: 0,
-			};
-		}
+	data.pbs.forEach(record => {
+		if (!record) return;
 
-		return [
-			record.start_level.toString().padStart(2, '0'),
-			record.end_level.toString().padStart(2, '0'),
-			record.score.toString().padStart(6, '0'),
-			record.lines.toString().padStart(3, '0'),
-			record.das_avg.toFixed(1).padStart(4, '0'),
-			`${Math.round(record.tetris_rate * 100).toString().padStart(2, '0')}%`
-		].join(' ');
-	}).join('</br>');
+		const row = dom.pbs[`s${record.start_level}`];
+
+		row.end_level.textContent =    record.end_level.toString().padStart(2, '0');
+		row.score.textContent =        record.score.toString().padStart(6, '0');
+		row.lines.textContent =        record.lines.toString().padStart(3, '0');
+		row.das_avg.textContent =      record.das_avg.toFixed(1).padStart(4, '0');
+		row.tetris_rate.textContent = `${Math.round(record.tetris_rate * 100).toString().padStart(2, '0')}%`;
+	});
 
 	// high scores
 	['today', 'overall'].forEach(category => {
-		dom.history.high_scores[category].innerHTML = data.high_scores[category].map(record => {
+		if (data.high_scores[category].length <= 0) {
+			data.high_scores[category].push(null);
+		}
+
+		dom.high_scores[category].innerHTML = data.high_scores[category].slice(0, 7).map(record => {
 			if (!record) {
 				record = {
 					score: 0,
@@ -353,13 +348,13 @@ function renderPastGamesAndPBs(data) {
 				};
 			}
 
-			return [
+			return '<tr>' + [
 				record.start_level.toString().padStart(2, '0'),
 				record.score.toString().padStart(6, '0'),
 				`${Math.round(record.tetris_rate * 100).toString().padStart(2, '0')}%`
-			].join(' ');
+			].map(content => `<td>${content}</td>`).join('') + '</tr>';
 
-		}).join('<br />');
+		}).join('');
 	});
 }
 
