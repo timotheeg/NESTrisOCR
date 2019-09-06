@@ -15,9 +15,9 @@ import time
 #patterns for digits. 
 #A = 0->9 + A->F, 
 #D = 0->9
-SCORE_PATTERN = 'ADDDDD' #change to DDDDDD if you don't have A-F enabled.
+SCORE_PATTERN = 'DDDDDD' #change to DDDDDD if you don't have A-F enabled.
 LINES_PATTERN = 'DDD'
-LEVEL_PATTERN = 'AA'
+LEVEL_PATTERN = 'DD'
 STATS_PATTERN = 'DDD'
 
 SCORE_COORDS = mult_rect(CAPTURE_COORDS,scorePerc)
@@ -33,7 +33,7 @@ STATS_METHOD  = 'FIELD' #can be TEXT or FIELD.
 USE_STATS_FIELD = (STATS_ENABLE and STATS_METHOD == 'FIELD')
 
 CALIBRATION = True
-MULTI_THREAD = 1 #shouldn't need more than four if using FieldStats + score/lines/level
+MULTI_THREAD = 1 # shouldn't need more than four if using FieldStats + score/lines/level
 
 #limit how fast we scan.
 RATE_FIELDSTATS = 0.004
@@ -187,11 +187,72 @@ def main(onCap):
                 time.sleep(0.001)
         
 
+def str2bool(v):
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
+
+def getCLIArguments():
+    parser = argparse.ArgumentParser(description='NESTrisOCR')
+
+    parser.add_argument('--calibrate', action='store_true',
+                       default=False,
+                       help='Indicate whether this should be a calibration run')
+
+    parser.add_argument('--only_highlight', type=str2bool, nargs='?',
+                       const=True, default=True,
+                       help='Indicate whether this should be a calibration run')
+
+    parser.add_argument('--fields', action='store',
+                       default='',
+                       help='Supply list of areas IDs to capture. Comma separated list.')
+
+    args = parser.parse_args()
+
+
+    # Validate profile and area ids
+
+    if args.fields:
+        if re.search('^[a-z_]+(,[a-z_]+)*$', args.capture):
+            fields = args.fields
+        else:
+            eprint('Invalid capture argument format', args.capture)
+            sys.exit(2)
+
+    fields = set(fields.split(','))
+
+    if not fields.issubset(set([key for key in base_config.fields])):
+        eprint('Invalid capture area id', args.capture)
+        sys.exit(3)
+
+    # override args to the validated set so we don't do it again later
+    args.fields = fields
+
+    return args
+
+
+
         
 if __name__ == '__main__':
-    client = TCPClient.CreateClient('127.0.0.1',3338)
-    cachedSender = CachedSender(client)
-    main(cachedSender.sendResult)
+    args = getCLIArguments()
+
+    if args.calibrate:
+        import calibrate
+        calibrate.run(args)
+
+    else:
+        compile_tasks(args)
+
+        client = TCPClient.CreateClient('127.0.0.1',3338)
+        cachedSender = CachedSender(client)
+        
+        main(cachedSender.sendResult)
     
 
         
