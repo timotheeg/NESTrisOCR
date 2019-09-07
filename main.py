@@ -238,9 +238,11 @@ def getCLIArguments():
 
 
 
-        
+
 if __name__ == '__main__':
     args = getCLIArguments()
+
+    validate_config(args)
 
     if args.calibrate:
         import calibrate

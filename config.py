@@ -1,7 +1,8 @@
-calibrate = False
-profile = 'original'
 threads = 1
 screenshot_per_field = True
+stats_method = 'FIELD'
+grid_nearest_neighbour_scaling = True
+grid_check_5 = True
 
 window_name = "OBS"
 
@@ -9,6 +10,13 @@ window_name = "OBS"
 window_coordinates = (, , , )
 
 # All coordinates in tuples represent (X, Y, W, H) in ratio of window's capture area
+# Types represent:
+# * digits: Consecutive horizontal sequence of digits following supplied pattern
+# * stats: Vertical list of consecutive digits following supplied pattern. The number of vertical items it the length of supplied labels
+# * grid: represents a grid of blocks, grid size is given by pattern tuple (num_rows, num_columns)
+# * next_piece: block recognition with next_piece specific alignment consideration
+# * cur_piece: block recognition with cur_piece specific alignment consideration
+# * controls: custom pattern recognition, looking for controller data (up, down, left, right, A, B)
 fields = {
 	"top_score": {
 		"type":        "digits",
@@ -63,14 +71,16 @@ fields = {
 		"type":        "grid",
 		"pattern":     (20, 10),
 		"coordinates": (, , , ),
-		"binary":      True
+		"binary":      True,
+		"with_count":  True
 	},
 
 	"stats_board": {
 		"type":        "grid",
 		"pattern":     (2, 4),
 		"coordinates": (, , , ),
-		"binary":      True
+		"binary":      True,
+		"with_count":  False
 	},
 
 	"next_piece": {
