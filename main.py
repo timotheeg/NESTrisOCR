@@ -11,6 +11,7 @@ from textstats import generate_stats
 import boardocr
 import time
 import config
+import calibrate
 
 
 #patterns for digits. 
@@ -187,8 +188,10 @@ def main(onCap):
             while time.time() < frame_end:
                 time.sleep(0.001)
 
+def validate_config():
+    pass
+
 def compile_tasks(args):
-    if ()
 
 
 

@@ -1,8 +1,8 @@
 threads = 1
 screenshot_per_field = True
-stats_method = 'FIELD'
-grid_nearest_neighbour_scaling = True
-grid_check_5 = True
+stats_method = 'field' # 'field' or 'text'
+grid_method = 'scale' # 'scale', 'pixel'
+block_method = '5px' # 1px , 5px
 
 window_name = "OBS"
 
@@ -48,7 +48,6 @@ fields = {
 		"coordinates": (0, 0, 0, 0),
 		"wrap":        False
 	},
-
 	#das trainer
 	"das": {
 		"type":        "digits",
@@ -69,7 +68,6 @@ fields = {
 		"coordinates": (0, 0, 0, 0),
 		"wrap":        True
 	},
-
 	"board": {
 		"type":        "grid",
 		"pattern":     (20, 10),
@@ -77,7 +75,6 @@ fields = {
 		"binary":      True,
 		"with_count":  True
 	},
-
 	"stats_board": {
 		"type":        "grid",
 		"pattern":     (2, 4),
@@ -85,18 +82,15 @@ fields = {
 		"binary":      True,
 		"with_count":  False
 	},
-
 	"next_piece": {
 		"type":        "next_piece",
 		"coordinates": (0, 0, 0, 0)
 	},
-
 	#das trainer
 	"cur_piece": {
 		"type":        "cur_piece",
 		"coordinates": (0, 0, 0, 0)
 	},
-
 	#das trainer
 	"controls": {
 		"type":        "controls",
