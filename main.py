@@ -10,6 +10,7 @@ from Networking import TCPClient
 from textstats import generate_stats
 import boardocr
 import time
+import config
 
 
 #patterns for digits. 
@@ -152,40 +153,44 @@ def main(onCap):
             rawTasks.append((captureAndOCR,(SCORE_COORDS,hwnd,SCORE_PATTERN,"score")))
             rawTasks.append((captureAndOCR,(LINES_COORDS,hwnd,LINES_PATTERN,"lines")))
             rawTasks.append((captureAndOCR,(LEVEL_COORDS,hwnd,LEVEL_PATTERN,"level")))
-            
+
             if STATS_ENABLE:
-                if STATS_METHOD == 'TEXT':                
+                if STATS_METHOD == 'TEXT':
                     rawTasks.append((captureAndOCR,(STATS_COORDS[key],hwnd,STATS_PATTERN,key,False,True)))
                 elif MULTI_THREAD == 1: #run FIELD_PIECE in main thread if necessary
                     rawTasks.append((captureAndOCRBoard, (STATS2_COORDS, hwnd)))
-                    
+
             # run all tasks (in separate threads if MULTI_THREAD is enabled)
             result = runTasks(p, rawTasks)
 
             #fix score's first digit. 8 to B and B to 8 depending on last state.
             result['score'] = scoreFixer.fix(result['score'])
-            
+
             # update our accumulator
             if USE_STATS_FIELD:
                 if lastLines is None and result['lines'] == '000':
                     accum.reset()
-                
+
                 if MULTI_THREAD == 1:
                     accum.update(result['board_ocr'], frame_start)
                     del result['board_ocr']
 
                 result.update(accum.toDict())
                 lastLines = result['lines']
-            
+
                 # warning for USE_STATS_FIELD if necessary
                 if MULTI_THREAD == 1 and time.time() > frame_start + 1/60.0:
                     print ("Warning, not scanning field fast enough")
-                    
+
             onCap(result)
-        
+
             while time.time() < frame_end:
                 time.sleep(0.001)
-        
+
+def compile_tasks(args):
+    if ()
+
+
 
 def str2bool(v):
     if isinstance(v, bool):
@@ -216,8 +221,6 @@ def getCLIArguments():
     args = parser.parse_args()
 
 
-    # Validate profile and area ids
-
     if args.fields:
         if re.search('^[a-z_]+(,[a-z_]+)*$', args.capture):
             fields = args.fields
@@ -225,17 +228,19 @@ def getCLIArguments():
             eprint('Invalid capture argument format', args.capture)
             sys.exit(2)
 
-    fields = set(fields.split(','))
+        fields = set(fields.split(','))
 
-    if not fields.issubset(set([key for key in base_config.fields])):
-        eprint('Invalid capture area id', args.capture)
-        sys.exit(3)
+        if not fields.issubset(set([key for key in base_config.fields])):
+            eprint('Invalid capture area id', args.capture)
+            sys.exit(3)
 
-    # override args to the validated set so we don't do it again later
-    args.fields = fields
+        # override args to the validated set so we don't do it again later
+        args.fields = fields
+    else:
+        args.fields = set([k for k, v in config.fields.items()])
+
 
     return args
-
 
 
 
