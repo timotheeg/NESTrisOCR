@@ -44,6 +44,8 @@ USE_STATS_FIELD = (STATS_ENABLE and STATS_METHOD == 'FIELD')
 CAPTURE_FIELD = config.capture_field
 COLOR1 = mult_rect(config.CAPTURE_COORDS, config.color1Perc)
 COLOR2 = mult_rect(config.CAPTURE_COORDS, config.color2Perc)
+BLACK = mult_rect(config.CAPTURE_COORDS, config.blackPerc)
+WHITE = mult_rect(config.CAPTURE_COORDS, config.whitePerc)
 
 CAPTURE_PREVIEW = config.capture_preview
 PREVIEW_COORDS = mult_rect(config.CAPTURE_COORDS, config.previewPerc)
@@ -86,9 +88,16 @@ def captureAndOCRBoardPiece(coords, hwnd):
 
 def captureAndOCRBoard(coords, hwnd):    
     img = WindowCapture.ImageCapture(coords, hwnd)
-    col1 = WindowCapture.ImageCapture(COLOR1,hwnd)
-    col2 = WindowCapture.ImageCapture(COLOR2,hwnd)    
-    field = BoardOCR.parseImage(img,col1,col2)
+
+    if config.colorMethod == 'READ':
+        col1 = WindowCapture.ImageCapture(COLOR1,hwnd)
+        col2 = WindowCapture.ImageCapture(COLOR2,hwnd)
+        field = BoardOCR.parseImageReadColors(img,col1,col2)
+    else:
+        black = WindowCapture.ImageCapture(BLACK,hwnd)
+        white = WindowCapture.ImageCapture(WHITE,hwnd)
+        field = BoardOCR.parseImageInterpolateColors(img,black,white)
+    
     return ('field', field)
 
 def captureAndOCRPreview(hwnd):

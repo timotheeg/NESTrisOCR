@@ -34,12 +34,20 @@ class Configuration:
         #field
         self.capture_field = parser['calibration'].getboolean('read_field')
         self.fieldPerc = literal_eval(parser['calibration']['fieldperc'])
+
+        self.colorMethod = parser['calibration']['color_method']
         self.color1Perc = literal_eval(parser['calibration']['color1perc'])
         self.color2Perc = literal_eval(parser['calibration']['color2perc'])
+        self.blackPerc = literal_eval(parser['calibration']['blackperc'])
+        self.whitePerc = literal_eval(parser['calibration']['whiteperc'])
 
         #preview
         self.capture_preview = parser['calibration'].getboolean('read_preview')
         self.previewPerc = literal_eval(parser['calibration']['previewperc'])
+        
+        #preview
+        self.capture_current = parser['calibration'].getboolean('read_current')
+        self.currentPerc = literal_eval(parser['calibration']['previewperc'])
         
         #calculate stats2Perc from field
         self.stats2Perc = self.subImage(self.fieldPerc)
