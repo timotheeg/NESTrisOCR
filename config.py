@@ -47,7 +47,7 @@ class Configuration:
         self.previewPerc = literal_eval(parser['calibration']['previewperc'])
         
         #das trainer fields
-        self.capture_current_piece = parser['calibration'].getboolean('capture_current_piece')
+        self.capture_das_trainer = parser['calibration'].getboolean('capture_das_trainer')
         self.currentPiecePerc = literal_eval(parser['calibration']['currentpieceperc'])
         self.currentPieceDasPerc = literal_eval(parser['calibration']['currentpiecedasperc'])
         

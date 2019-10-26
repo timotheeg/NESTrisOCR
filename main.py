@@ -4,7 +4,8 @@ from OCRAlgo.ScoreFixer import ScoreFixer
 from OCRAlgo.PieceStatsTextOCR import generate_stats
 import OCRAlgo.PieceStatsBoardOCR as PieceStatsBoardOCR
 import OCRAlgo.BoardOCR as BoardOCR
-import OCRAlgo.PreviewOCR2 as PreviewOCR
+import OCRAlgo.PreviewOCR3 as PreviewOCR
+import OCRAlgo.CurrentPieceOCR as CurrentPieceOCR
 from OCRAlgo.NewGameDetector import NewGameDetector
 
 from calibrate import mainLoop as calibrateLoop
@@ -26,12 +27,14 @@ PATTERNS = {
     'score': 'ADDDDD' if config.hexSupport else 'DDDDDD',
     'lines': 'DDD',
     'level': 'DD',
-    'stats': 'DDD'
+    'stats': 'DDD',
+    'current_piece_das': 'DD'
 }
 
 STATS_METHOD = config.stats_method #can be TEXT or FIELD.
 CAPTURE_FIELD = config.capture_field
 CAPTURE_PREVIEW = config.capture_preview
+CAPTURE_DAS_TRAINER = config.capture_das_trainer
 STATS_ENABLE  = config.capture_stats
 USE_STATS_FIELD = (STATS_ENABLE and STATS_METHOD == 'FIELD')
 WINDOW_N_SLICE = config.tasksCaptureMethod == 'WINDOW_N_SLICE'
@@ -70,6 +73,10 @@ def getWindowAreaAndPartialTasks():
 
     if CAPTURE_PREVIEW:
         areas['preview'] = mult_rect(config.CAPTURE_COORDS, config.previewPerc)
+
+    if CAPTURE_DAS_TRAINER:
+        areas['current_piece'] = mult_rect(config.CAPTURE_COORDS, config.currentPiecePerc)
+        areas['current_piece_das'] = mult_rect(config.CAPTURE_COORDS, config.currentPieceDasPerc)
 
     coords_list = areas.values()
 
@@ -112,7 +119,7 @@ def getWindowAreaAndPartialTasks():
 
     # prepare list of tasks to run at each loop
     for key, coords in areas.items():
-        if key in ['score', 'lines', 'level']:
+        if key in ('score', 'lines', 'level', 'current_piece_das'):
             partials.append((
                 eval(methodPrefix + 'AndOCR'),
                 (
@@ -126,6 +133,14 @@ def getWindowAreaAndPartialTasks():
         elif key == 'preview':
             partials.append((
                 eval(methodPrefix + 'AndOCRPreview'),
+                (
+                    processCoordinates(coords),
+                )
+            ))
+
+        elif key == 'current_piece':
+            partials.append((
+                eval(methodPrefix + 'AndOCRCurrentPiece'),
                 (
                     processCoordinates(coords),
                 )
@@ -237,6 +252,11 @@ def captureAndOCRPreview(hwnd, previewCoords):
     result = PreviewOCR.parseImage(img)
     return ('preview', result)
 
+def captureAndOCRCurrentPiece(hwnd, curPieceCoords):
+    img = WindowCapture.ImageCapture(curPieceCoords, hwnd)
+    result = CurrentPieceOCR.parseImage(img)
+    return ('current_piece', result)
+
 def extractAndOCR(sourceImg, fieldCoords, digitPattern, taskName, red):
     img = sourceImg.crop(fieldCoords)
     return (taskName, scoreImage(img, digitPattern, False, red))
@@ -260,9 +280,13 @@ def extractAndOCRBoardInterpolate(sourceImg, level, boardCoords, blackCoords, wh
     field = BoardOCR.parseImageInterpolateColors(img, black, white, level)
     return ('field', field)
 
-def extractAndOCRPreview(img, previewCoords):
-    result = PreviewOCR.parseImage(img.crop(previewCoords))
+def extractAndOCRPreview(sourceImg, previewCoords):
+    result = PreviewOCR.parseImage(sourceImg.crop(previewCoords))
     return ('preview', result)
+
+def extractAndOCRCurrentPiece(sourceImg, curPieceCoords):
+    result = CurrentPieceOCR.parseImage(sourceImg.crop(curPieceCoords))
+    return ('current_piece', result)
 
 #run this as fast as possible    
 def statsFieldMulti(ocr_stats, pool):
