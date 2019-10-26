@@ -25,7 +25,7 @@ import sys
 PATTERNS = {
     'score': 'ADDDDD' if config.hexSupport else 'DDDDDD',
     'lines': 'DDD',
-    'level': 'AA',
+    'level': 'DD',
     'stats': 'DDD'
 }
 
@@ -315,6 +315,8 @@ def main(onCap, checkNetworkClose):
                     scoreFixer.reset()
                 #fix score's first digit. 8 to B and B to 8 depending on last state.
                 result['score'] = scoreFixer.fix(result['score'])
+
+            print('frame', time.time() - frame_start)
 
             onCap(result, getTimeStamp())
             error = checkNetworkClose()   
