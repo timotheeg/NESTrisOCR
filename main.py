@@ -35,6 +35,7 @@ CAPTURE_PREVIEW = config.capture_preview
 STATS_ENABLE  = config.capture_stats
 USE_STATS_FIELD = (STATS_ENABLE and STATS_METHOD == 'FIELD')
 WINDOW_N_SLICE = config.tasksCaptureMethod == 'WINDOW_N_SLICE'
+USE_COLOR_INTERPOLATION = config.colorMethod == 'INTERPOLATE'
 
 #quick check for num_threads:
 if WINDOW_N_SLICE and config.threads != 1:    
@@ -54,8 +55,13 @@ def getWindowAreaAndPartialTasks():
 
     if CAPTURE_FIELD:
         areas['field'] = mult_rect(config.CAPTURE_COORDS, config.fieldPerc)
-        areas['color1'] = mult_rect(config.CAPTURE_COORDS, config.color1Perc)
-        areas['color2'] = mult_rect(config.CAPTURE_COORDS, config.color2Perc)
+
+        if USE_COLOR_INTERPOLATION:
+            areas['black'] = mult_rect(config.CAPTURE_COORDS, config.blackPerc)
+            areas['white'] = mult_rect(config.CAPTURE_COORDS, config.whitePerc)
+        else:
+            areas['color1'] = mult_rect(config.CAPTURE_COORDS, config.color1Perc)
+            areas['color2'] = mult_rect(config.CAPTURE_COORDS, config.color2Perc)
 
     if USE_STATS_FIELD:
         areas['stats2'] = mult_rect(config.CAPTURE_COORDS, config.stats2Perc)
@@ -142,14 +148,26 @@ def getWindowAreaAndPartialTasks():
                 ))
 
         elif key == 'field':
-            partials.append((
-                eval(methodPrefix + 'AndOCRBoard'),
-                (
-                    processCoordinates(coords),
-                    processCoordinates(areas['color1']),
-                    processCoordinates(areas['color2']),
-                )
-            ))
+            # if interpolation is on, we must read the level before we can get the colors
+            if USE_COLOR_INTERPOLATION:
+                partials.append((
+                    eval(methodPrefix + 'AndOCRBoardInterpolate'),
+                    (
+                        processCoordinates(coords),
+                        processCoordinates(areas['black']),
+                        processCoordinates(areas['white']),
+                    )
+                ))
+            else:
+                partials.append((
+                    eval(methodPrefix + 'AndOCRBoard'),
+                    (
+                        processCoordinates(coords),
+                        processCoordinates(areas['color1']),
+                        processCoordinates(areas['color2']),
+                    )
+                ))
+
 
     return (minWindowAreaXYWH, partials)
 
@@ -196,7 +214,14 @@ def captureAndOCRBoard(hwnd, boardCoords, color1Coords, color2Coords):
     img = WindowCapture.ImageCapture(boardCoords, hwnd)
     col1 = WindowCapture.ImageCapture(color1Coords, hwnd)
     col2 = WindowCapture.ImageCapture(color2Coords, hwnd)
-    field = BoardOCR.parseImage(img, col1, col2)
+    field = BoardOCR.parseImageReadColors(img, col1, col2)
+    return ('field', field)
+
+def captureAndOCRBoardInterpolate(hwnd, level, boardCoords, blackCoords, whiteCoords):
+    img = WindowCapture.ImageCapture(boardCoords, hwnd)
+    black = WindowCapture.ImageCapture(blackCoords, hwnd)
+    white = WindowCapture.ImageCapture(whiteCoords, hwnd)
+    field = BoardOCR.parseImageInterpolateColors(img, black, white, level)
     return ('field', field)
 
 def captureAndOCRPreview(hwnd, previewCoords):
@@ -217,7 +242,14 @@ def extractAndOCRBoard(sourceImg, boardCoords, color1Coords, color2Coords):
     img = sourceImg.crop(boardCoords)
     col1 = sourceImg.crop(color1Coords)
     col2 = sourceImg.crop(color2Coords)
-    field = BoardOCR.parseImage(img, col1, col2)
+    field = BoardOCR.parseImageReadColors(img, col1, col2)
+    return ('field', field)
+
+def extractAndOCRBoardInterpolate(sourceImg, level, boardCoords, blackCoords, whiteCoords):
+    img = sourceImg.crop(boardCoords)
+    black = sourceImg.crop(blackCoords)
+    white = sourceImg.crop(whiteCoords)
+    field = BoardOCR.parseImageInterpolateColors(img, black, white, level)
     return ('field', field)
 
 def extractAndOCRPreview(img, previewCoords):
@@ -270,6 +302,10 @@ def main(onCap, checkNetworkClose):
 
         windowMinCoords, partialTasks = getWindowAreaAndPartialTasks()
 
+        if USE_COLOR_INTERPOLATION:
+            fieldTask = [tasks for tasks in partialTasks if tasks[0]  in (captureAndOCRBoardInterpolate, extractAndOCRBoardInterpolate)].pop()
+            partialTasks = [tasks for tasks in partialTasks if tasks[0] not in (captureAndOCRBoardInterpolate, extractAndOCRBoardInterpolate)]
+
         while checkWindow(hwnd):
             # inner loop gets fresh data for just the desired window
             frame_start  = time.time()
@@ -286,6 +322,19 @@ def main(onCap, checkNetworkClose):
 
             # run all tasks (in separate threads if MULTI_THREAD is enabled)
             result = runTasks(p, rawTasks)
+
+            if config.hexSupport:
+                #fix score's first digit. 8 to B and B to 8 depending on last state.
+                result['score'] = scoreFixer.fix(result['score'])
+
+            if USE_COLOR_INTERPOLATION:
+                try:
+                    level = int(result['level'])
+                except:
+                    level = 0
+
+                key, value = runFunc(fieldTask[0], (source, level) + fieldTask[1])
+                result[key] = value
 
             # update our accumulator
             if USE_STATS_FIELD:
