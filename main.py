@@ -29,7 +29,7 @@ PATTERNS = {
     'stats': 'DDD'
 }
 
-STATS_METHOD  = config.stats_method #can be TEXT or FIELD.
+STATS_METHOD = config.stats_method #can be TEXT or FIELD.
 CAPTURE_FIELD = config.capture_field
 CAPTURE_PREVIEW = config.capture_preview
 STATS_ENABLE  = config.capture_stats
