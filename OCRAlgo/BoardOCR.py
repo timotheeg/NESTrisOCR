@@ -27,10 +27,9 @@ LEVEL_COLORS = (
     { 'color1': (0xC4, 0x1E, 0x0E), 'color2': (0xF6, 0x9B, 0x00) },
 )
 
+# color1 and color2 are expected to be 1x1 pixels
 def parseImageReadColors(img, color1, color2):
-    color1 = color1.resize((1,1), PIL.Image.ANTIALIAS)
     color1 = color1.getpixel((0,0))
-    color2 = color2.resize((1,1), PIL.Image.ANTIALIAS)
     color2 = color2.getpixel((0,0))
 
     black = np.array((10,10,10), dtype=np.uint8)
@@ -38,11 +37,9 @@ def parseImageReadColors(img, color1, color2):
 
     return parseImage(img, black, white, color1, color2)
 
-
+# black and white are expected to be 1x1 pixels
 def parseImageInterpolateColors(img, black, white, level=0):
-    black = black.resize((1,1), PIL.Image.NEAREST)
     black = black.getpixel((0,0))
-    white = white.resize((1,1), PIL.Image.NEAREST)
     white = white.getpixel((0,0))
 
     color1 = LEVEL_COLORS[level % 10]['color1']

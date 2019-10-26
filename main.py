@@ -94,7 +94,15 @@ def getWindowAreaAndPartialTasks():
 
     partials = []
 
-    def processCoordinates(coords):
+    def processCoordinates(coords, getCentralPixel=False):
+        if getCentralPixel:
+            coords = (
+                round(lerp(coords[0], coords[0] + coors[2], 0.5)),
+                round(lerp(coords[1], coords[1] + coors[3], 0.5)),
+                1,
+                1
+            )
+
         if WINDOW_N_SLICE:
             return XYWHOffsetAndConvertToLTBR(offset, coords)
         else:
