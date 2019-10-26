@@ -17,7 +17,6 @@ class Configuration:
         self.threads = literal_eval(parser['performance']['multi_thread'])
         self.hexSupport = parser['performance'].getboolean('support_hex_score') 
         self.scanRate = literal_eval(parser['performance']['scan_rate'])
-        self.tasksCaptureMethod = parser['performance']['tasks_capture_method']
         
         #stats
         self.capture_stats = parser['stats'].getboolean('read_stats')
@@ -35,12 +34,21 @@ class Configuration:
         #field
         self.capture_field = parser['calibration'].getboolean('read_field')
         self.fieldPerc = literal_eval(parser['calibration']['fieldperc'])
+
+        self.colorMethod = parser['calibration']['color_method']
         self.color1Perc = literal_eval(parser['calibration']['color1perc'])
         self.color2Perc = literal_eval(parser['calibration']['color2perc'])
+        self.blackPerc = literal_eval(parser['calibration']['blackperc'])
+        self.whitePerc = literal_eval(parser['calibration']['whiteperc'])
 
         #preview
         self.capture_preview = parser['calibration'].getboolean('read_preview')
         self.previewPerc = literal_eval(parser['calibration']['previewperc'])
+        
+        #das trainer fields
+        self.capture_current_piece = parser['calibration'].getboolean('capture_current_piece')
+        self.currentPiecePerc = literal_eval(parser['calibration']['currentpieceperc'])
+        self.currentPieceDasPerc = literal_eval(parser['calibration']['currentpiecedasperc'])
         
         #calculate stats2Perc from field
         self.stats2Perc = self.subImage(self.fieldPerc)
