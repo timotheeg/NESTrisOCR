@@ -28,7 +28,7 @@ PATTERNS = {
     'lines': 'DDD',
     'level': 'DD',
     'stats': 'DDD',
-    'current_piece_das': 'DD'
+    'cur_piece_das': 'DD'
 }
 
 STATS_METHOD = config.stats_method #can be TEXT or FIELD.
@@ -75,8 +75,8 @@ def getWindowAreaAndPartialTasks():
         areas['preview'] = mult_rect(config.CAPTURE_COORDS, config.previewPerc)
 
     if CAPTURE_DAS_TRAINER:
-        areas['current_piece'] = mult_rect(config.CAPTURE_COORDS, config.currentPiecePerc)
-        areas['current_piece_das'] = mult_rect(config.CAPTURE_COORDS, config.currentPieceDasPerc)
+        areas['cur_piece'] = mult_rect(config.CAPTURE_COORDS, config.currentPiecePerc)
+        areas['cur_piece_das'] = mult_rect(config.CAPTURE_COORDS, config.currentPieceDasPerc)
 
     coords_list = areas.values()
 
@@ -119,7 +119,7 @@ def getWindowAreaAndPartialTasks():
 
     # prepare list of tasks to run at each loop
     for key, coords in areas.items():
-        if key in ('score', 'lines', 'level', 'current_piece_das'):
+        if key in ('score', 'lines', 'level', 'cur_piece_das'):
             partials.append((
                 eval(methodPrefix + 'AndOCR'),
                 (
@@ -138,7 +138,7 @@ def getWindowAreaAndPartialTasks():
                 )
             ))
 
-        elif key == 'current_piece':
+        elif key == 'cur_piece':
             partials.append((
                 eval(methodPrefix + 'AndOCRCurrentPiece'),
                 (
@@ -255,7 +255,7 @@ def captureAndOCRPreview(hwnd, previewCoords):
 def captureAndOCRCurrentPiece(hwnd, curPieceCoords):
     img = WindowCapture.ImageCapture(curPieceCoords, hwnd)
     result = CurrentPieceOCR.parseImage(img)
-    return ('current_piece', result)
+    return ('cur_piece', result)
 
 def extractAndOCR(sourceImg, fieldCoords, digitPattern, taskName, red):
     img = sourceImg.crop(fieldCoords)
@@ -281,12 +281,14 @@ def extractAndOCRBoardInterpolate(sourceImg, level, boardCoords, blackCoords, wh
     return ('field', field)
 
 def extractAndOCRPreview(sourceImg, previewCoords):
-    result = PreviewOCR.parseImage(sourceImg.crop(previewCoords))
+    img = sourceImg.crop(previewCoords)
+    result = PreviewOCR.parseImage(img)
     return ('preview', result)
 
 def extractAndOCRCurrentPiece(sourceImg, curPieceCoords):
-    result = CurrentPieceOCR.parseImage(sourceImg.crop(curPieceCoords))
-    return ('current_piece', result)
+    img = sourceImg.crop(curPieceCoords)
+    result = CurrentPieceOCR.parseImage(img)
+    return ('cur_piece', result)
 
 #run this as fast as possible    
 def statsFieldMulti(ocr_stats, pool):
