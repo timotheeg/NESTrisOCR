@@ -399,7 +399,7 @@ def main(onCap, checkNetworkClose):
                 #fix score's first digit. 8 to B and B to 8 depending on last state.
                 result['score'] = scoreFixer.fix(result['score'])
 
-            print('frame', time.time() - frame_start)
+            # print('frame', time.time() - frame_start)
 
             onCap(result, getTimeStamp())
             error = checkNetworkClose()   
