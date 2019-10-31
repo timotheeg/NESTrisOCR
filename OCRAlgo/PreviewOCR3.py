@@ -1,6 +1,6 @@
 ﻿from PIL import Image
 
-BLACK_LIMIT = 15
+BLACK_LIMIT = 20
 
 NEXT_PIECE_BLOCKS = {
     # Alignment 1
