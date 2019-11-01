@@ -177,8 +177,8 @@ def getWindowAreaAndPartialTasks():
                     eval(methodPrefix + 'AndOCRBoardInterpolate'),
                     (
                         processCoordinates(coords),
-                        processCoordinates(areas['black']),
-                        processCoordinates(areas['white']),
+                        processCoordinates(areas['black'], getCentralPixel=True),
+                        processCoordinates(areas['white'], getCentralPixel=True),
                     )
                 ))
             else:
@@ -186,8 +186,8 @@ def getWindowAreaAndPartialTasks():
                     eval(methodPrefix + 'AndOCRBoard'),
                     (
                         processCoordinates(coords),
-                        processCoordinates(areas['color1']),
-                        processCoordinates(areas['color2']),
+                        processCoordinates(areas['color1'], getCentralPixel=True),
+                        processCoordinates(areas['color2'], getCentralPixel=True),
                     )
                 ))
 
