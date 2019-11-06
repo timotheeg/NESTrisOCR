@@ -8,11 +8,13 @@ class WindowMgr():
     def __init__(self):
         pass
     
-    def checkWindow(self, fileName):
+    def checkWindow(self, ocv2_device_id):
         return True
     
     def getWindows(self):
-        return [[int(config.WINDOW_NAME), config.WINDOW_NAME]]
+        ocv2_device_id = int(config.WINDOW_NAME)
+
+        return [[ocv2_device_id, config.WINDOW_NAME]]
 
 class OpenCVMgr():
     def __init__(self):
@@ -20,13 +22,13 @@ class OpenCVMgr():
         self.imgBuf = None
         self.frameCount = 0
 
-    def videoCheck(self, cv2_input_device_index):
+    def videoCheck(self, ocv2_device_id):
         if self.inputDevice is None:
-            self.inputDevice = cv2.VideoCapture(cv2_input_device_index)
+            self.inputDevice = cv2.VideoCapture(ocv2_device_id)
             self.NextFrame()
                 
-    def ImageCapture(self, rectangle, cv2_input_device_index):
-        self.videoCheck(cv2_input_device_index)
+    def ImageCapture(self, rectangle, ocv2_device_id):
+        self.videoCheck(ocv2_device_id)
         return self.imgBuf.crop([rectangle[0],
                                 rectangle[1],
                                 rectangle[0]+rectangle[2],
