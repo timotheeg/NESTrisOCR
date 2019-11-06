@@ -8,6 +8,7 @@ import sys
 
 data = {}
 redData = {}
+binary = ['0', '1']
 digits = ['0','1','2','3','4','5','6','7','8','9','null']
 digitsLetters = digits + ['A','B','C','D','E','F']
 
@@ -48,7 +49,13 @@ def setupData():
 
 def getDigit(img, pattern, startX, startY, red):
     template = redData if red else data
-    validDigits = digitsLetters if pattern == 'A' else digits
+
+    if pattern == 'A':
+        validDigits = digitsLetters
+    elif pattern == 'B':
+        validDigits = binary
+    else:
+        validDigits = digits
     
     scores = {}
     #img in y, x format

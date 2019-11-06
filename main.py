@@ -20,7 +20,8 @@ from tkinter import messagebox, Tk
 import time
 import sys
 
-#patterns for digits. 
+#patterns for digits.
+#B = 0->1
 #A = 0->9 + A->F, 
 #D = 0->9
 PATTERNS = {
@@ -28,7 +29,7 @@ PATTERNS = {
     'lines': 'DDD',
     'level': 'DD',
     'stats': 'DDD',
-    'cur_piece_das': 'DD'
+    'cur_piece_das': 'BD' # legit values are 00 to 16
 }
 
 STATS_METHOD = config.stats_method #can be TEXT or FIELD.
