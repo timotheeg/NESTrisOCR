@@ -9,7 +9,7 @@ from Networking.ByteStuffer import prePackField
 
 try:
     from OCRAlgo.board_ocr import parseImage2 #if it's built
-    #print("loading parseImage2 from compiled")
+    print("loading parseImage2 from compiled")
 except:
     from OCRAlgo.BoardOCR2 import parseImage2
     print("Warning, loaded parseImage2 from llvmlite: please run buildBoardOCR2 to build a compiled version")
@@ -32,8 +32,8 @@ def parseImageReadColors(img, color1, color2):
     color1 = color1.getpixel((0,0))
     color2 = color2.getpixel((0,0))
 
-    black = np.array((10,10,10), dtype=np.uint8)
-    white = np.array((240,240,240), dtype=np.uint8)
+    black = (10, 10, 10)
+    white = (240, 240, 240)
 
     return parseImage(img, black, white, color1, color2)
 
@@ -59,38 +59,38 @@ def parseImageInterpolateColors(img, black, white, level=0):
         lerp(black[2], white[2], color2[2]/0xFF)
     )
 
-    black = np.array(black,dtype=np.uint8)
-    white = np.array(white,dtype=np.uint8)
-    color1 = np.array(color1,dtype=np.uint8)
-    color2 = np.array(color2,dtype=np.uint8)
-
     return parseImage(img, black, white, color1, color2)
 
-    
+
 def parseImage(img, black, white, color1, color2):
+    black = np.array(black, dtype=np.uint8)
+    white = np.array(white, dtype=np.uint8)
+    color1 = np.array(color1, dtype=np.uint8)
+    color2 = np.array(color2, dtype=np.uint8)
+
     img = img.resize((10,20),PIL.Image.NEAREST)
     img = np.array(img,dtype=np.uint8)
-    
+
     result = parseImage2(img, black, white, color1, color2)
-    
+
     if config.netProtocol == 'AUTOBAHN_V2':
         result = prePackField(result)
         result = result.tobytes()
     else:
         result2 = []
         for y in range(20):
-            temp = "".join(str(result[y, x]) for x in range(10))        
+            temp = "".join(str(result[y, x]) for x in range(10))
             result2.append(temp)
         result = "".join(str(r) for r in result2)
-    
+
     return result
 
 
 
 #run as python -m OCRAlgo.BoardOCR
-if __name__ == '__main__':    
-    
-    
+if __name__ == '__main__':
+
+
     from PIL import Image
     img = Image.open("assets/test/board.jpg")
     color1 = Image.open("assets/test/color1.jpg")
@@ -99,5 +99,4 @@ if __name__ == '__main__':
     for i in range(100):
         parseImage(img, color1, color2)
     print(time.time() - t)
-    
-    
+
