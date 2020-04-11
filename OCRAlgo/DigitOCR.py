@@ -2,15 +2,20 @@ import PIL
 from PIL import Image, ImageEnhance, ImageFilter
 import time
 import numpy as np
-    
-    
+
+
 import sys
 
 data = {}
 redData = {}
-binary = ['0', '1']
 digits = ['0','1','2','3','4','5','6','7','8','9','null']
-digitsLetters = digits + ['A','B','C','D','E','F']
+
+digitsMap = {
+    'D': digits,
+    'A': digits + ['A','B','C','D','E','F'],
+    'B': ['0', '1', 'null'],
+    'T': ['0', '1', '2', 'null'],
+}
 
 MONO = True
 IMAGE_SIZE = 7
@@ -43,20 +48,14 @@ def setupColour(prefix, outputDict, digitList):
         outputDict[digit] = img
         
 def setupData():
-    setupColour('sprite_templates/', data, digitsLetters) #setup white
-    setupColour('sprite_templates/red', redData, digits) #setup red
+    setupColour('sprite_templates/', data, digitsMap['A']) #setup white
+    setupColour('sprite_templates/red', redData, digitsMap['D']) #setup red
 
 
 def getDigit(img, pattern, startX, startY, red):
     template = redData if red else data
+    validDigits = digitsMap[pattern]
 
-    if pattern == 'A':
-        validDigits = digitsLetters
-    elif pattern == 'B':
-        validDigits = binary
-    else:
-        validDigits = digits
-    
     scores = {}
     #img in y, x format
     subImage = img[:,startX:startX + SCALED_IMAGE_SIZE]

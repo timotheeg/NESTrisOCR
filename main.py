@@ -22,13 +22,14 @@ import sys
 
 #patterns for digits.
 #B = 0->1
-#A = 0->9 + A->F, 
+#T = 0->2
+#A = 0->9 + A->F,
 #D = 0->9
 PATTERNS = {
     'score': 'ADDDDD' if config.hexSupport else 'DDDDDD',
-    'lines': 'DDD',
-    'level': 'DD',
-    'stats': 'DDD',
+    'lines': 'TDD',
+    'level': 'TD',
+    'stats': 'BDD',
     'cur_piece_das': 'BD' # legit values are 00 to 16
 }
 
