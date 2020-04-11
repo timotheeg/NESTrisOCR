@@ -25,6 +25,7 @@ class OpenCVMgr():
     def videoCheck(self, ocv2_device_id):
         if self.inputDevice is None:
             self.inputDevice = cv2.VideoCapture(ocv2_device_id)
+            time.sleep(1)
             self.NextFrame()
                 
     def ImageCapture(self, rectangle, ocv2_device_id):
