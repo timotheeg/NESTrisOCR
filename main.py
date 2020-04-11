@@ -389,9 +389,9 @@ def main(onCap, checkNetworkClose):
             
             if config.capture_field and time.time() > frame_start + RATE_FIELD:
                 print("Warning, dropped frame when capturing field")
-            
-            
-            result['playername'] = config.player_name            
+
+
+            # result['playername'] = config.player_name
             result['gameid'], wasNewGameID = gameIDParser.getGameID(result['score'],result['lines'],result['level'])
             
             if config.hexSupport:
