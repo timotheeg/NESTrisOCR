@@ -133,7 +133,16 @@ class Configuration:
 
     def setPreviewPerc(self, val):
         self.setItem('calibration','previewperc', val)    
-    
+
+    def setCaptureDasTrainer(self, val):
+        self.setItem('calibration', 'capture_das_trainer', val)
+
+    def setCurrentPiecePerc(self, val):
+        self.setItem('calibration', 'currentpieceperc', val)
+
+    def setCurrentPieceDasPerc(self, val):
+        self.setItem('calibration', 'currentpiecedasperc', val)
+
     def setHost(self, val):
         self.setItem('network','host', val)    
     

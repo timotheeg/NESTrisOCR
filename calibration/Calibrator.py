@@ -7,10 +7,11 @@ from lib import *
 from OCRAlgo.PieceStatsTextOCR import generate_stats
 from OCRAlgo.DigitOCR import finalImageSize, scoreImage0
 from OCRAlgo.PreviewOCR2 import PreviewImageSize
+from calibration.BoolChooser import BoolChooser
 from calibration.StringChooser import StringChooser
 from calibration.RectChooser import RectChooser, CompactRectChooser
 from calibration.ImageCanvas import ImageCanvas
-from calibration.draw_calibration import draw_calibration, highlight_split_digits, highlight_preview, captureArea
+from calibration.draw_calibration import draw_calibration, highlight_split_digits, highlight_preview, highlight_das_trainer, captureArea
 from calibration.OtherOptions import create_window
 from calibration.auto_calibrate import auto_calibrate_raw
 import multiprocessing
@@ -67,6 +68,8 @@ class Calibrator(tk.Frame):
         self.setupTab1()
         self.setupTab2()
         self.setupTab3()
+        self.setupTab4()
+        self.setPreviewTextVisible()
 
         self.redrawImages()
         self.lastUpdate = time.time()
@@ -134,10 +137,43 @@ class Calibrator(tk.Frame):
         self.wsamplePreviewImage.grid()        
         self.wsamplePreviewLabel = tk.Label(f,text="Example of bad calibration (extra pixel borders)")
         self.wsamplePreviewLabel.grid()
-        self.setPreviewTextVisible()
         
         self.tabManager.add(f, text="PreviewPiece")
-    
+
+    def setupTab4(self):
+        f = tk.Frame(self.tabManager)
+
+        self.dasEnabledChooser = BoolChooser(
+            f, 'Enable DAS Trainer specific capturing',
+            config.capture_das_trainer, self.changeCaptureDasTrainer)
+        self.dasEnabledChooser.grid(row=0, columnspan=2)
+
+        self.dasCurrentPieceChooser = CompactRectChooser(
+            f, "Current Piece (imagePerc)", config.currentPiecePerc,
+            True, self.updateCurrentPiecePerc)
+        self.dasCurrentPieceChooser.grid(row=1, columnspan=2)
+
+        canvasSize = [UPSCALE * 2 * i for i in PreviewImageSize]
+        self.dasCurrentPieceImage = ImageCanvas(f, canvasSize[0], canvasSize[1])
+        self.dasCurrentPieceImage.grid(row=2, columnspan=2)
+
+        canvasSize = [UPSCALE * i for i in finalImageSize(2)]
+        Button(
+            f, text="Auto Adjust Current Piece DAS \n Needs START DAS = 00",
+            command=self.autoCurrentPieceDas, bg='red'
+        ).grid(row=3,column=0)
+        self.currentPieceDasPercChooser = CompactRectChooser(
+            f, "currentPieceDas (imagePerc)", config.currentPieceDasPerc,
+            True, self.updateCurrentPieceDasPerc
+        )
+        self.currentPieceDasPercChooser.grid(row=3,column=1)
+        self.currentPieceDasImage = ImageCanvas(
+            f, canvasSize[0], canvasSize[1]
+        )
+        self.currentPieceDasImage.grid(row=4, columnspan=2)
+
+        self.tabManager.add(f, text="DasTrainer")
+
     def setFieldTextVisible(self):
         show = False
         if (self.config.capture_field or 
@@ -161,11 +197,15 @@ class Calibrator(tk.Frame):
         if show:
             self.previewPiece.grid()
             self.previewImage.grid()
+            self.dasCurrentPieceImage.grid()
+            self.currentPieceDasImage.grid()
             self.samplePreviewImage.grid()
             self.samplePreviewLabel.grid()
         else:
             self.previewPiece.grid_forget()
             self.previewImage.grid_forget()
+            self.dasCurrentPieceImage.grid_forget()
+            self.currentPieceDasImage.grid_forget()
             self.samplePreviewImage.grid_forget()
             self.samplePreviewLabel.grid_forget()
 
@@ -208,6 +248,15 @@ class Calibrator(tk.Frame):
 
     def updatePreviewPerc(self, result):
         self.updateRedraw(self.config.setPreviewPerc, result)
+    
+    def updateCurrentPiecePerc(self, result):
+        self.updateRedraw(self.config.setCurrentPiecePerc, result)
+
+    def updateCurrentPieceDasPerc(self, result):
+        self.updateRedraw(self.config.setCurrentPieceDasPerc, result)
+
+    def changeCaptureDasTrainer(self, result):
+        self.updateRedraw(self.config.setCaptureDasTrainer, result)
 
     def redrawImages(self):
         self.lastUpdate = time.time()
@@ -230,10 +279,17 @@ class Calibrator(tk.Frame):
             self.linesImage.updateImage(lines_img)
             self.scoreImage.updateImage(score_img)
             self.levelImage.updateImage(level_img)
-        if self.getActiveTab() == 2: #preview
+        elif self.getActiveTab() == 2: #preview
             preview_img = highlight_preview(self.config)
             preview_img = preview_img.resize((UPSCALE * 2 * i for i in preview_img.size))
             self.previewImage.updateImage(preview_img)
+        elif self.getActiveTab() == 3:  # DAS Trainer
+            current_piece_img, current_piece_das_img = highlight_das_trainer(self.config)
+            current_piece_img = current_piece_img.resize((UPSCALE * 2 * i for i in current_piece_img.size))
+            current_piece_das_img = current_piece_das_img.resize((UPSCALE * i for i in current_piece_das_img.size))
+
+            self.dasCurrentPieceImage.updateImage(current_piece_img)
+            self.currentPieceDasImage.updateImage(current_piece_das_img)
             
     
     def autoLines(self):
@@ -259,6 +315,14 @@ class Calibrator(tk.Frame):
             self.config.setLevelPerc(bestRect)        
         else:
             print ("Please have score on screen as 00")
+
+    def autoCurrentPieceDas(self):
+        bestRect = autoAdjustRectangle(self.config.CAPTURE_COORDS, self.config.currentPieceDasPerc, 2)
+        if bestRect is not None:
+            self.levelPerc.show(str(item) for item in bestRect)
+            self.config.setCurrentPieceDasPerc(bestRect)        
+        else:
+            print ("Please have current piece das on screen as 00")
         
     def getNewBoardImage(self):
         return draw_calibration(self.config)

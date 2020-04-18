@@ -46,7 +46,18 @@ def highlight_preview(c):
     previewImg = captureArea(previewPix)
     previewImg = previewImg.resize(PreviewImageSize, Image.BOX)
     return previewImg
-    
+
+def highlight_das_trainer(c):
+    currentPiecePix = mult_rect(c.CAPTURE_COORDS, c.currentPiecePerc)
+    currentPieceImg = captureArea(currentPiecePix)
+    currentPieceImg = currentPieceImg.resize(PreviewImageSize, Image.BOX)
+
+    currentPieceDasPix = mult_rect(c.CAPTURE_COORDS, c.currentPieceDasPerc)
+    currentPieceDasImg = captureArea(currentPieceDasPix)
+    currentPieceDasImg = currentPieceDasImg.resize(finalImageSize(2))
+
+    return currentPieceImg, currentPieceDasImg
+
 def highlight_calibration(img, c):    
     poly = Image.new('RGBA', (img.width,img.height))
     draw = ImageDraw.Draw(poly)
@@ -110,6 +121,18 @@ def highlight_calibration(img, c):
         for o in calculateOffsets():
             rect = (o[0], o[1], pixelWidth, pixelHeight)
             draw.rectangle(screenPercToPixels(img.width,img.height,rect),fill='red')
+
+    if c.capture_das_trainer:
+        draw.rectangle(
+            screenPercToPixels(
+                img.width, img.height, c.currentPieceDasPerc
+            ), fill=green
+        )
+        draw.rectangle(
+            screenPercToPixels(
+                img.width, img.height, c.currentPiecePerc
+            ), fill=blue
+        )
 
     img.paste(poly,mask=poly)    
     del draw
