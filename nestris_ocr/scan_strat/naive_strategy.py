@@ -83,10 +83,6 @@ class NaiveStrategy(BaseStrategy):
 
         if self.lines and self.score and self.level:
             self.gamestate = GameState.IN_GAME
-            if self.lines == "000" and self.score == "000000":
-                return True
-
-        return False
 
     def update_ingame(self):
         for task in self.tasks:

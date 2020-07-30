@@ -77,8 +77,9 @@ class BaseStrategy(object):
         self.current_time = timestamp
         self.current_frame = frame
         if self.gamestate == GameState.MENU:
-            is_newgame = self.update_menu()
-            if is_newgame:
+            self.update_menu()
+
+            if self.gamestate == GameState.IN_GAME:
                 self.on_newgame()
         else:
             self.update_ingame()
