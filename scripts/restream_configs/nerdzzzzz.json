@@ -1,6 +1,6 @@
 {
-  "player.name": "its_dlo",
-  "player.twitch_url": "twitch.tv/its_dlo",
+  "player.name": "nerdzzzzz",
+  "player.twitch_url": "twitch.tv/nerdzzzzz",
   "calibrator.ui": "ADVANCED",
   "performance.support_hex_score": false,
   "performance.support_hex_level": false,
@@ -8,7 +8,7 @@
   "stats.enabled": true,
   "stats.capture_method": "TEXT",
   "capture.method": "STREAM",
-  "capture.source_id": "https://video-weaver.sin01.hls.ttvnw.net/v1/playlist/CtUDw5M8sReqsiGofa8__Y4-WNXxSQt_3_1TJ87DdBjrHJlxF8x1E1y_Ys_jRdwV9mTNSR--yHjWJFufO5VfJpM30AR9EpleMsfu1mlP3eDVzbX4yNSv8cFomnfeQYWfo_P4VpbiUgv395VSxiZb1YqY-Dnirki_oJE3sKKPt5OEpijZ2qTzccoFuK393NMjikjVjU0UC_5O5-Z-6sQjYm1mrewf91N9E-5dCOMVsYvcFQtR0RFL9M3SLrb9CDWb1kTj7ItCI1gNnWBkeSJdvYZlSvs4B-yf5UcfTvlysTxCZBEA3dc7-CELVcDebvlh_vOFvYdWTI2mFfDDvWbA8kLq-rTRb5e_GL4eavvVe6VwoHy_LON1qXyXLWwgOZtLrpWmEgRL_BLTxgwHQFUFNSA1nP6xf2M3Xw2Qkodw-uCwUSAJvU7n-Y-Z-BvBNrYGUnM9gWYX6JUDSizJ-7G_JGRp0CHeA5xWGISjseEOklifzu1Y9qZFrbr7iqRp6mfueVv99GzSZ9KJ1RqrWrt-Js5wpbFzTcwZNt0g67r7KgWo8DtBQq3tPsZGHqBaohocyLCp1lK8YJb2x-8IaF7yWSTqGT8r0p5lpLqUhPnR-NiQDjf5alZ37BIQpimRcfb36YtYIPOrupBBehoMeLTTlGt9wtXNMBSo.m3u8",
+  "capture.source_id": "https://video-weaver.sin01.hls.ttvnw.net/v1/playlist/CvwDk62QwyRCk8_DboeRorQ2UL-JpOVNzEJsU8iELuZFFg4kmTx8725ZmDz95yMo89wCQBM7JBRa51hLYoQNtNtrnqv406DTAS82n5x51SsL-iP4NqJ149gnPkmZi3cMw-XHehYpBGkKtkaY-WDS3u9ZD7ku8qfehxeaFiuQeTcW2On0iGoWqbrpYwffV_lVqlOkqUnR7HHyvjAVuzIkgwa8y-O-M_D14vgF7QEp5oEfWbwkOC1UAWXP4S7kNups2iD4xzNACdDP1BU2miurRqYNjSTD16uw8TrrCPI2WN1HD3WUWb-IIY4VeC1FHRUUsPjRCvqgU94BFmaU7S6I8Bpt1dTJSucBdXnXLMlDA72gkFIMX7iQAjXZFMuvaB1NmE3AijQa4z0L9XSwIWNwNDfXeq3oh-5FWr3iqpjTDAWte3XOvIf0hpUfZeLVrD7c4poM046KOukQTG3JtSFtiNIcFTm4zuYg7Oh1QpNdiMC_0to10zYiJ8I_ngxFtzUiHcqkTrhy4H8mO1_wxIQQmrMDH-np_bVQ_RQbcbQszQL6h1BoXsZ1iG1QJBQ0KO322qic3_8YBadY14GnkW27RnxxaxCfbnCIiKryS8ZRvwrFVHQLVqGMEYmT10LNa2D8Jt7_FtWPqEZ75vwfFJp8RSI6MlOHk2jBoRjBemMj6RIQPji_xBxAd_3D-UqFHDoEUBoMe0KbISQP-a5sOC-7.m3u8",
   "capture.source_extra_data": "",
   "capture.deinterlace_method": "DISCARD_BOTTOM",
   "capture.deinterlace_res": "FULL",
@@ -18,32 +18,32 @@
   "calibration.game_coords": [
     0,
     0,
-    411,
-    360
+    876,
+    768
   ],
   "calibration.pct.score": [
     0.751,
-    0.25,
-    0.181,
-    0.031
+    0.247,
+    0.182,
+    0.03
   ],
   "calibration.pct.lines": [
-    0.595,
-    0.071,
-    0.088,
-    0.031
+    0.594,
+    0.06999999999999999,
+    0.09,
+    0.028999999999999998
   ],
   "calibration.pct.level": [
-    0.8099999999999999,
-    0.714,
-    0.06,
-    0.031
+    0.8119999999999999,
+    0.709,
+    0.057999999999999996,
+    0.028999999999999998
   ],
   "calibration.pct.stats": [
-    0.189,
-    0.392,
-    0.09,
-    0.46
+    0.187,
+    0.39,
+    0.091,
+    0.457
   ],
   "calibration.pct.flash": [
     0.749,
@@ -53,23 +53,23 @@
   ],
   "calibration.capture_field": true,
   "calibration.pct.field": [
-    0.374,
-    0.176,
+    0.373,
+    0.175,
     0.312,
-    0.715
+    0.71
   ],
   "calibration.dynamic_colors": true,
   "calibration.pct.color1": [
-    0.153,
-    0.477,
-    0.018,
+    0.149,
+    0.471,
+    0.014999999999999996,
     0.018
   ],
   "calibration.pct.color2": [
-    0.153,
-    0.552,
-    0.014999999999999996,
-    0.018
+    0.15,
+    0.548,
+    0.015999999999999997,
+    0.016999999999999998
   ],
   "calibration.dynamic_black_n_white": true,
   "calibration.color_interpolation": true,
@@ -81,10 +81,10 @@
   ],
   "calibration.capture_preview": true,
   "calibration.pct.preview": [
-    0.753,
-    0.501,
-    0.118,
-    0.066
+    0.751,
+    0.498,
+    0.119,
+    0.064
   ],
   "calibration.capture_das": false,
   "calibration.pct.das.current_piece": [
@@ -106,7 +106,7 @@
     0.034
   ],
   "network.host": "127.0.0.1",
-  "network.port": 4002,
+  "network.port": 4001,
   "network.protocol": "LEGACY",
   "debug.print_packet": true,
   "debug.print_benchmark": false

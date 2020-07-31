@@ -35,6 +35,8 @@ def setup_player(twitch_name, player_num, local_vlc=True):
         "1080p",
         "1080p60",
         "360p60",
+        "768p",
+        "460p",
     ]
 
     # ==================================
