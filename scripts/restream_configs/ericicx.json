@@ -1,0 +1,113 @@
+{
+  "player.name": "ericicx",
+  "player.twitch_url": "twitch.tv/ericicx",
+  "calibrator.ui": "ADVANCED",
+  "performance.support_hex_score": false,
+  "performance.support_hex_level": false,
+  "performance.scan_rate": 60,
+  "stats.enabled": true,
+  "stats.capture_method": "TEXT",
+  "capture.method": "STREAM",
+  "capture.source_id": "https://video-weaver.sin01.hls.ttvnw.net/v1/playlist/CtMDdFKBVmalk33-1qOBeo96DvQ2fDp4t9nh-2sZMv5xmrAsQwwwGPw5eVa1oRL3x-xkHAvl-A53FlsH4U9zDPTb7iXxAko7uFduHDwbbzNCJL2cRGq_FZIFgrIt0fFrNXwc4eni2UQodUan92hlCQZouVZAD3NES2Tm4VgPC-MtCeYy_g4g0kyfMVFUte8fSaXlM9ZBM95fHVNJV1J7Ha_-k-gdgKehR3Ixh1nmwLdOI5umsxin35BJud4Q8Jw7_CzbsA2K8b0yIegqLVNSSFUiAwkV0P8IcWIlZ6ADx0fxrHw5hItmdkwf94lKeLkRBYFYZDtPUFTqoesS4dtNGkqVLjO93ppFef6Jp-ZZuSVECfbgga4UcNSDY2S806c5aDAkbIWF4UC_r3Jborw1E41XNjDdhHQ8uDRICN4_AYcOuT8SklvpB-0J5iNwQ1ot-37B9CRsoXTj3liuWhrngr6sb9Xbne75d2qoVj5mUMdcrpqXnZYdg4AZhWLCFw-5gv28DB_iP9dWoMzhmvTg_IAWUsg-wACsdfi3H-9oz8043rrhXKbNfvsSOUc2F3IIq1pICDiV8Ks82S-RJ4MlmpWJYugFctrGap7XcKHm4bNitvU90kASEOMHVw4SQvemEymTIKbsUmsaDIx1eonFGSU_vgW_og.m3u8",
+  "capture.source_extra_data": "",
+  "capture.deinterlace_method": "DISCARD_BOTTOM",
+  "capture.deinterlace_res": "FULL",
+  "calibration.palette": "DEFAULT",
+  "calibration.flash_method": "NONE",
+  "calibration.flash_threshold": 150,
+  "calibration.game_coords": [
+    0,
+    0,
+    547,
+    480
+  ],
+  "calibration.pct.score": [
+    0.752,
+    0.252,
+    0.183,
+    0.03
+  ],
+  "calibration.pct.lines": [
+    0.595,
+    0.072,
+    0.09,
+    0.032
+  ],
+  "calibration.pct.level": [
+    0.814,
+    0.713,
+    0.056999999999999995,
+    0.031
+  ],
+  "calibration.pct.stats": [
+    0.187,
+    0.392,
+    0.091,
+    0.458
+  ],
+  "calibration.pct.flash": [
+    0.749,
+    0.37,
+    0.07,
+    0.012
+  ],
+  "calibration.capture_field": true,
+  "calibration.pct.field": [
+    0.374,
+    0.175,
+    0.311,
+    0.716
+  ],
+  "calibration.dynamic_colors": true,
+  "calibration.pct.color1": [
+    0.15,
+    0.476,
+    0.016999999999999998,
+    0.018
+  ],
+  "calibration.pct.color2": [
+    0.15,
+    0.552,
+    0.016999999999999998,
+    0.018
+  ],
+  "calibration.dynamic_black_n_white": true,
+  "calibration.color_interpolation": true,
+  "calibration.pct.black_n_white": [
+    0.827,
+    0.43299999999999994,
+    0.028,
+    0.02
+  ],
+  "calibration.capture_preview": true,
+  "calibration.pct.preview": [
+    0.752,
+    0.499,
+    0.118,
+    0.065
+  ],
+  "calibration.capture_das": false,
+  "calibration.pct.das.current_piece": [
+    0.06,
+    0.191,
+    0.09,
+    0.059
+  ],
+  "calibration.pct.das.current_piece_das": [
+    0.216,
+    0.211,
+    0.061,
+    0.034
+  ],
+  "calibration.pct.das.instant_das": [
+    0.154,
+    0.134,
+    0.061,
+    0.034
+  ],
+  "network.host": "127.0.0.1",
+  "network.port": 4002,
+  "network.protocol": "LEGACY",
+  "debug.print_packet": true,
+  "debug.print_benchmark": false
+}
