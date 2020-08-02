@@ -1,14 +1,14 @@
 {
-  "player.name": "zefanyanenu",
-  "player.twitch_url": "twitch.tv/zefanyanenu",
+  "player.name": "plasmamonkey",
+  "player.twitch_url": "twitch.tv/plasmamonkey",
   "calibrator.ui": "ADVANCED",
   "performance.support_hex_score": false,
   "performance.support_hex_level": false,
-  "performance.scan_rate": 60,
+  "performance.scan_rate": 30,
   "stats.enabled": true,
   "stats.capture_method": "TEXT",
   "capture.method": "STREAM",
-  "capture.source_id": "https://video-weaver.sin01.hls.ttvnw.net/v1/playlist/CoIEbxveOUW0oanFDt-ipdpR-g1Vos_8z_SaU7NEO9UePHS2VGL2x8jrz2VL8B_tzNwXKP9FyN-89h5qTFS6PdPlndBiax477Bd3fjx_ETlzTTQgLXgc85espy6-mlGCMUxqMQcGMWugH3xFb2FEoSZnL4DV9N1vkhRxdFuNV29SirPJcDv6tu2qe4yBcmKlZUeyb4kDZM4ZQrjw5wTetVIogdmvr-tQkp0as6MS7mn-uAM0S8B2uWWjP15WCNT_Qq--uYDE3ZvoZyUt0AghkJ9n2f-6bmXht42dDuCdYXeNGi5SfNadbqDmwHKye6Dt_xcjaTuiC3hTQG-PeAn6yt4tHHWGKvBvH7AFnMpewPNIAVJVLDhUil_bLocW7YROpggp_NuslWAamAchFrWB3ix2GpNf-ijVvEVv_FP_Z1izEraIzoihSM8Z6ygmrK3zY_uE1GZInrF5PGGim2vFeq1zjirP14ORajWQh5oyG-yT1fCHHoJHNgUo4YB4wAFmhqYzy5Yqtd840lcluzdwo9D6HlArI8CjU0RKJzSzPpyp57C7PWdR0S9287Td8Ew3HfMaj3pmdbqMo46SqUYcaYnZHoXmUaT7YSNihklT0KGUsVwjiCpk9ahEieMTrzWOECZLjy3nugbVEXg772LDAuW_pv64-HwhmyjlF7Oh4-aNZJJuUhIQ_2ElGpvSCxyf95SPn_4lbBoMkfyCWa0yqSLYQECE.m3u8",
+  "capture.source_id": "https://video-weaver.sin01.hls.ttvnw.net/v1/playlist/CoUEIsPN-6sfsX2Rap-EA-mX6CnO0UWJb3yKJVlO0-7iH6sRYtAKLAgGmi9CroZkK_p9YxaJUYF2WoMsNoh19ZX7XXm3Sf9QLOYTRt7Z2Pwpy8TUez1NIoVomslmB9B8ASCjOVHym8KnfSKwltokmF-YmCM8uAUsx3-wZiZbTiCKjqmMMSZ5XjSOxR5dspRBJhxdsPg9tKmSF99-G3YuR6UFoLUXt-YPAh9uHY3aESmaf5wsBY4VibKDgMJXHOTjYbRQJf5aM2mQ-r3OHl0-WoYtDfHJbO5QcCncUTXPuPF_Y1WJgunHXHZl8je1ctxRJiNGzTgFU5-VZMkFMlBG5MP5OZDsSXm8b01xrBea_gxAIOOUH2Q2YmxUOdLBCJhj8NfHUrL8kD0M6Gw5JY21lIqTtyODkpIY9WoDcxr1Mwo56rnRwXiHa2YGFXFHU7CxyjN_aJChcT8xgXcp7OIKDLCOhkU-X6YDmnHLj5OFbyEg1PsYj9DZXNXUCMFL0UdIJlVOU5QmfkWkvoa9WzuFSsDk7xyF2f1YFWsoGC1YVjxn8szWCfiSgrwmBSGesGYZ0qdtirj5UqWaZIzlcIZxJ18a5xb4WhzFhb0Sv7toqPGebCYUwpV3maQf7l2RmOItg9BX8DVk8q1CPA1RmUxJF_zhN7RtTshQ8L1tys5lsUdLUciyoheO9BIQPK0WHgfyVGiLdZyVkdYOchoMjx3WH5ITOS_Esfi9.m3u8",
   "capture.source_extra_data": "",
   "capture.deinterlace_method": "DISCARD_BOTTOM",
   "capture.deinterlace_res": "FULL",
@@ -18,31 +18,31 @@
   "calibration.game_coords": [
     0,
     0,
-    411,
-    360
+    822,
+    720
   ],
   "calibration.pct.score": [
-    0.752,
-    0.25,
+    0.753,
+    0.249,
     0.183,
-    0.031
+    0.028999999999999998
   ],
   "calibration.pct.lines": [
-    0.595,
-    0.071,
+    0.597,
+    0.072,
     0.088,
-    0.031
+    0.028999999999999998
   ],
   "calibration.pct.level": [
-    0.814,
-    0.713,
-    0.059,
-    0.03
+    0.815,
+    0.714,
+    0.056999999999999995,
+    0.028999999999999998
   ],
   "calibration.pct.stats": [
-    0.188,
+    0.187,
     0.392,
-    0.089,
+    0.091,
     0.459
   ],
   "calibration.pct.flash": [
@@ -53,23 +53,23 @@
   ],
   "calibration.capture_field": true,
   "calibration.pct.field": [
-    0.374,
-    0.176,
-    0.312,
-    0.715
+    0.376,
+    0.175,
+    0.311,
+    0.713
   ],
   "calibration.dynamic_colors": true,
   "calibration.pct.color1": [
-    0.15,
-    0.476,
+    0.148,
+    0.472,
     0.018,
-    0.02
+    0.021
   ],
   "calibration.pct.color2": [
-    0.15,
-    0.551,
+    0.148,
+    0.547,
     0.018,
-    0.02
+    0.022000000000000002
   ],
   "calibration.dynamic_black_n_white": true,
   "calibration.color_interpolation": true,
@@ -81,10 +81,10 @@
   ],
   "calibration.capture_preview": true,
   "calibration.pct.preview": [
-    0.754,
+    0.751,
     0.499,
-    0.118,
-    0.067
+    0.12,
+    0.065
   ],
   "calibration.capture_das": false,
   "calibration.pct.das.current_piece": [

@@ -1,6 +1,6 @@
 {
-  "player.name": "zefanyanenu",
-  "player.twitch_url": "twitch.tv/zefanyanenu",
+  "player.name": "xeal337",
+  "player.twitch_url": "twitch.tv/xeal337",
   "calibrator.ui": "ADVANCED",
   "performance.support_hex_score": false,
   "performance.support_hex_level": false,
@@ -8,7 +8,7 @@
   "stats.enabled": true,
   "stats.capture_method": "TEXT",
   "capture.method": "STREAM",
-  "capture.source_id": "https://video-weaver.sin01.hls.ttvnw.net/v1/playlist/CoIEbxveOUW0oanFDt-ipdpR-g1Vos_8z_SaU7NEO9UePHS2VGL2x8jrz2VL8B_tzNwXKP9FyN-89h5qTFS6PdPlndBiax477Bd3fjx_ETlzTTQgLXgc85espy6-mlGCMUxqMQcGMWugH3xFb2FEoSZnL4DV9N1vkhRxdFuNV29SirPJcDv6tu2qe4yBcmKlZUeyb4kDZM4ZQrjw5wTetVIogdmvr-tQkp0as6MS7mn-uAM0S8B2uWWjP15WCNT_Qq--uYDE3ZvoZyUt0AghkJ9n2f-6bmXht42dDuCdYXeNGi5SfNadbqDmwHKye6Dt_xcjaTuiC3hTQG-PeAn6yt4tHHWGKvBvH7AFnMpewPNIAVJVLDhUil_bLocW7YROpggp_NuslWAamAchFrWB3ix2GpNf-ijVvEVv_FP_Z1izEraIzoihSM8Z6ygmrK3zY_uE1GZInrF5PGGim2vFeq1zjirP14ORajWQh5oyG-yT1fCHHoJHNgUo4YB4wAFmhqYzy5Yqtd840lcluzdwo9D6HlArI8CjU0RKJzSzPpyp57C7PWdR0S9287Td8Ew3HfMaj3pmdbqMo46SqUYcaYnZHoXmUaT7YSNihklT0KGUsVwjiCpk9ahEieMTrzWOECZLjy3nugbVEXg772LDAuW_pv64-HwhmyjlF7Oh4-aNZJJuUhIQ_2ElGpvSCxyf95SPn_4lbBoMkfyCWa0yqSLYQECE.m3u8",
+  "capture.source_id": "https://video-weaver.sin01.hls.ttvnw.net/v1/playlist/CvQDtT_IK0FohcSDohs-uKK_KMAhmeHFPw7rlX3vN2StsZCnVT4vp5nwM5a10ezB9iwOCvy497YTJkBF16EdUMDwQtST4aCL01Pah9l_P9fJ1miYp9inlz1NnpbCJYEsPoNASDw5XvsfjErejJuJUEvL-9mIB8ULdch4jIZyX7xF5R_BbvKO17uNp4phpZKQPgxHtgpv45Q2sF9xdn2DFcTn8l4uIPKLP_GFoSYy2kGvC5rxVGf-QF7DEuwoWEFtpp-oGzHikphufCS_ZnZoRP1gu_TlA5EwAScAhCBg_RfMt4YLnpxt1kHM6mr-azA2ccl6hhkgfY1Utl0uQtFGZ4xS_vFpFl5Jyo66juv4Keh2KinHVewjcBjFfJU2BcMMonQFFYOsdubqCqhLcShJDlOrVqXQot0MwJonLUhh49f2UrHcgLKUxy-d3sni9L-QIypiXs6AdzozTnQGMwGEMyn5PB92SyrbgEUmSp36GCe2r8NSRpJKO_55pgtoDH7Mn5czi0rwwNxzID2Ds3DrDMTGggNBTOViTO_5eyJ0k8A3eOP5MxwGR8gFAShaLbFtQrKTcPtRm9mAaq6y9W8MT-siQuY5ODuHduXzGHy42-txicPJlTZTsUZmGCznD2PGolGGlT2te_GsBTR_u9jjzkjfTIBcgDISEDqsfsKPpmNY1dJb3JcM29gaDLEgqKIYvM8A-HCr6w.m3u8",
   "capture.source_extra_data": "",
   "capture.deinterlace_method": "DISCARD_BOTTOM",
   "capture.deinterlace_res": "FULL",
@@ -18,32 +18,32 @@
   "calibration.game_coords": [
     0,
     0,
-    411,
-    360
+    547,
+    480
   ],
   "calibration.pct.score": [
     0.752,
-    0.25,
-    0.183,
-    0.031
+    0.252,
+    0.181,
+    0.03
   ],
   "calibration.pct.lines": [
     0.595,
-    0.071,
-    0.088,
-    0.031
+    0.074,
+    0.09,
+    0.03
   ],
   "calibration.pct.level": [
     0.814,
-    0.713,
-    0.059,
-    0.03
+    0.714,
+    0.056999999999999995,
+    0.032
   ],
   "calibration.pct.stats": [
-    0.188,
-    0.392,
-    0.089,
-    0.459
+    0.191,
+    0.396,
+    0.088,
+    0.457
   ],
   "calibration.pct.flash": [
     0.749,
@@ -53,23 +53,23 @@
   ],
   "calibration.capture_field": true,
   "calibration.pct.field": [
-    0.374,
-    0.176,
-    0.312,
-    0.715
+    0.375,
+    0.178,
+    0.31,
+    0.709
   ],
   "calibration.dynamic_colors": true,
   "calibration.pct.color1": [
-    0.15,
+    0.153,
     0.476,
-    0.018,
-    0.02
+    0.014999999999999996,
+    0.021
   ],
   "calibration.pct.color2": [
-    0.15,
-    0.551,
-    0.018,
-    0.02
+    0.153,
+    0.552,
+    0.014999999999999996,
+    0.019
   ],
   "calibration.dynamic_black_n_white": true,
   "calibration.color_interpolation": true,
@@ -81,9 +81,9 @@
   ],
   "calibration.capture_preview": true,
   "calibration.pct.preview": [
-    0.754,
+    0.753,
     0.499,
-    0.118,
+    0.11699999999999999,
     0.067
   ],
   "calibration.capture_das": false,
@@ -106,7 +106,7 @@
     0.034
   ],
   "network.host": "127.0.0.1",
-  "network.port": 4002,
+  "network.port": 4001,
   "network.protocol": "LEGACY",
   "debug.print_packet": true,
   "debug.print_benchmark": false
