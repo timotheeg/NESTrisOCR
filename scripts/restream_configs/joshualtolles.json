@@ -1,0 +1,113 @@
+{
+  "player.name": "joshualtolles",
+  "player.twitch_url": "twitch.tv/joshualtolles",
+  "calibrator.ui": "ADVANCED",
+  "performance.support_hex_score": false,
+  "performance.support_hex_level": false,
+  "performance.scan_rate": 30,
+  "stats.enabled": true,
+  "stats.capture_method": "TEXT",
+  "capture.method": "STREAM",
+  "capture.source_id": "https://video-weaver.sin01.hls.ttvnw.net/v1/playlist/CoUE_VRitIhk6ZBMmK5a8bcR_rvzrXNaQviaz07aTe3XsAG9dQj8v3g4cyeW1FAKFJUeG-a889zTgbE2coZPD8T4cBN_cq9kD8lxTK4qdOodA9RclQhX2w7sFn3HQSEcBnRL8gGDEptN06YGm8AbFEU_xeDzienVrfKy8_pIxW00IWgkKALxGPZxef0repbDmTvpnfWad9_Yehns8qXa1ddw5tQE1kvLaaGRbfSu55XU2ZJ8MRL76MIO10wYRcsud-ia_xIljRs0Ueu22Lqhuc9iF2zfszAQnZlai04VYuSBp5ZQaDARUG_Jt6Ih41v2G0GXmJKoSV1F8CbDQzM_M3mZaofqFq4Z0YrKUbIPSbILgQSQwFohrH562mlHUUVlf7SK1NsWmpsS8KvY4kvw1XOw4V_eyY9KtzJlPhZECejdmnRbPsGLo7vcmJGP21R27XXPwN6krY-D4bad3hgvnqMz6_uc1OAvYnw91qRVHKCYvWhLZ817bB4DudH0Hgr9My1aXj6rDfIOSi4KrMGZEeVq0PuTtzU2IgarTLdFREK_aSK9Dp6xSww1QTc06ddOdXIT4n5C8js8CZL-y8ZwJc30EOHAVWpd-iPrgPNUnTLwDCTIW32gVTCFGKYbs6cVsGBioqLzyYdJplmHWUK_wElSIrMURD7e8-QLMMn60-GSy22U827cjBIQQJ47zmLEjz0xmtp_Mhce_xoMIDfld6XBKXcvemhV.m3u8",
+  "capture.source_extra_data": "",
+  "capture.deinterlace_method": "DISCARD_BOTTOM",
+  "capture.deinterlace_res": "FULL",
+  "calibration.palette": "DEFAULT",
+  "calibration.flash_method": "NONE",
+  "calibration.flash_threshold": 150,
+  "calibration.game_coords": [
+    0,
+    0,
+    547,
+    480
+  ],
+  "calibration.pct.score": [
+    0.752,
+    0.25,
+    0.184,
+    0.032
+  ],
+  "calibration.pct.lines": [
+    0.595,
+    0.071,
+    0.09,
+    0.032
+  ],
+  "calibration.pct.level": [
+    0.814,
+    0.714,
+    0.059,
+    0.032
+  ],
+  "calibration.pct.stats": [
+    0.186,
+    0.392,
+    0.09,
+    0.461
+  ],
+  "calibration.pct.flash": [
+    0.749,
+    0.37,
+    0.07,
+    0.012
+  ],
+  "calibration.capture_field": true,
+  "calibration.pct.field": [
+    0.374,
+    0.176,
+    0.312,
+    0.717
+  ],
+  "calibration.dynamic_colors": true,
+  "calibration.pct.color1": [
+    0.15,
+    0.476,
+    0.014999999999999996,
+    0.02
+  ],
+  "calibration.pct.color2": [
+    0.15,
+    0.552,
+    0.014999999999999996,
+    0.019
+  ],
+  "calibration.dynamic_black_n_white": true,
+  "calibration.color_interpolation": true,
+  "calibration.pct.black_n_white": [
+    0.827,
+    0.43299999999999994,
+    0.028,
+    0.02
+  ],
+  "calibration.capture_preview": true,
+  "calibration.pct.preview": [
+    0.753,
+    0.499,
+    0.12,
+    0.067
+  ],
+  "calibration.capture_das": false,
+  "calibration.pct.das.current_piece": [
+    0.06,
+    0.191,
+    0.09,
+    0.059
+  ],
+  "calibration.pct.das.current_piece_das": [
+    0.216,
+    0.211,
+    0.061,
+    0.034
+  ],
+  "calibration.pct.das.instant_das": [
+    0.154,
+    0.134,
+    0.061,
+    0.034
+  ],
+  "network.host": "127.0.0.1",
+  "network.port": 4001,
+  "network.protocol": "LEGACY",
+  "debug.print_packet": true,
+  "debug.print_benchmark": false
+}
