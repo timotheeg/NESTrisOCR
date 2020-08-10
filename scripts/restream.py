@@ -39,6 +39,7 @@ def setup_player(twitch_name, player_num, local_vlc=True):
         "768p",
         "460p",
         "614p",  # digginout
+        "576p60",  # pixelandy
     ]
 
     # ==================================
