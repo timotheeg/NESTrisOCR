@@ -8,7 +8,7 @@
   "stats.enabled": true,
   "stats.capture_method": "TEXT",
   "capture.method": "STREAM",
-  "capture.source_id": "http://localhost:8082",
+  "capture.source_id": "https://video-weaver.sin01.hls.ttvnw.net/v1/playlist/CocEQi1imaB03xw1SNQf2lo9ytPbPFtZNrJP-N4HG-jqhqK1aqnTav-tMA17IZfgcTmYoPqY1EifsbCb19ZR2Zj7ndsaxgForJS0nj9ik5HCctzDPqrfFcnIVnfZWAv-PcTvpd1NfZ3_fPWw_0nst9nj-I_LyAelG8F1kb7tLZY9a877f1OMidx_zMH_6TD_eXceVVJ4Uc4rzeyTfmmQkCZcSRk4G015Jyqp9AgpOnZbJzOlzOzPnnbl4eLU_bn2ay6nAPuk73PJktLoWJn4iC9cB2Y5lG_sA3ZfiJdXcXXIl3sqRXmbaml8aLzll15F_iU7yAWMVPpx8NDHRfftBeDS9JgbKLA4MbM-IgbfFc0cdyCI9xkmOKpiOVrjHbc5OVDveD5LK1L3RRbAuFCLxRrm-cSfkMhOQJoe3HsdfRMFjDauh7mIA0E4_0F_Ygj0VK_vQKGbs1OmqLSGaVSkvSN_WVmCVhPab0Lp7VQ0dLG6WryVdjHHsPWsf35vBjPmMFfPXWZI2KdrH031eUPl7wY_UuWVrt0SC7ExFz8FX7TpdSQ20bffamFB1pjTpocd4YjJ1OBX5ca4b-cowcP1POav0PmGg2lph1WnqmHzNz_tXOWk45pltxB9kXh-R2_4bDMSbqCcgElAGHJ-c8ChJ_SFuqhyrTXn-ydJjR8K_dg6BqV80krChnvnEhAqEzWE9cA4I5c3WN_mS_FFGgzeV1zctDXFAdZTCGo.m3u8",
   "capture.source_extra_data": "",
   "capture.deinterlace_method": "DISCARD_BOTTOM",
   "capture.deinterlace_res": "FULL",
@@ -23,40 +23,40 @@
   ],
   "calibration.pct.score": [
     0.752,
-    0.25,
+    0.252,
     0.182,
-    0.032
+    0.03
   ],
   "calibration.pct.lines": [
     0.595,
-    0.071,
+    0.072,
     0.09,
-    0.032
+    0.03
   ],
   "calibration.pct.level": [
     0.814,
-    0.716,
+    0.718,
     0.059,
-    0.032
+    0.03
   ],
   "calibration.pct.stats": [
     0.189,
-    0.392,
+    0.394,
     0.088,
-    0.464
+    0.463
   ],
   "calibration.pct.flash": [
     0.749,
-    0.37,
+    0.373,
     0.07,
     0.012
   ],
   "calibration.capture_field": true,
   "calibration.pct.field": [
-    0.374,
-    0.175,
-    0.312,
-    0.719
+    0.375,
+    0.176,
+    0.311,
+    0.72
   ],
   "calibration.dynamic_colors": true,
   "calibration.pct.color1": [
@@ -106,7 +106,7 @@
     0.034
   ],
   "network.host": "127.0.0.1",
-  "network.port": 4002,
+  "network.port": 4001,
   "network.protocol": "LEGACY",
   "debug.print_packet": true,
   "debug.print_benchmark": false
