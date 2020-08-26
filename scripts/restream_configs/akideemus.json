@@ -8,7 +8,7 @@
   "stats.enabled": true,
   "stats.capture_method": "TEXT",
   "capture.method": "STREAM",
-  "capture.source_id": "https://video-weaver.sin01.hls.ttvnw.net/v1/playlist/CtgDdw5Dh3e6ajr_UiiU_JVjJzG0FTendrxh8bL11zZKUf80li9eFRQNJ8EBnLutegFF04XDSR1m3v1dtLCC6ZwQa5FhZgYRuebMqYkzV10gQlOK9TU4M-5jJsPUTqjoxQ5tbqK_SbB3jOfnS2n1DCabHClV9n-p8QwLvLDbwgpUWyozYX9TLK-42JesuAaeMhQ-BBc-gQ2qPd3rQzLI84tNXpuU4tRHeeix278jhYrybkKTcejaHmiPlvRuY2myNDAWXaiQR3ksj4siCu5yJ3UpbIh86HhF9J7wJkawtBPCigi9U9jipHWh3spAjmq5DBGmw9ZHOFxA7gSxRAXxbrHIHnRT-h84hQjiWJbvm9Q4solxKiIJ-DwbYTHGiz505PafNCfMGAaEYrEx0958coSvriJD35fW2i0bnSYwM8XLEf3B-GeacZGgv2iQOyAo3M2ROhUbwOxOhIf1wvifgRFU4AQAYy31vZ0czzjyf9yw4aLiYgsUt0nhB3xgpTQdbTdC_jOIwLblFF5wP2BElMXY3d_KSnMto_vd7yslE-6BH5d2KvTY9q5-5BtP7U52GkRgl7qIxrYfZPs23qPZl0NKUcD9Nuy6oGM2UJZWLvubP6ZFjF3_0vf25RIQTmF9zXNYyVwsCwN6a2CxxRoM7-mjwc_k34J8fLma.m3u8",
+  "capture.source_id": "http://localhost:8081",
   "capture.source_extra_data": "",
   "capture.deinterlace_method": "DISCARD_BOTTOM",
   "capture.deinterlace_res": "FULL",
@@ -22,7 +22,7 @@
     720
   ],
   "calibration.pct.score": [
-    0.752,
+    0.753,
     0.25,
     0.184,
     0.031
